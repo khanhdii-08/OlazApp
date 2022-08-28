@@ -5,9 +5,24 @@ import ChatRoomItem from "../components/ChatRoomItem";
 export default function TabTwoScreen() {
   return (
     <View style={styles.page}>
-      <View>
+      {/* <View>
         <TextInput style={styles.search} placeholder="Search"></TextInput>
-      </View>
+      </View> */}
+      <ChatRoomItem />
+      <ChatRoomItem />
+      <ChatRoomItem />
+      <ChatRoomItem />
+      <ChatRoomItem />
+      <ChatRoomItem />
+      <ChatRoomItem />
+      <ChatRoomItem />
+      <ChatRoomItem />
+      <ChatRoomItem />
+      <ChatRoomItem />
+      <ChatRoomItem />
+      <ChatRoomItem />
+      <ChatRoomItem />
+      <ChatRoomItem />
       <ChatRoomItem />
       <ChatRoomItem />
       <ChatRoomItem />
@@ -22,11 +37,11 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     flex: 1,
   },
-  search: {
-    margin: 10,
-    borderRadius: 5,
-    padding: 6,
-    color: "gray",
-    textAlign: "center",
-  },
+  // search: {
+  //   margin: 10,
+  //   borderRadius: 5,
+  //   padding: 6,
+  //   color: "gray",
+  //   textAlign: "center",
+  // },
 });
