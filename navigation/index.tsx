@@ -3,8 +3,6 @@
  * https://reactnavigation.org/docs/getting-started
  *
  */
-import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
-import { createStackNavigator } from "react-navigation";
 import { Text, View } from "react-native";
 import { FontAwesome, AntDesign } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -17,12 +15,12 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
 import { ColorSchemeName, Pressable } from "react-native";
 
-import Colors from "../constants/Colors";
+import TabNavigator from "./MainTabNavigator";
 import useColorScheme from "../hooks/useColorScheme";
 import SearchScreen from "../screens/SearchScreen";
 import NotFoundScreen from "../screens/NotFoundScreen";
-import TabChatScreen from "../screens/HomeScreen";
-import TabOneScreen from "../screens/TabOneScreen";
+import TabChatScreen from "../screens/ChatScreen";
+import TabOneScreen from "../screens/ContactScreen";
 import TabUserScreen from "../screens/UserScreen";
 import {
   RootStackParamList,
@@ -30,9 +28,6 @@ import {
   RootTabScreenProps,
 } from "../types";
 import LinkingConfiguration from "./LinkingConfiguration";
-
-import ChatRoomScreen from "../screens/ChatRoomScreen";
-import styles from "../components/ChatRoomItem/styles";
 
 export default function Navigation({
   colorScheme,
@@ -54,11 +49,6 @@ export default function Navigation({
  * https://reactnavigation.org/docs/modal
  */
 
-// const AppNavigator = createStackNavigator({
-//   Chat: { screen: ChatRoomScreen },
-//   Search: { screen: SearchScreen },
-// });
-
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
@@ -71,7 +61,7 @@ function RootNavigator() {
       /> */}
       <Stack.Screen
         name="Root"
-        component={BottomTabNavigator}
+        component={TabNavigator}
         options={{
           headerShown: false,
         }}
@@ -88,99 +78,6 @@ function RootNavigator() {
         <Stack.Screen name="Modal" component={SearchScreen} />
       </Stack.Group>
     </Stack.Navigator>
-  );
-}
-
-/**
- * A bottom tab navigator displays tab buttons on the bottom of the display to switch screens.
- * https://reactnavigation.org/docs/bottom-tab-navigator
- */
-const BottomTab = createBottomTabNavigator<RootTabParamList>();
-
-function BottomTabNavigator() {
-  const colorScheme = useColorScheme();
-
-  return (
-    <BottomTab.Navigator
-      initialRouteName="TabChat"
-      screenOptions={{
-        tabBarActiveTintColor: "#0091ff",
-        tabBarStyle: {
-          backgroundColor: "white",
-        },
-      }}
-    >
-      <BottomTab.Screen
-        name="TabChat"
-        component={TabChatScreen}
-        options={({ navigation }: RootTabScreenProps<"TabChat">) => ({
-          title: "Tin nhắn",
-          tabBarIcon: ({ color }) => (
-            <AntDesign name="message1" size={24} color={color} />
-          ),
-          headerStyle: {
-            backgroundColor: "#0091ff",
-          },
-          headerTitle: "",
-          headerLeft: () => (
-            <Pressable
-              onPress={() => {
-                navigation.navigate("Search");
-              }}
-            >
-              <View style={{ flexDirection: "row" }}>
-                <AntDesign
-                  name="search1"
-                  size={23}
-                  color="white"
-                  style={{ marginLeft: 15 }}
-                />
-                <Text
-                  style={{
-                    color: "white",
-                    paddingLeft: 22,
-                    fontSize: 16,
-                    opacity: 0.6,
-                  }}
-                >
-                  Tìm kiếm
-                </Text>
-              </View>
-            </Pressable>
-          ),
-          headerRight: () => (
-            <Pressable>
-              <AntDesign
-                name="plus"
-                size={25}
-                color="white"
-                style={{ marginRight: 15 }}
-              />
-            </Pressable>
-          ),
-        })}
-      />
-      <BottomTab.Screen
-        name="TabContact"
-        component={TabOneScreen}
-        options={{
-          title: "Danh bạ",
-          tabBarIcon: ({ color }) => (
-            <AntDesign name="contacts" size={26} color={color} />
-          ),
-        }}
-      />
-      <BottomTab.Screen
-        name="TabUser"
-        component={TabUserScreen}
-        options={{
-          title: "Cá nhân",
-          tabBarIcon: ({ color }) => (
-            <AntDesign name="user" size={26} color={color} />
-          ),
-        }}
-      />
-    </BottomTab.Navigator>
   );
 }
 

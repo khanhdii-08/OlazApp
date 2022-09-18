@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from "react-native";
 export default function () {
   return (
     <View style={styles.container}>
-      <Text>Duy</Text>
+      <Text> ABCC</Text>
     </View>
   );
 }

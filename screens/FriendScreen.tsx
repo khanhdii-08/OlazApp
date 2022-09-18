@@ -1,9 +1,9 @@
-import { View, Text, StyleSheet } from "react-native";
+import { Text, View, StyleSheet } from "react-native";
 
-export default function () {
+export default function TabOneScreen() {
   return (
     <View style={styles.container}>
-      <Text>Duy</Text>
+      <Text>OCcccc</Text>
     </View>
   );
 }
