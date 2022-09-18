@@ -3,7 +3,10 @@
  * https://reactnavigation.org/docs/getting-started
  *
  */
-import { FontAwesome } from "@expo/vector-icons";
+import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
+import { createStackNavigator } from "react-navigation";
+import { Text, View } from "react-native";
+import { FontAwesome, AntDesign } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {
   NavigationContainer,
@@ -16,10 +19,11 @@ import { ColorSchemeName, Pressable } from "react-native";
 
 import Colors from "../constants/Colors";
 import useColorScheme from "../hooks/useColorScheme";
-import ModalScreen from "../screens/ModalScreen";
+import SearchScreen from "../screens/SearchScreen";
 import NotFoundScreen from "../screens/NotFoundScreen";
+import TabChatScreen from "../screens/HomeScreen";
 import TabOneScreen from "../screens/TabOneScreen";
-import TabTwoScreen from "../screens/HomeScreen";
+import TabUserScreen from "../screens/UserScreen";
 import {
   RootStackParamList,
   RootTabParamList,
@@ -28,6 +32,7 @@ import {
 import LinkingConfiguration from "./LinkingConfiguration";
 
 import ChatRoomScreen from "../screens/ChatRoomScreen";
+import styles from "../components/ChatRoomItem/styles";
 
 export default function Navigation({
   colorScheme,
@@ -48,28 +53,39 @@ export default function Navigation({
  * A root stack navigator is often used for displaying modals on top of all other content.
  * https://reactnavigation.org/docs/modal
  */
+
+// const AppNavigator = createStackNavigator({
+//   Chat: { screen: ChatRoomScreen },
+//   Search: { screen: SearchScreen },
+// });
+
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
   return (
     <Stack.Navigator>
-      <Stack.Screen
+      {/* <Stack.Screen
         name="ChatRoom"
         component={ChatRoomScreen}
-        options={{ headerShown: true}}
-      />
+        options={{ headerShown: true }}
+      /> */}
       <Stack.Screen
         name="Root"
         component={BottomTabNavigator}
-        options={{ headerShown: false }}
+        options={{
+          headerShown: false,
+        }}
       />
       <Stack.Screen
         name="NotFound"
         component={NotFoundScreen}
         options={{ title: "Oops!" }}
       />
+      <Stack.Group>
+        <Stack.Screen name="Search" component={SearchScreen} />
+      </Stack.Group>
       <Stack.Group screenOptions={{ presentation: "modal" }}>
-        <Stack.Screen name="Modal" component={ModalScreen} />
+        <Stack.Screen name="Modal" component={SearchScreen} />
       </Stack.Group>
     </Stack.Navigator>
   );
@@ -86,28 +102,58 @@ function BottomTabNavigator() {
 
   return (
     <BottomTab.Navigator
-      initialRouteName="TabTwo"
+      initialRouteName="TabChat"
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme].tint,
+        tabBarActiveTintColor: "#0091ff",
+        tabBarStyle: {
+          backgroundColor: "white",
+        },
       }}
     >
       <BottomTab.Screen
-        name="TabOne"
-        component={TabOneScreen}
-        options={({ navigation }: RootTabScreenProps<"TabOne">) => ({
-          title: "Contacts",
-          tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
-          headerRight: () => (
+        name="TabChat"
+        component={TabChatScreen}
+        options={({ navigation }: RootTabScreenProps<"TabChat">) => ({
+          title: "Tin nhắn",
+          tabBarIcon: ({ color }) => (
+            <AntDesign name="message1" size={24} color={color} />
+          ),
+          headerStyle: {
+            backgroundColor: "#0091ff",
+          },
+          headerTitle: "",
+          headerLeft: () => (
             <Pressable
-              onPress={() => navigation.navigate("Modal")}
-              style={({ pressed }) => ({
-                opacity: pressed ? 0.5 : 1,
-              })}
+              onPress={() => {
+                navigation.navigate("Search");
+              }}
             >
-              <FontAwesome
-                name="info-circle"
+              <View style={{ flexDirection: "row" }}>
+                <AntDesign
+                  name="search1"
+                  size={23}
+                  color="white"
+                  style={{ marginLeft: 15 }}
+                />
+                <Text
+                  style={{
+                    color: "white",
+                    paddingLeft: 22,
+                    fontSize: 16,
+                    opacity: 0.6,
+                  }}
+                >
+                  Tìm kiếm
+                </Text>
+              </View>
+            </Pressable>
+          ),
+          headerRight: () => (
+            <Pressable>
+              <AntDesign
+                name="plus"
                 size={25}
-                color={Colors[colorScheme].text}
+                color="white"
                 style={{ marginRight: 15 }}
               />
             </Pressable>
@@ -115,12 +161,22 @@ function BottomTabNavigator() {
         })}
       />
       <BottomTab.Screen
-        name="TabTwo"
-        component={TabTwoScreen}
+        name="TabContact"
+        component={TabOneScreen}
         options={{
-          title: "Chats",
+          title: "Danh bạ",
           tabBarIcon: ({ color }) => (
-            <TabBarIcon name="comments" color={color} />
+            <AntDesign name="contacts" size={26} color={color} />
+          ),
+        }}
+      />
+      <BottomTab.Screen
+        name="TabUser"
+        component={TabUserScreen}
+        options={{
+          title: "Cá nhân",
+          tabBarIcon: ({ color }) => (
+            <AntDesign name="user" size={26} color={color} />
           ),
         }}
       />

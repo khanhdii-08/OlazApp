@@ -17,21 +17,18 @@ const chatRoom2 = ChatRoomData[1];
 export default function TabTwoScreen() {
   return (
     <View style={styles.page}>
-      {/* <View>
-        <TextInput style={styles.search} placeholder="Search"></TextInput>
-      </View> */}
       <FlatList
         data={ChatRoomData}
         renderItem={({ item }) => <ChatRoomItem chatRoom={item} />}
         showsVerticalScrollIndicator={false}
-        ListHeaderComponent = { () =>
-          <FlatList
-          data={ChatRoomData}
-          renderItem={({ item }) => <ChatRoomItem chatRoom={item} />}
-          showsVerticalScrollIndicator={false}
-          horizontal
-        />
-        }
+        // ListHeaderComponent={() => (
+        //   <FlatList
+        //     data={ChatRoomData}
+        //     renderItem={({ item }) => <ChatRoomItem chatRoom={item} />}
+        //     showsVerticalScrollIndicator={false}
+        //     horizontal
+        //   />
+        // )}
       />
     </View>
   );
@@ -42,11 +39,4 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     flex: 1,
   },
-  // search: {
-  //   margin: 10,
-  //   borderRadius: 5,
-  //   padding: 6,
-  //   color: "gray",
-  //   textAlign: "center",
-  // },
 });
