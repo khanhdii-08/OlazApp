@@ -2,8 +2,7 @@ import { Text, View, StyleSheet, Image, TextInput } from "react-native";
 
 import styles from "./styles";
 
-export default function ChatRoomItem({chatRoom}) {
-
+export default function ChatRoomItem({ chatRoom }) {
   const user = chatRoom.users[1];
 
   return (
@@ -14,9 +13,11 @@ export default function ChatRoomItem({chatRoom}) {
         }}
         style={styles.image}
       />
-      {chatRoom.newMessages && <View style={styles.badgeContainer}>
-        <Text style={styles.badgeText}>{chatRoom.newMessages}</Text>
-      </View>}
+      {chatRoom.newMessages && (
+        <View style={styles.badgeContainer}>
+          <Text style={styles.badgeText}>{chatRoom.newMessages}</Text>
+        </View>
+      )}
 
       <View style={styles.rightContainer}>
         <View style={styles.row}>

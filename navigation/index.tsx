@@ -3,8 +3,9 @@
  * https://reactnavigation.org/docs/getting-started
  *
  */
-import { Text, View } from "react-native";
+import { SafeAreaView, Text, TextInput, View } from "react-native";
 import { FontAwesome, AntDesign } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {
   NavigationContainer,
@@ -24,10 +25,12 @@ import TabOneScreen from "../screens/ContactScreen";
 import TabUserScreen from "../screens/UserScreen";
 import {
   RootStackParamList,
+  RootStackScreenProps,
   RootTabParamList,
   RootTabScreenProps,
 } from "../types";
 import LinkingConfiguration from "./LinkingConfiguration";
+import SearchInput from "../components/SearchInput";
 
 export default function Navigation({
   colorScheme,
@@ -71,11 +74,36 @@ function RootNavigator() {
         component={NotFoundScreen}
         options={{ title: "Oops!" }}
       />
-      <Stack.Group>
-        <Stack.Screen name="Search" component={SearchScreen} />
-      </Stack.Group>
-      <Stack.Group screenOptions={{ presentation: "modal" }}>
-        <Stack.Screen name="Modal" component={SearchScreen} />
+      <Stack.Group
+        screenOptions={() => ({
+          presentation: "fullScreenModal",
+        })}
+      >
+        <Stack.Screen
+          name="Search"
+          component={SearchScreen}
+          options={({ navigation }: RootStackScreenProps<"Search">) => ({
+            animation: "none",
+            title: "",
+            headerStyle: {
+              backgroundColor: "#0091ff",
+            },
+            headerLeft: () => (
+              <Pressable
+                onPress={() => {
+                  navigation.goBack();
+                }}
+              >
+                <Ionicons name="chevron-back" size={26} color="white" />
+              </Pressable>
+            ),
+            headerRight: () => (
+              <SafeAreaView>
+                <SearchInput />
+              </SafeAreaView>
+            ),
+          })}
+        />
       </Stack.Group>
     </Stack.Navigator>
   );
