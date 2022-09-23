@@ -1,16 +1,7 @@
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
-import { StatusBar } from "expo-status-bar";
-import {
-  Platform,
-  StyleSheet,
-  View,
-  Button,
-  Text,
-  SafeAreaView,
-  Pressable,
-} from "react-native";
+import Tooltip from "react-native-walkthrough-tooltip";
+import { StyleSheet, View, Text, Pressable } from "react-native";
 
-import EditScreenInfo from "../components/EditScreenInfo";
 import HistorySearchItem from "../components/HistorySearchItem/HistorySearchItem";
 import SearchInput from "../components/SearchInput";
 import { RootStackScreenProps } from "../types";
