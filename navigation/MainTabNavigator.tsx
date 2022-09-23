@@ -1,5 +1,5 @@
 import { Text, View } from "react-native";
-import { FontAwesome, AntDesign } from "@expo/vector-icons";
+import { FontAwesome, AntDesign, MaterialIcons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {
   NavigationContainer,
@@ -76,14 +76,24 @@ export default function TabNavigator() {
             </Pressable>
           ),
           headerRight: () => (
-            <Pressable>
-              <AntDesign
-                name="plus"
-                size={25}
-                color="white"
-                style={{ marginRight: 15 }}
-              />
-            </Pressable>
+            <View style={{ flexDirection: "row" }}>
+              <Pressable>
+                <MaterialIcons
+                  name="qr-code-scanner"
+                  size={24}
+                  color="white"
+                  style={{ marginRight: 20 }}
+                />
+              </Pressable>
+              <Pressable>
+                <AntDesign
+                  name="plus"
+                  size={25}
+                  color="white"
+                  style={{ marginRight: 15 }}
+                />
+              </Pressable>
+            </View>
           ),
         })}
       />
