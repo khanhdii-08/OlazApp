@@ -1,5 +1,4 @@
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
-import Tooltip from "react-native-walkthrough-tooltip";
 import { StyleSheet, View, Text, Pressable } from "react-native";
 
 import HistorySearchItem from "../components/HistorySearchItem/HistorySearchItem";
