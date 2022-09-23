@@ -11,7 +11,7 @@ import {
 } from "react-native";
 
 import EditScreenInfo from "../components/EditScreenInfo";
-import HistorySearchItem from "../components/HistorySearch/HistorySearchItem";
+import HistorySearchItem from "../components/HistorySearchItem/HistorySearchItem";
 import SearchInput from "../components/SearchInput";
 import { RootStackScreenProps } from "../types";
 
