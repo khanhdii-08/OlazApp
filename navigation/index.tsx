@@ -17,6 +17,7 @@ import TabNavigator from "./MainTabNavigator";
 import useColorScheme from "../hooks/useColorScheme";
 import SearchScreen from "../screens/SearchScreen";
 import NotFoundScreen from "../screens/NotFoundScreen";
+import MenuPopup from "../components/MenuPopup/MenuPopup";
 import { RootStackParamList, RootStackScreenProps } from "../types";
 import LinkingConfiguration from "./LinkingConfiguration";
 import ChatRoomScreen from "../screens/ChatRoomScreen";
@@ -40,7 +41,6 @@ export default function Navigation({
  * A root stack navigator is often used for displaying modals on top of all other content.
  * https://reactnavigation.org/docs/modal
  */
-
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
@@ -64,9 +64,9 @@ function RootNavigator() {
         options={{ title: "Oops!" }}
       />
       <Stack.Group
-        screenOptions={() => ({
+        screenOptions={{
           presentation: "fullScreenModal",
-        })}
+        }}
       >
         <Stack.Screen
           name="Search"
@@ -80,6 +80,9 @@ function RootNavigator() {
             },
           })}
         />
+      </Stack.Group>
+      <Stack.Group screenOptions={{ presentation: "modal" }}>
+        <Stack.Screen name="MenuPopup" component={MenuPopup} />
       </Stack.Group>
     </Stack.Navigator>
   );

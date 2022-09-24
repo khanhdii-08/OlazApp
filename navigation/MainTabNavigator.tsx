@@ -6,22 +6,14 @@ import {
   DefaultTheme,
   DarkTheme,
 } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
 import { ColorSchemeName, Pressable } from "react-native";
 
 import useColorScheme from "../hooks/useColorScheme";
-import SearchScreen from "../screens/SearchScreen";
-import NotFoundScreen from "../screens/NotFoundScreen";
 import TabChatScreen from "../screens/ChatScreen";
 import TabOneScreen from "../screens/ContactScreen";
 import TabUserScreen from "../screens/UserScreen";
-import {
-  RootStackParamList,
-  RootTabParamList,
-  RootTabScreenProps,
-} from "../types";
-import LinkingConfiguration from "./LinkingConfiguration";
+import { RootTabParamList, RootTabScreenProps } from "../types";
 
 const BottomTab = createBottomTabNavigator<RootTabParamList>();
 
@@ -85,7 +77,7 @@ export default function TabNavigator() {
                   style={{ marginRight: 20 }}
                 />
               </Pressable>
-              <Pressable>
+              <Pressable onPress={() => navigation.navigate("MenuPopup")}>
                 <AntDesign
                   name="plus"
                   size={25}

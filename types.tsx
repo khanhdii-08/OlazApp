@@ -22,6 +22,7 @@ export type RootStackParamList = {
   NotFound: undefined;
   Search: undefined;
   ChatRoom: undefined;
+  MenuPopup: undefined;
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> =

@@ -13,8 +13,8 @@ const styles = StyleSheet.create({
     // position: "absolute",
   },
   badgeContainer: {
-    backgroundColor: "#3777f0",
-    width: 20,
+    backgroundColor: "#db342e",
+    width: 25,
     height: 20,
     borderRadius: 10,
     borderWidth: 1,
@@ -22,8 +22,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     position: "absolute",
-    left: 45,
-    top: 10,
+    left: 300,
+
   },
   badgeText: {
     color: "white",
@@ -42,10 +42,15 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 17,
     marginBottom: 2,
+    maxWidth:270
   },
   text: {
     color: "grey",
+    maxWidth:280
   },
+  textBold: {
+    fontWeight: "bold",
+  }
 });
 
 
