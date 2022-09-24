@@ -81,7 +81,7 @@ function RootNavigator() {
           })}
         />
       </Stack.Group>
-      <Stack.Group screenOptions={{ presentation: "modal" }}>
+      <Stack.Group screenOptions={{ presentation: "card" }}>
         <Stack.Screen name="MenuPopup" component={MenuPopup} />
       </Stack.Group>
     </Stack.Navigator>

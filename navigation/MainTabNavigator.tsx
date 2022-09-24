@@ -7,18 +7,27 @@ import {
   DarkTheme,
 } from "@react-navigation/native";
 import * as React from "react";
-import { ColorSchemeName, Pressable } from "react-native";
-
+import {
+  ColorSchemeName,
+  Pressable,
+  TouchableOpacity,
+  Platform,
+} from "react-native";
+import { useState } from "react";
 import useColorScheme from "../hooks/useColorScheme";
 import TabChatScreen from "../screens/ChatScreen";
 import TabOneScreen from "../screens/ContactScreen";
 import TabUserScreen from "../screens/UserScreen";
 import { RootTabParamList, RootTabScreenProps } from "../types";
+import Tooltip from "react-native-walkthrough-tooltip";
+import { StatusBar } from "expo-status-bar";
+import MenuPopup from "../components/MenuPopup/MenuPopup";
 
 const BottomTab = createBottomTabNavigator<RootTabParamList>();
 
 export default function TabNavigator() {
   const colorScheme = useColorScheme();
+  const [showTip, setTip] = useState(false);
   return (
     <BottomTab.Navigator
       initialRouteName="TabChat"
@@ -77,14 +86,23 @@ export default function TabNavigator() {
                   style={{ marginRight: 20 }}
                 />
               </Pressable>
-              <Pressable onPress={() => navigation.navigate("MenuPopup")}>
-                <AntDesign
-                  name="plus"
-                  size={25}
-                  color="white"
-                  style={{ marginRight: 15 }}
-                />
-              </Pressable>
+              <View>
+                <Tooltip
+                  isVisible={showTip}
+                  content={<MenuPopup />}
+                  onClose={() => setTip(false)}
+                  placement="bottom"
+                >
+                  <TouchableOpacity onPress={() => setTip(true)}>
+                    <AntDesign
+                      name="plus"
+                      size={25}
+                      color="white"
+                      style={{ marginRight: 15 }}
+                    />
+                  </TouchableOpacity>
+                </Tooltip>
+              </View>
             </View>
           ),
         })}
