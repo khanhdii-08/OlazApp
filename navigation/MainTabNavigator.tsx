@@ -1,26 +1,15 @@
 import { Text, View } from "react-native";
-import { FontAwesome, AntDesign, MaterialIcons } from "@expo/vector-icons";
+import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import {
-  NavigationContainer,
-  DefaultTheme,
-  DarkTheme,
-} from "@react-navigation/native";
 import * as React from "react";
-import {
-  ColorSchemeName,
-  Pressable,
-  TouchableOpacity,
-  Platform,
-} from "react-native";
+import { Pressable, TouchableOpacity } from "react-native";
 import { useState } from "react";
 import useColorScheme from "../hooks/useColorScheme";
 import TabChatScreen from "../screens/ChatScreen";
-import TabOneScreen from "../screens/ContactScreen";
+import TabContactScreen from "../screens/ContactScreen";
 import TabUserScreen from "../screens/UserScreen";
 import { RootTabParamList, RootTabScreenProps } from "../types";
 import Tooltip from "react-native-walkthrough-tooltip";
-import { StatusBar } from "expo-status-bar";
 import MenuPopup from "../components/MenuPopup/MenuPopup";
 
 const BottomTab = createBottomTabNavigator<RootTabParamList>();
@@ -28,6 +17,69 @@ const BottomTab = createBottomTabNavigator<RootTabParamList>();
 export default function TabNavigator() {
   const colorScheme = useColorScheme();
   const [showTip, setTip] = useState(false);
+
+  function headerSearch(navigation: any) {
+    return (
+      <Pressable
+        onPress={() => {
+          navigation.navigate("Search");
+        }}
+      >
+        <View style={{ flexDirection: "row" }}>
+          <AntDesign
+            name="search1"
+            size={23}
+            color="white"
+            style={{ marginLeft: 15 }}
+          />
+          <Text
+            style={{
+              color: "white",
+              paddingLeft: 22,
+              fontSize: 16,
+              opacity: 0.6,
+            }}
+          >
+            Tìm kiếm
+          </Text>
+        </View>
+      </Pressable>
+    );
+  }
+
+  function headerMenuPopup(navigation: any) {
+    return (
+      <View style={{ flexDirection: "row" }}>
+        <Pressable>
+          <MaterialIcons
+            name="qr-code-scanner"
+            size={24}
+            color="white"
+            style={{ marginRight: 20 }}
+          />
+        </Pressable>
+        <View>
+          <Tooltip
+            isVisible={showTip}
+            content={<MenuPopup navigation={navigation} setTip={setTip} />}
+            onClose={() => setTip(false)}
+            placement="bottom"
+            displayInsets={{ top: 24, bottom: 24, left: 24, right: 12 }}
+          >
+            <TouchableOpacity onPress={() => setTip(true)}>
+              <AntDesign
+                name="plus"
+                size={25}
+                color="white"
+                style={{ marginRight: 15 }}
+              />
+            </TouchableOpacity>
+          </Tooltip>
+        </View>
+      </View>
+    );
+  }
+
   return (
     <BottomTab.Navigator
       initialRouteName="TabChat"
@@ -50,66 +102,13 @@ export default function TabNavigator() {
             backgroundColor: "#0091ff",
           },
           headerTitle: "",
-          headerLeft: () => (
-            <Pressable
-              onPress={() => {
-                navigation.navigate("Search");
-              }}
-            >
-              <View style={{ flexDirection: "row" }}>
-                <AntDesign
-                  name="search1"
-                  size={23}
-                  color="white"
-                  style={{ marginLeft: 15 }}
-                />
-                <Text
-                  style={{
-                    color: "white",
-                    paddingLeft: 22,
-                    fontSize: 16,
-                    opacity: 0.6,
-                  }}
-                >
-                  Tìm kiếm
-                </Text>
-              </View>
-            </Pressable>
-          ),
-          headerRight: () => (
-            <View style={{ flexDirection: "row" }}>
-              <Pressable>
-                <MaterialIcons
-                  name="qr-code-scanner"
-                  size={24}
-                  color="white"
-                  style={{ marginRight: 20 }}
-                />
-              </Pressable>
-              <View>
-                <Tooltip
-                  isVisible={showTip}
-                  content={<MenuPopup />}
-                  onClose={() => setTip(false)}
-                  placement="bottom"
-                >
-                  <TouchableOpacity onPress={() => setTip(true)}>
-                    <AntDesign
-                      name="plus"
-                      size={25}
-                      color="white"
-                      style={{ marginRight: 15 }}
-                    />
-                  </TouchableOpacity>
-                </Tooltip>
-              </View>
-            </View>
-          ),
+          headerLeft: () => headerSearch(navigation),
+          headerRight: () => headerMenuPopup(navigation),
         })}
       />
       <BottomTab.Screen
         name="TabContact"
-        component={TabOneScreen}
+        component={TabContactScreen}
         options={({ navigation }: RootTabScreenProps<"TabContact">) => ({
           title: "Danh bạ",
           tabBarIcon: ({ color }) => (
@@ -119,34 +118,9 @@ export default function TabNavigator() {
             backgroundColor: "#0091ff",
           },
           headerTitle: "",
-          headerLeft: () => (
-            <Pressable
-              onPress={() => {
-                navigation.navigate("Search");
-              }}
-            >
-              <View style={{ flexDirection: "row" }}>
-                <AntDesign
-                  name="search1"
-                  size={23}
-                  color="white"
-                  style={{ marginLeft: 15 }}
-                />
-                <Text
-                  style={{
-                    color: "white",
-                    paddingLeft: 22,
-                    fontSize: 16,
-                    opacity: 0.6,
-                  }}
-                >
-                  Tìm kiếm
-                </Text>
-              </View>
-            </Pressable>
-          ),
+          headerLeft: () => headerSearch(navigation),
           headerRight: () => (
-            <Pressable>
+            <Pressable onPress={() => navigation.navigate("AddFriendScreen")}>
               <AntDesign
                 name="adduser"
                 size={24}
@@ -169,32 +143,7 @@ export default function TabNavigator() {
             backgroundColor: "#0091ff",
           },
           headerTitle: "",
-          headerLeft: () => (
-            <Pressable
-              onPress={() => {
-                navigation.navigate("Search");
-              }}
-            >
-              <View style={{ flexDirection: "row" }}>
-                <AntDesign
-                  name="search1"
-                  size={23}
-                  color="white"
-                  style={{ marginLeft: 15 }}
-                />
-                <Text
-                  style={{
-                    color: "white",
-                    paddingLeft: 22,
-                    fontSize: 16,
-                    opacity: 0.6,
-                  }}
-                >
-                  Tìm kiếm
-                </Text>
-              </View>
-            </Pressable>
-          ),
+          headerLeft: () => headerSearch(navigation),
           headerRight: () => (
             <Pressable>
               <AntDesign

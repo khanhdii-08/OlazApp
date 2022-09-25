@@ -1,21 +1,82 @@
-import {
-  StyleSheet,
-  Text,
-  TouchableHighlight,
-  View,
-  Modal,
-} from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, Modal } from "react-native";
 import React from "react";
-import Tooltip from "react-native-walkthrough-tooltip";
+import { AntDesign, Ionicons, MaterialIcons } from "@expo/vector-icons";
+import styles from "./styles";
 
-export default function MenuPopup() {
-  return <View style={styles.container}></View>;
+export default function MenuPopup({ navigation, setTip }) {
+  return (
+    <View style={styles.container}>
+      <TouchableOpacity
+        style={styles.buttonContainer}
+        onPress={() => {
+          setTip(false);
+          navigation.navigate("AddGroupScreen");
+        }}
+      >
+        <AntDesign
+          name="addusergroup"
+          size={24}
+          color="black"
+          style={styles.icon}
+        />
+        <Text style={styles.text}>Tạo nhóm</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.buttonContainer}
+        onPress={() => {
+          setTip(false);
+          navigation.navigate("AddFriendScreen");
+        }}
+      >
+        <AntDesign name="adduser" size={24} color="black" style={styles.icon} />
+        <Text style={styles.text}>Thêm bạn</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.buttonContainer}>
+        <Ionicons
+          name="qr-code-outline"
+          size={24}
+          color="black"
+          style={styles.icon}
+        />
+        <Text style={styles.text}>Quét mã QR</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.buttonContainer}>
+        <AntDesign
+          name="calendar"
+          size={24}
+          color="black"
+          style={styles.icon}
+        />
+        <Text style={styles.text}>Lịch Zalo</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.buttonContainer}>
+        <MaterialIcons
+          name="computer"
+          size={24}
+          color="black"
+          style={styles.icon}
+        />
+        <Text style={styles.text}>Lịch sử đăng nhập</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.buttonContainer}>
+        <AntDesign name="cloudo" size={24} color="black" style={styles.icon} />
+        <Text style={styles.text}>Cloud của tôi</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.buttonContainer}>
+        <AntDesign
+          name="videocamera"
+          size={24}
+          color="black"
+          style={styles.icon}
+        />
+        <Text style={styles.text}>Tạo cuộc gọi nhóm</Text>
+      </TouchableOpacity>
+    </View>
+  );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    width: 240,
-    height: 300,
-    backgroundColor: "white",
-  },
-});

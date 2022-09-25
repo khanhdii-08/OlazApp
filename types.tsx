@@ -22,6 +22,8 @@ export type RootStackParamList = {
   NotFound: undefined;
   Search: undefined;
   ChatRoom: undefined;
+  AddFriendScreen: undefined;
+  AddGroupScreen: undefined;
   MenuPopup: undefined;
 };
 
