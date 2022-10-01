@@ -6,6 +6,7 @@ import {
   Pressable,
   TextInput,
   StatusBar,
+  Image,
 } from "react-native";
 import React from "react";
 
@@ -15,13 +16,12 @@ const SecurityScreen = () => {
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
-      <StatusBar
-        animated={true}
-        backgroundColor="red"
-        barStyle="dark-content"
-      />
+      <StatusBar animated={true} barStyle="dark-content" />
       <View style={styles.containerTop}>
-        <Text style={styles.logo}>Zalo</Text>
+        <Image
+          style={styles.logo}
+          source={require("../assets/images/slide_5.png")}
+        />
       </View>
       <View style={styles.containerBot}>
         <TouchableOpacity
@@ -59,9 +59,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   logo: {
-    fontSize: 90,
-    fontWeight: "bold",
-    color: "#007AFF",
+    width: 250,
+    height: 150,
   },
   btn: {
     width: 300,

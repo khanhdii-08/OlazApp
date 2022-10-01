@@ -5,6 +5,7 @@ import {
   Image,
   TextInput,
   FlatList,
+  StatusBar,
 } from "react-native";
 
 import ChatRoomItem from "../components/ChatRoomItem";
@@ -17,6 +18,7 @@ const chatRoom2 = ChatRoomData[1];
 export default function TabTwoScreen() {
   return (
     <View style={styles.page}>
+      <StatusBar backgroundColor="#3399FF" />
       <FlatList
         data={ChatRoomData}
         renderItem={({ item }) => <ChatRoomItem chatRoom={item} />}
