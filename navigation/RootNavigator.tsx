@@ -9,12 +9,24 @@ import { RootStackParamList, RootStackScreenProps } from "../types";
 import AddFriendScreen from "../screens/AddFriendScreen";
 import AddGroupScreen from "../screens/AddGroupScreen";
 import ChatRoomScreen from "../screens/ChatRoomScreen";
+import SecurityScreen from "../screens/SecurityScreen";
+import LoginScreen from "../screens/LoginScreen";
+import { Ionicons } from "@expo/vector-icons";
+import RegisterScreen from "../screens/RegisterScreen";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function RootNavigator() {
   return (
     <Stack.Navigator>
+      <Stack.Screen
+        name="Security"
+        component={SecurityScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+
       <Stack.Screen
         name="Root"
         component={TabNavigator}
@@ -85,15 +97,69 @@ export default function RootNavigator() {
         }}
       >
         <Stack.Screen name="AddFriendScreen" component={AddFriendScreen} />
+
+        <Stack.Screen
+          name="LoginScreen"
+          component={LoginScreen}
+          options={({ navigation }: RootStackScreenProps<"LoginScreen">) => ({
+            headerTitle: "",
+            headerStyle: {
+              backgroundColor: "#0091ff",
+            },
+            headerLeft: () => (
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <Pressable onPress={() => navigation.goBack()}>
+                  <Ionicons name="chevron-back" size={26} color="white" />
+                </Pressable>
+                <Text
+                  style={{
+                    marginLeft: 10,
+                    fontSize: 18,
+                    fontWeight: "bold",
+                    color: "white",
+                  }}
+                >
+                  Đăng nhập
+                </Text>
+              </View>
+            ),
+          })}
+        />
+
+        <Stack.Screen
+          name="RegisterScreen"
+          component={RegisterScreen}
+          options={({
+            navigation,
+          }: RootStackScreenProps<"RegisterScreen">) => ({
+            headerTitle: "",
+            headerStyle: {
+              backgroundColor: "#0091ff",
+            },
+            headerLeft: () => (
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <Pressable onPress={() => navigation.goBack()}>
+                  <Ionicons name="chevron-back" size={26} color="white" />
+                </Pressable>
+                <Text
+                  style={{
+                    marginLeft: 10,
+                    fontSize: 18,
+                    fontWeight: "bold",
+                    color: "white",
+                  }}
+                >
+                  Tạo tài khoản
+                </Text>
+              </View>
+            ),
+          })}
+        />
       </Stack.Group>
     </Stack.Navigator>
   );
 }
 
-const ChatRoomHeader = (props) => {
-  return (
-    <View>
-      <Text style={{}}>Duy</Text>;
-    </View>
-  );
+const ChatRoomHeader = (props: any) => {
+  return <Text style={{}}>Duy</Text>;
 };

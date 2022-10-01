@@ -25,6 +25,9 @@ export type RootStackParamList = {
   AddFriendScreen: undefined;
   AddGroupScreen: undefined;
   MenuPopup: undefined;
+  Security: undefined;
+  LoginScreen: undefined;
+  RegisterScreen: undefined;
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> =

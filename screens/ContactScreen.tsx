@@ -1,12 +1,8 @@
 import { StyleSheet } from "react-native";
-
-import EditScreenInfo from "../components/EditScreenInfo";
-import { Text, View } from "../components/Themed";
-import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { RootTabScreenProps } from "../types";
 import FriendScreen from "./FriendScreen";
 import GroupScreen from "./GroupScreen";
 import OAScreen from "./OAScreen";
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -27,3 +23,16 @@ export default function TabOneScreen() {
     </Tab.Navigator>
   );
 }
+
+// import { View, Text } from "react-native";
+// import React from "react";
+
+// const ContactScreen = () => {
+//   return (
+//     <View>
+//       <Text>ContactScreen</Text>
+//     </View>
+//   );
+// };
+
+// export default ContactScreen;
