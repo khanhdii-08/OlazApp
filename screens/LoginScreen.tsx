@@ -12,15 +12,43 @@ import {
   Alert,
 } from "react-native";
 import React, { useState, useEffect } from "react";
+import { useNavigation } from "@react-navigation/native";
 import { useTogglePasswordVisibility } from "../hooks/useTogglePasswordVisibility";
-
+import { useAuthContext } from "../contexts/AuthContext";
+import { useLoginMutation } from "../generated/graphql";
+import JWTManager from "../utils/jwt";
 const LoginScreen = () => {
-  const [textUserName, setUserName] = useState("");
-  const [textPass, setPass] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const { setIsAuthenticatied } = useAuthContext();
+  const [login, _] = useLoginMutation();
+  const [error, setError] = useState("");
+
+  const navigation = useNavigation();
+
   const { passwordVisibility, rightIcon, handlePasswordVisibility } =
     useTogglePasswordVisibility("HIỆN", "ẨN");
 
   const [disabled, setDisabled] = useState(true);
+
+  const onPress = async () => {
+    const result = await login({
+      variables: {
+        loginInput: {
+          username,
+          password,
+        },
+      },
+    });
+
+    if (result.data?.login.success) {
+      JWTManager.setToken(result.data.login.accessToken as string);
+      setIsAuthenticatied(true);
+      navigation.navigate("Root");
+    } else {
+      if (result.data?.login.message) setError(result.data?.login.message);
+    }
+  };
 
   const checkInput = (textUserName: string, textPass: string) => {
     if (textUserName && textPass) setDisabled(false);
@@ -28,8 +56,8 @@ const LoginScreen = () => {
   };
 
   useEffect(() => {
-    checkInput(textUserName, textPass);
-  }, [textUserName, textPass]);
+    checkInput(username, password);
+  }, [username, password]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -41,18 +69,18 @@ const LoginScreen = () => {
         <View style={styles.parent}>
           <TextInput
             style={styles.textInput}
-            value={textUserName}
+            value={username}
             placeholder="Tên đăng nhập"
             placeholderTextColor="#717070"
             autoFocus={true}
             onChangeText={(value) => {
-              setUserName(value);
+              setUsername(value);
             }}
           />
-          {textUserName && (
+          {username && (
             <TouchableOpacity
               style={styles.closeButtonParent}
-              onPress={() => setUserName("")}
+              onPress={() => setUsername("")}
             >
               <Image
                 style={styles.closeButton}
@@ -64,19 +92,19 @@ const LoginScreen = () => {
         <View style={styles.parent}>
           <TextInput
             style={styles.textInput}
-            value={textPass}
+            value={password}
             placeholder="Mật khẩu"
             placeholderTextColor="#717070"
             secureTextEntry={passwordVisibility}
             onChangeText={(value) => {
-              setPass(value);
+              setPassword(value);
             }}
           />
 
-          {textPass && (
+          {password && (
             <TouchableOpacity
               style={styles.closeButtonParent}
-              onPress={() => setPass("")}
+              onPress={() => setPassword("")}
             >
               <Image
                 style={styles.closeButton}
@@ -94,7 +122,7 @@ const LoginScreen = () => {
         <View style={{ alignItems: "center" }}>
           <TouchableOpacity
             disabled={disabled}
-            onPress={() => Alert.alert(textUserName, textPass)}
+            onPress={onPress}
             style={[styles.btnLogin, { opacity: disabled ? 0.3 : 1 }]}
           >
             <View>

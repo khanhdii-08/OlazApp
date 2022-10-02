@@ -13,12 +13,21 @@ import SecurityScreen from "../screens/SecurityScreen";
 import LoginScreen from "../screens/LoginScreen";
 import { Ionicons } from "@expo/vector-icons";
 import RegisterScreen from "../screens/RegisterScreen";
+import SplashScreen from "../screens/SplashScreen";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function RootNavigator() {
   return (
     <Stack.Navigator>
+      <Stack.Screen
+        name="Splash"
+        component={SplashScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+
       <Stack.Screen
         name="Security"
         component={SecurityScreen}
@@ -34,6 +43,7 @@ export default function RootNavigator() {
           headerShown: false,
         }}
       />
+
       <Stack.Screen
         name="ChatRoom"
         component={ChatRoomScreen}

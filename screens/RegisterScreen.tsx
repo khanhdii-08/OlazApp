@@ -9,32 +9,51 @@ import {
   Image,
   ScrollView,
   Pressable,
+  Alert,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { useTogglePasswordVisibility } from "../hooks/useTogglePasswordVisibility";
+import { useRegisterMutation } from "../generated/graphql";
+import { useNavigation } from "@react-navigation/native";
 
 const RegisterScreen = () => {
-  const [textName, setName] = useState("");
-  const [textUserName, setUserName] = useState("");
-  const [textPass, setPass] = useState("");
-  const [textRePass, setRePass] = useState("");
+  const navigation = useNavigation();
+
+  const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
   const { passwordVisibility, rightIcon, handlePasswordVisibility } =
     useTogglePasswordVisibility("HIỆN", "ẨN");
-
   const [disabled, setDisabled] = useState(true);
 
-  const checkInput = (
-    textName: string,
-    textUserName: string,
-    textPass: string
-  ) => {
-    if (textName && textUserName && textPass) setDisabled(false);
+  const [register, _] = useRegisterMutation();
+
+  const onSubmit = async () => {
+    const result = await register({
+      variables: {
+        registerInput: {
+          name,
+          username,
+          password,
+        },
+      },
+    });
+
+    if (result.data?.register.success) {
+      Alert.alert("Bạn đã đăng ký thành công xin mời bạn đăng nhập");
+      navigation.navigate("LoginScreen");
+    }
+  };
+
+  const checkInput = (name: string, username: string, password: string) => {
+    if (name && username && password) setDisabled(false);
     else setDisabled(true);
   };
 
   useEffect(() => {
-    checkInput(textName, textUserName, textPass);
-  }, [textName, textUserName, textPass]);
+    checkInput(name, username, password);
+  }, [name, username, password]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -44,13 +63,13 @@ const RegisterScreen = () => {
         <View style={styles.parent}>
           <TextInput
             style={styles.textInput}
-            value={textName}
+            value={name}
             placeholder="Gồm 2-40 ký tự"
             placeholderTextColor="#717070"
             autoFocus={true}
             onChangeText={setName}
           />
-          {textName && (
+          {name && (
             <TouchableOpacity
               style={styles.closeButtonParent}
               onPress={() => setName("")}
@@ -66,15 +85,15 @@ const RegisterScreen = () => {
         <View style={styles.parent}>
           <TextInput
             style={styles.textInput}
-            value={textUserName}
+            value={username}
             placeholder="Gồm 2-40 ký tự"
             placeholderTextColor="#717070"
-            onChangeText={(value) => setUserName(value)}
+            onChangeText={(value) => setUsername(value)}
           />
-          {textUserName && (
+          {username && (
             <TouchableOpacity
               style={styles.closeButtonParent}
-              onPress={() => setUserName("")}
+              onPress={() => setUsername("")}
             >
               <Image
                 style={styles.closeButton}
@@ -87,17 +106,17 @@ const RegisterScreen = () => {
         <View style={styles.parent}>
           <TextInput
             style={styles.textInput}
-            value={textPass}
+            value={password}
             placeholder="Gồm 2-40 ký tự"
             placeholderTextColor="#717070"
             secureTextEntry={passwordVisibility}
-            onChangeText={(value) => setPass(value)}
+            onChangeText={(value) => setPassword(value)}
           />
 
-          {textPass && (
+          {password && (
             <TouchableOpacity
               style={styles.closeButtonParent}
-              onPress={() => setPass("")}
+              onPress={() => setPassword("")}
             >
               <Image
                 style={styles.closeButton}
@@ -115,6 +134,7 @@ const RegisterScreen = () => {
 
         <View style={{ alignItems: "center" }}>
           <TouchableOpacity
+            onPress={onSubmit}
             disabled={disabled}
             style={[styles.btn, { opacity: disabled ? 0.3 : 1 }]}
           >
