@@ -1,14 +1,18 @@
 import { StyleSheet, Text, View } from "react-native";
+import JWTManager from "../../utils/jwt"
+
 
 const Message = ({message}) => {
 
-    const myId = 'u1';
-    const isMe = message.user.id === myId;
+    const myId = JWTManager.getUserId()?.toString() as string;
+    const isMe = message.senderId === myId;
+
+
 
     return (
         <View style={[styles.container, isMe ? styles.rightContainer : styles.leftContainer]}>
             <Text style={{color: isMe ? '#ffffff' : 'black'}}>
-                {message.content}
+                {message.messageText}
             </Text>
         </View>
     );

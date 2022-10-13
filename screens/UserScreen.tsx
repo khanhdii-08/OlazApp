@@ -12,13 +12,17 @@ export default function () {
   const [logoutServer, _] = useLogoutMutation();
 
   const onPress = async () => {
+
     logoutClient();
     const result = await logoutServer({
       variables: {
         userId: JWTManager.getUserId()?.toString() as string,
       },
     });
-    if (result.data?.logout.success) navigation.navigate("Security");
+    if (result.data?.logout.success) {
+      navigation.navigate("Security");
+      // window.location.href = "/Security"
+    }
   };
 
   const { data, error, loading } = useHelloQuery({

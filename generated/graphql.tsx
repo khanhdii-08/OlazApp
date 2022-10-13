@@ -16,6 +16,16 @@ export type Scalars = {
   DateTime: any;
 };
 
+export type Conversation = {
+  __typename?: 'Conversation';
+  _id?: Maybe<Scalars['ID']>;
+  lastMessageId?: Maybe<Scalars['String']>;
+  leaderId?: Maybe<Scalars['String']>;
+  members: Array<Scalars['String']>;
+  messages: Array<Message>;
+  name?: Maybe<Scalars['String']>;
+};
+
 export type ConversationInput = {
   members: Array<Scalars['String']>;
   name: Scalars['String'];
@@ -80,6 +90,7 @@ export type Mutation = {
   addLastMessageId: Scalars['Boolean'];
   addMember: Member;
   createConversation: Scalars['ID'];
+  createGroupConversation: Scalars['ID'];
   createMessage: Message;
   deleteFriend: Scalars['Boolean'];
   login: UserMutationResponse;
@@ -102,6 +113,11 @@ export type MutationAddMemberArgs = {
 
 
 export type MutationCreateConversationArgs = {
+  conversation: ConversationInput;
+};
+
+
+export type MutationCreateGroupConversationArgs = {
   conversation: ConversationInput;
 };
 
@@ -137,11 +153,13 @@ export type MutationSendRequestArgs = {
 
 export type Query = {
   __typename?: 'Query';
+  getConversationById: Conversation;
   getConversationIds: Array<Scalars['String']>;
   getFriends: Array<Friend>;
+  getListConversation: Array<Conversation>;
   getMessages: Array<Message>;
+  getMyFriendByConversationId: Member;
   getNameById: Scalars['String'];
-  getRooms: Array<ResponseMemberRoom>;
   getUser: User;
   hello: Scalars['String'];
   isFriendExisted: Scalars['Boolean'];
@@ -151,7 +169,11 @@ export type Query = {
 
 export type QueryGetMessagesArgs = {
   conversationId: Scalars['String'];
-  friendId: Scalars['String'];
+};
+
+
+export type QueryGetMyFriendByConversationIdArgs = {
+  conversationId: Scalars['String'];
 };
 
 
@@ -174,14 +196,6 @@ export type RegisterInput = {
   name: Scalars['String'];
   password: Scalars['String'];
   username: Scalars['String'];
-};
-
-export type ResponseMemberRoom = {
-  __typename?: 'ResponseMemberRoom';
-  _id: Scalars['String'];
-  memberList: Array<Member>;
-  members: Array<Scalars['String']>;
-  name_group: Scalars['String'];
 };
 
 export type Subscription = {
@@ -234,6 +248,11 @@ export type RegisterMutationVariables = Exact<{
 
 export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserMutationResponse', code: number, success: boolean, message?: string | null, userId: string } };
 
+export type GetListConversationQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetListConversationQuery = { __typename?: 'Query', getListConversation: Array<{ __typename?: 'Conversation', members: Array<string>, _id?: string | null, name?: string | null, lastMessageId?: string | null, leaderId?: string | null }> };
+
 export type GetFriendsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -244,10 +263,38 @@ export type HelloQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type HelloQuery = { __typename?: 'Query', hello: string };
 
+export type GetMyFriendByConversationIdQueryVariables = Exact<{
+  conversationId: Scalars['String'];
+}>;
+
+
+export type GetMyFriendByConversationIdQuery = { __typename?: 'Query', getMyFriendByConversationId: { __typename?: 'Member', _id?: string | null, conversationId: string, createdAt: any, name: string, userId: string } };
+
+export type GetMessagesQueryVariables = Exact<{
+  getMessagesConversationId2: Scalars['String'];
+}>;
+
+
+export type GetMessagesQuery = { __typename?: 'Query', getMessages: Array<{ __typename?: 'Message', _id?: string | null, conversationId: string, createdAt: any, messageText: string, senderId: string }> };
+
+export type CreateMessageMutationVariables = Exact<{
+  createMessageCreateMessageInput2: CreateMessageInput;
+}>;
+
+
+export type CreateMessageMutation = { __typename?: 'Mutation', createMessage: { __typename?: 'Message', _id?: string | null, conversationId: string, createdAt: any, messageText: string, senderId: string } };
+
 export type UsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type UsersQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', _id?: string | null, username: string }> };
+
+export type GetUserQueryVariables = Exact<{
+  userId: Scalars['String'];
+}>;
+
+
+export type GetUserQuery = { __typename?: 'Query', getUser: { __typename?: 'User', _id?: string | null, avatar: string, coverPicture: string, name: string, username: string } };
 
 
 export const LoginDocument = gql`
@@ -356,6 +403,44 @@ export function useRegisterMutation(baseOptions?: Apollo.MutationHookOptions<Reg
 export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
+export const GetListConversationDocument = gql`
+    query GetListConversation {
+  getListConversation {
+    members
+    _id
+    name
+    lastMessageId
+    leaderId
+  }
+}
+    `;
+
+/**
+ * __useGetListConversationQuery__
+ *
+ * To run a query within a React component, call `useGetListConversationQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetListConversationQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetListConversationQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetListConversationQuery(baseOptions?: Apollo.QueryHookOptions<GetListConversationQuery, GetListConversationQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetListConversationQuery, GetListConversationQueryVariables>(GetListConversationDocument, options);
+      }
+export function useGetListConversationLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetListConversationQuery, GetListConversationQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetListConversationQuery, GetListConversationQueryVariables>(GetListConversationDocument, options);
+        }
+export type GetListConversationQueryHookResult = ReturnType<typeof useGetListConversationQuery>;
+export type GetListConversationLazyQueryHookResult = ReturnType<typeof useGetListConversationLazyQuery>;
+export type GetListConversationQueryResult = Apollo.QueryResult<GetListConversationQuery, GetListConversationQueryVariables>;
 export const GetFriendsDocument = gql`
     query GetFriends {
   getFriends {
@@ -422,6 +507,121 @@ export function useHelloLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Hell
 export type HelloQueryHookResult = ReturnType<typeof useHelloQuery>;
 export type HelloLazyQueryHookResult = ReturnType<typeof useHelloLazyQuery>;
 export type HelloQueryResult = Apollo.QueryResult<HelloQuery, HelloQueryVariables>;
+export const GetMyFriendByConversationIdDocument = gql`
+    query GetMyFriendByConversationId($conversationId: String!) {
+  getMyFriendByConversationId(conversationId: $conversationId) {
+    _id
+    conversationId
+    createdAt
+    name
+    userId
+  }
+}
+    `;
+
+/**
+ * __useGetMyFriendByConversationIdQuery__
+ *
+ * To run a query within a React component, call `useGetMyFriendByConversationIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMyFriendByConversationIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMyFriendByConversationIdQuery({
+ *   variables: {
+ *      conversationId: // value for 'conversationId'
+ *   },
+ * });
+ */
+export function useGetMyFriendByConversationIdQuery(baseOptions: Apollo.QueryHookOptions<GetMyFriendByConversationIdQuery, GetMyFriendByConversationIdQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetMyFriendByConversationIdQuery, GetMyFriendByConversationIdQueryVariables>(GetMyFriendByConversationIdDocument, options);
+      }
+export function useGetMyFriendByConversationIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetMyFriendByConversationIdQuery, GetMyFriendByConversationIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetMyFriendByConversationIdQuery, GetMyFriendByConversationIdQueryVariables>(GetMyFriendByConversationIdDocument, options);
+        }
+export type GetMyFriendByConversationIdQueryHookResult = ReturnType<typeof useGetMyFriendByConversationIdQuery>;
+export type GetMyFriendByConversationIdLazyQueryHookResult = ReturnType<typeof useGetMyFriendByConversationIdLazyQuery>;
+export type GetMyFriendByConversationIdQueryResult = Apollo.QueryResult<GetMyFriendByConversationIdQuery, GetMyFriendByConversationIdQueryVariables>;
+export const GetMessagesDocument = gql`
+    query GetMessages($getMessagesConversationId2: String!) {
+  getMessages(conversationId: $getMessagesConversationId2) {
+    _id
+    conversationId
+    createdAt
+    messageText
+    senderId
+  }
+}
+    `;
+
+/**
+ * __useGetMessagesQuery__
+ *
+ * To run a query within a React component, call `useGetMessagesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMessagesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMessagesQuery({
+ *   variables: {
+ *      getMessagesConversationId2: // value for 'getMessagesConversationId2'
+ *   },
+ * });
+ */
+export function useGetMessagesQuery(baseOptions: Apollo.QueryHookOptions<GetMessagesQuery, GetMessagesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetMessagesQuery, GetMessagesQueryVariables>(GetMessagesDocument, options);
+      }
+export function useGetMessagesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetMessagesQuery, GetMessagesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetMessagesQuery, GetMessagesQueryVariables>(GetMessagesDocument, options);
+        }
+export type GetMessagesQueryHookResult = ReturnType<typeof useGetMessagesQuery>;
+export type GetMessagesLazyQueryHookResult = ReturnType<typeof useGetMessagesLazyQuery>;
+export type GetMessagesQueryResult = Apollo.QueryResult<GetMessagesQuery, GetMessagesQueryVariables>;
+export const CreateMessageDocument = gql`
+    mutation CreateMessage($createMessageCreateMessageInput2: CreateMessageInput!) {
+  createMessage(createMessageInput: $createMessageCreateMessageInput2) {
+    _id
+    conversationId
+    createdAt
+    messageText
+    senderId
+  }
+}
+    `;
+export type CreateMessageMutationFn = Apollo.MutationFunction<CreateMessageMutation, CreateMessageMutationVariables>;
+
+/**
+ * __useCreateMessageMutation__
+ *
+ * To run a mutation, you first call `useCreateMessageMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateMessageMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createMessageMutation, { data, loading, error }] = useCreateMessageMutation({
+ *   variables: {
+ *      createMessageCreateMessageInput2: // value for 'createMessageCreateMessageInput2'
+ *   },
+ * });
+ */
+export function useCreateMessageMutation(baseOptions?: Apollo.MutationHookOptions<CreateMessageMutation, CreateMessageMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateMessageMutation, CreateMessageMutationVariables>(CreateMessageDocument, options);
+      }
+export type CreateMessageMutationHookResult = ReturnType<typeof useCreateMessageMutation>;
+export type CreateMessageMutationResult = Apollo.MutationResult<CreateMessageMutation>;
+export type CreateMessageMutationOptions = Apollo.BaseMutationOptions<CreateMessageMutation, CreateMessageMutationVariables>;
 export const UsersDocument = gql`
     query Users {
   users {
@@ -457,3 +657,42 @@ export function useUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<User
 export type UsersQueryHookResult = ReturnType<typeof useUsersQuery>;
 export type UsersLazyQueryHookResult = ReturnType<typeof useUsersLazyQuery>;
 export type UsersQueryResult = Apollo.QueryResult<UsersQuery, UsersQueryVariables>;
+export const GetUserDocument = gql`
+    query GetUser($userId: String!) {
+  getUser(userId: $userId) {
+    _id
+    avatar
+    coverPicture
+    name
+    username
+  }
+}
+    `;
+
+/**
+ * __useGetUserQuery__
+ *
+ * To run a query within a React component, call `useGetUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserQuery({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useGetUserQuery(baseOptions: Apollo.QueryHookOptions<GetUserQuery, GetUserQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetUserQuery, GetUserQueryVariables>(GetUserDocument, options);
+      }
+export function useGetUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserQuery, GetUserQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetUserQuery, GetUserQueryVariables>(GetUserDocument, options);
+        }
+export type GetUserQueryHookResult = ReturnType<typeof useGetUserQuery>;
+export type GetUserLazyQueryHookResult = ReturnType<typeof useGetUserLazyQuery>;
+export type GetUserQueryResult = Apollo.QueryResult<GetUserQuery, GetUserQueryVariables>;

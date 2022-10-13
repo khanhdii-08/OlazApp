@@ -8,39 +8,49 @@ import {
 } from "react-native";
 import styles from "./styles";
 import { useNavigation } from "@react-navigation/native";
+import { useGetMyFriendByConversationIdQuery } from "../../generated/graphql";
 
 export default function ChatRoomItem({ chatRoom }) {
-  const user = chatRoom.users[1];
+  // const user = chatRoom.users[1];
 
   const navigation = useNavigation();
 
-  const onPress = () => {
-    navigation.navigate("ChatRoom", { id: chatRoom.id });
-  };
+  // console.log(chatRoom)
+
+  const { loading, error, data } = useGetMyFriendByConversationIdQuery({
+    variables: {
+        conversationId: chatRoom._id
+    },
+});
+
+const onPress = () => {
+  navigation.navigate("ChatRoom", { id: chatRoom._id });
+};
+
 
   return (
     <Pressable style={styles.container} onPress={() => onPress()}>
       <Image
         source={{
-          uri: user.imageUri,
+          uri: "https://previews.123rf.com/images/panyamail/panyamail1809/panyamail180900343/109879063-user-avatar-icon-sign-profile-symbol.jpg",
         }}
         style={styles.image}
       />
       <View style={styles.rightContainer}>
         <View style={styles.row}>
           <Text numberOfLines={1} style={styles.name}>
-            {user.name}
+            {data?.getMyFriendByConversationId.name}
           </Text>
-          {chatRoom.newMessages ? (
+          {/* {chatRoom.newMessages ? (
             <Text style={styles.textBold}>
-              {chatRoom.lastMessage.createdAt}
+              {data?.getMyFriendByConversationId.createdAt}
             </Text>
           ) : (
             <Text style={styles.text}>{chatRoom.lastMessage.createdAt}</Text>
-          )}
+          )} */}
         </View>
         <View>
-          {chatRoom.newMessages ? (
+          {/* {chatRoom.newMessages ? (
             <Text
               numberOfLines={1}
               style={[styles.textBold, { maxWidth: 280 }]}
@@ -56,7 +66,7 @@ export default function ChatRoomItem({ chatRoom }) {
             <View style={styles.badgeContainer}>
               <Text style={styles.badgeText}>{chatRoom.newMessages}</Text>
             </View>
-          )}
+          )} */}
         </View>
       </View>
     </Pressable>
