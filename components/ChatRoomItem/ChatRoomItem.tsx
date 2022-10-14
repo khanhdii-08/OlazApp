@@ -6,9 +6,14 @@ import {
   TextInput,
   Pressable,
 } from "react-native";
+
+import { Avatar } from "react-native-elements";
 import styles from "./styles";
 import { useNavigation } from "@react-navigation/native";
-import { useGetMyFriendByConversationIdQuery } from "../../generated/graphql";
+import {
+  useGetMyFriendByConversationIdQuery,
+  useGetUserQuery,
+} from "../../generated/graphql";
 
 export default function ChatRoomItem({ chatRoom }) {
   // const user = chatRoom.users[1];
@@ -23,7 +28,7 @@ export default function ChatRoomItem({ chatRoom }) {
     },
   });
 
-  // console.log("data", data?.getMyFriendByConversationId);
+  console.log("data", data?.getMyFriendByConversationId);
 
   const onPress = () => {
     navigation.navigate("ChatRoom", {
@@ -32,14 +37,44 @@ export default function ChatRoomItem({ chatRoom }) {
     });
   };
 
+  const {
+    loading: loadingUser,
+    error: errorUser,
+    data: dataUser,
+  } = useGetUserQuery({
+    fetchPolicy: "no-cache",
+    variables: {
+      userId: data?.getMyFriendByConversationId.userId as string,
+    },
+  });
+
   return (
     <Pressable style={styles.container} onPress={() => onPress()}>
-      <Image
-        source={{
-          uri: "https://previews.123rf.com/images/panyamail/panyamail1809/panyamail180900343/109879063-user-avatar-icon-sign-profile-symbol.jpg",
-        }}
-        style={styles.image}
-      />
+      {dataUser?.getUser.avatar ? (
+        <Avatar
+          size={45}
+          rounded
+          source={{
+            uri: dataUser.getUser.avatar,
+          }}
+          activeOpacity={0.2}
+          containerStyle={{
+            marginRight: 10,
+          }}
+        />
+      ) : (
+        <Avatar
+          size={45}
+          rounded
+          title={dataUser?.getUser.name[0]}
+          activeOpacity={0.2}
+          containerStyle={{
+            backgroundColor: "#BDBDBD",
+            marginRight: 10,
+          }}
+        />
+      )}
+
       <View style={styles.rightContainer}>
         <View style={styles.row}>
           <Text numberOfLines={1} style={styles.name}>

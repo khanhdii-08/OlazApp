@@ -113,7 +113,36 @@ export default function RootNavigator() {
           presentation: "card",
         }}
       >
-        <Stack.Screen name="AddFriendScreen" component={AddFriendScreen} />
+        <Stack.Screen
+          name="AddFriendScreen"
+          component={AddFriendScreen}
+          options={({
+            navigation,
+          }: RootStackScreenProps<"AddFriendScreen">) => ({
+            headerBackVisible: false,
+            headerTitle: "",
+            headerStyle: {
+              backgroundColor: "#0091ff",
+            },
+            headerLeft: () => (
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <Pressable onPress={() => navigation.goBack()}>
+                  <Ionicons name="chevron-back" size={26} color="white" />
+                </Pressable>
+                <Text
+                  style={{
+                    marginLeft: 10,
+                    fontSize: 18,
+                    fontWeight: "bold",
+                    color: "white",
+                  }}
+                >
+                  Thêm bạn
+                </Text>
+              </View>
+            ),
+          })}
+        />
 
         <Stack.Screen
           name="LoginScreen"
@@ -187,7 +216,7 @@ const ChatRoomHeader = (props) => {
       style={{
         flexDirection: "row",
         justifyContent: "space-between",
-        width: width - 60,
+        width: width - 50,
         padding: 10,
         alignItems: "center",
       }}
