@@ -1,7 +1,13 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
-import { Pressable, Text, View } from "react-native";
-
+import {
+  Pressable,
+  Text,
+  View,
+  SafeAreaView,
+  useWindowDimensions,
+} from "react-native";
+import LinearGradient from "react-native-linear-gradient";
 import TabNavigator from "./MainTabNavigator";
 import SearchScreen from "../screens/SearchScreen";
 import NotFoundScreen from "../screens/NotFoundScreen";
@@ -11,7 +17,7 @@ import AddGroupScreen from "../screens/AddGroupScreen";
 import ChatRoomScreen from "../screens/ChatRoomScreen";
 import SecurityScreen from "../screens/SecurityScreen";
 import LoginScreen from "../screens/LoginScreen";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, Feather, AntDesign } from "@expo/vector-icons";
 import RegisterScreen from "../screens/RegisterScreen";
 import SplashScreen from "../screens/SplashScreen";
 
@@ -48,12 +54,13 @@ export default function RootNavigator() {
         name="ChatRoom"
         component={ChatRoomScreen}
         options={{
-          headerShown: true,
+          headerTintColor: "white",
           headerTitle: ChatRoomHeader,
           headerStyle: {
             backgroundColor: "#0091ff",
           },
           headerBackTitleVisible: false,
+          title: "Username",
         }}
       />
 
@@ -170,6 +177,37 @@ export default function RootNavigator() {
   );
 }
 
-const ChatRoomHeader = (props: any) => {
-  return <Text style={{}}>Duy</Text>;
+const ChatRoomHeader = (props) => {
+  const { width } = useWindowDimensions();
+
+  console.log(props);
+
+  return (
+    <View
+      style={{
+        flexDirection: "row",
+        justifyContent: "space-between",
+        width: width - 60,
+        padding: 10,
+        alignItems: "center",
+      }}
+    >
+      <View>
+        <Text style={{ color: "white", fontSize: 17 }}>{props.children}</Text>
+        <Text style={{ color: "white", fontSize: 11 }}>
+          Truy cập 52 phút trước
+        </Text>
+      </View>
+      <View style={{ flexDirection: "row" }}>
+        <Feather name="phone" size={24} color="white" />
+        <AntDesign
+          name="videocamera"
+          size={24}
+          color="white"
+          style={{ marginLeft: 16, marginRight: 16 }}
+        />
+        <Ionicons name="menu" size={28} color="white" />
+      </View>
+    </View>
+  );
 };

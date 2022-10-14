@@ -3,7 +3,7 @@ import { setContext } from "@apollo/client/link/context";
 import JWTManager from "./utils/jwt";
 
 const httpLink = createHttpLink({
-  uri: "http://172.25.54.83:4000/graphql",
+  uri: "http://192.168.1.11:4000/graphql",
   credentials: "include",
 });
 

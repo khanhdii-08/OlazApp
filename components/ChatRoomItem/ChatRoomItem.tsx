@@ -15,18 +15,22 @@ export default function ChatRoomItem({ chatRoom }) {
 
   const navigation = useNavigation();
 
-  // console.log(chatRoom)
+  console.log("chat Room", chatRoom);
 
   const { loading, error, data } = useGetMyFriendByConversationIdQuery({
     variables: {
-        conversationId: chatRoom._id
+      conversationId: chatRoom._id,
     },
-});
+  });
 
-const onPress = () => {
-  navigation.navigate("ChatRoom", { id: chatRoom._id });
-};
+  // console.log("data", data?.getMyFriendByConversationId);
 
+  const onPress = () => {
+    navigation.navigate("ChatRoom", {
+      conversationId: chatRoom._id,
+      name: data?.getMyFriendByConversationId.name,
+    });
+  };
 
   return (
     <Pressable style={styles.container} onPress={() => onPress()}>
