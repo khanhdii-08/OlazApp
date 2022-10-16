@@ -9,18 +9,26 @@ import {
 } from "react-native";
 
 import ChatRoomItem from "../components/ChatRoomItem";
-import { useGetListConversationQuery } from "../generated/graphql";
+import { conversations } from "../service/conversationService";
 
-export default function TabTwoScreen() {
-  const { loading, error, data } = useGetListConversationQuery({
-    fetchPolicy: "no-cache",
-  });
+export default async function TabTwoScreen() {
+  const getListConversation = async () => {
+    try {
+      const result = await conversations();
+      // console.log("result", result);
+      // return result;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  getListConversation();
 
   return (
     <View style={styles.page}>
       <StatusBar backgroundColor="#3399FF" />
-      <FlatList
-        data={data?.getListConversation}
+      {/* <FlatList
+        data={result}
         renderItem={({ item }) => <ChatRoomItem chatRoom={item} />}
         showsVerticalScrollIndicator={false}
 
@@ -32,7 +40,7 @@ export default function TabTwoScreen() {
         //     horizontal
         //   />
         // )}
-      />
+      /> */}
     </View>
   );
 }

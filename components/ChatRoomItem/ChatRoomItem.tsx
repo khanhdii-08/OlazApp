@@ -10,10 +10,6 @@ import {
 import { Avatar } from "react-native-elements";
 import styles from "./styles";
 import { useNavigation } from "@react-navigation/native";
-import {
-  useGetMyFriendByConversationIdQuery,
-  useGetUserQuery,
-} from "../../generated/graphql";
 
 export default function ChatRoomItem({ chatRoom }) {
   // const user = chatRoom.users[1];
@@ -22,35 +18,16 @@ export default function ChatRoomItem({ chatRoom }) {
 
   console.log("chat Room", chatRoom);
 
-  const { loading, error, data } = useGetMyFriendByConversationIdQuery({
-    variables: {
-      conversationId: chatRoom._id,
-    },
-  });
-
-  console.log("data", data?.getMyFriendByConversationId);
-
   const onPress = () => {
-    navigation.navigate("ChatRoom", {
-      conversationId: chatRoom._id,
-      name: data?.getMyFriendByConversationId.name,
-    });
+    // navigation.navigate("ChatRoom", {
+    //   conversationId: chatRoom._id,
+    //   name: data?.getMyFriendByConversationId.name,
+    // });
   };
-
-  const {
-    loading: loadingUser,
-    error: errorUser,
-    data: dataUser,
-  } = useGetUserQuery({
-    fetchPolicy: "no-cache",
-    variables: {
-      userId: data?.getMyFriendByConversationId.userId as string,
-    },
-  });
 
   return (
     <Pressable style={styles.container} onPress={() => onPress()}>
-      {dataUser?.getUser.avatar ? (
+      {/* {dataUser?.getUser.avatar ? (
         <Avatar
           size={45}
           rounded
@@ -73,13 +50,13 @@ export default function ChatRoomItem({ chatRoom }) {
             marginRight: 10,
           }}
         />
-      )}
+      )} */}
 
       <View style={styles.rightContainer}>
         <View style={styles.row}>
-          <Text numberOfLines={1} style={styles.name}>
+          {/* <Text numberOfLines={1} style={styles.name}>
             {data?.getMyFriendByConversationId.name}
-          </Text>
+          </Text> */}
           {/* {chatRoom.newMessages ? (
             <Text style={styles.textBold}>
               {data?.getMyFriendByConversationId.createdAt}

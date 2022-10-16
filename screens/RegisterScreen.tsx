@@ -13,7 +13,6 @@ import {
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { useTogglePasswordVisibility } from "../hooks/useTogglePasswordVisibility";
-import { useRegisterMutation } from "../generated/graphql";
 import { useNavigation } from "@react-navigation/native";
 
 const RegisterScreen = () => {
@@ -27,23 +26,22 @@ const RegisterScreen = () => {
     useTogglePasswordVisibility("HIỆN", "ẨN");
   const [disabled, setDisabled] = useState(true);
 
-  const [register, _] = useRegisterMutation();
+  // const [register, _] = useRegisterMutation();
 
   const onSubmit = async () => {
-    const result = await register({
-      variables: {
-        registerInput: {
-          name,
-          username,
-          password,
-        },
-      },
-    });
-
-    if (result.data?.register.success) {
-      Alert.alert("Bạn đã đăng ký thành công xin mời bạn đăng nhập");
-      navigation.navigate("LoginScreen");
-    }
+    // const result = await register({
+    //   variables: {
+    //     registerInput: {
+    //       name,
+    //       username,
+    //       password,
+    //     },
+    //   },
+    // });
+    // if (result.data?.register.success) {
+    //   Alert.alert("Bạn đã đăng ký thành công xin mời bạn đăng nhập");
+    //   navigation.navigate("LoginScreen");
+    // }
   };
 
   const checkInput = (name: string, username: string, password: string) => {

@@ -1,9 +1,0 @@
-query GetListConversation {
-    getListConversation {
-        members
-        _id
-        name
-        lastMessageId
-        leaderId
-    }
-}

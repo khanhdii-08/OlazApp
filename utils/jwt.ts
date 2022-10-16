@@ -1,3 +1,4 @@
+
 import { JwtPayload } from 'jsonwebtoken';
 import jwtDecode from 'jwt-decode';
 
@@ -13,11 +14,12 @@ const JWTManager = () => {
         inMemoryToken = accessToken;
         // decode and set countdown to refresh
         const decoded = jwtDecode<JwtPayload & { userId: string }>(accessToken);
-        userId = decoded.userId;
+        userId = decoded._id;
         setRefreshTokenTimeOut((decoded.exp as number) - (decoded.iat as number));
         return true;
     };
 
+    
     const abortRefresgToken = () => {
         if (refreshTokenTimeOutId) window.clearTimeout(refreshTokenTimeOutId as number);
     };

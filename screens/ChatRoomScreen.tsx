@@ -2,7 +2,6 @@ import { StyleSheet, Text, View, FlatList, SafeAreaView } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import Message from "../components/Message";
 import MessageInput from "../components/MessageInput";
-import { useGetMessagesQuery, useGetUserQuery } from "../generated/graphql";
 
 export default function ChatRoomScreen() {
   const route = useRoute();
@@ -11,35 +10,35 @@ export default function ChatRoomScreen() {
 
   const navigation = useNavigation();
 
-  const { data, error, loading } = useGetMessagesQuery({
-    fetchPolicy: "no-cache",
-    variables: {
-      getMessagesConversationId2: route.params?.conversationId,
-    },
-  });
+  // const { data, error, loading } = useGetMessagesQuery({
+  //   fetchPolicy: "no-cache",
+  //   variables: {
+  //     getMessagesConversationId2: route.params?.conversationId,
+  //   },
+  // });
 
-  const {
-    data: dataUser,
-    error: errorUser,
-    loading: loadingUser,
-  } = useGetUserQuery({
-    fetchPolicy: "no-cache",
-    variables: {
-      userId: route.params?.id,
-    },
-  });
+  // const {
+  //   data: dataUser,
+  //   error: errorUser,
+  //   loading: loadingUser,
+  // } = useGetUserQuery({
+  //   fetchPolicy: "no-cache",
+  //   variables: {
+  //     userId: route.params?.id,
+  //   },
+  // });
 
   // console.log(dataUser?.getUser);
 
-  navigation.setOptions({ title: route.params?.name });
+  // navigation.setOptions({ title: route.params?.name });
 
   return (
     <SafeAreaView style={styles.page}>
-      <FlatList
+      {/* <FlatList
         data={data?.getMessages}
         renderItem={({ item }) => <Message message={item} />}
       />
-      <MessageInput />
+      <MessageInput /> */}
     </SafeAreaView>
   );
 }

@@ -9,19 +9,20 @@ import {
   Image,
   ScrollView,
   Pressable,
-  Alert,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { useTogglePasswordVisibility } from "../hooks/useTogglePasswordVisibility";
 import { useAuthContext } from "../contexts/AuthContext";
-import { useLoginMutation } from "../generated/graphql";
+
 import JWTManager from "../utils/jwt";
+import { login } from "../service/authService";
+import jwt from "../utils/jwt";
+import { configAxios } from "../utils/httpRequest";
 const LoginScreen = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { setIsAuthenticatied } = useAuthContext();
-  const [login, _] = useLoginMutation();
   const [error, setError] = useState("");
 
   const navigation = useNavigation();
@@ -32,21 +33,16 @@ const LoginScreen = () => {
   const [disabled, setDisabled] = useState(true);
 
   const onPress = async () => {
-    const result = await login({
-      variables: {
-        loginInput: {
-          username,
-          password,
-        },
-      },
-    });
+    try {
+      const result = await login(username, password);
 
-    if (result.data?.login.success) {
-      JWTManager.setToken(result.data.login.accessToken as string);
+      jwt.setToken(result.token);
+      configAxios();
       setIsAuthenticatied(true);
       navigation.navigate("Root");
-    } else {
-      if (result.data?.login.message) setError(result.data?.login.message);
+    } catch (error) {
+      console.log(error);
+      setIsAuthenticatied(false);
     }
   };
 
