@@ -14,6 +14,7 @@ import {
 import React, { useState, useEffect } from "react";
 import { useTogglePasswordVisibility } from "../hooks/useTogglePasswordVisibility";
 import { useNavigation } from "@react-navigation/native";
+import { registry } from "../service/authService";
 
 const RegisterScreen = () => {
   const navigation = useNavigation();
@@ -26,22 +27,14 @@ const RegisterScreen = () => {
     useTogglePasswordVisibility("HIỆN", "ẨN");
   const [disabled, setDisabled] = useState(true);
 
-  // const [register, _] = useRegisterMutation();
-
   const onSubmit = async () => {
-    // const result = await register({
-    //   variables: {
-    //     registerInput: {
-    //       name,
-    //       username,
-    //       password,
-    //     },
-    //   },
-    // });
-    // if (result.data?.register.success) {
-    //   Alert.alert("Bạn đã đăng ký thành công xin mời bạn đăng nhập");
-    //   navigation.navigate("LoginScreen");
-    // }
+    try {
+      const result = await registry(name, username, password);
+      Alert.alert("Bạn đã đăng ký thành công xin mời bạn đăng nhập");
+      navigation.navigate("LoginScreen");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const checkInput = (name: string, username: string, password: string) => {

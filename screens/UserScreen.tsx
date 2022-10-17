@@ -2,6 +2,7 @@ import { View, Text, StyleSheet, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useAuthContext } from "../contexts/AuthContext";
 import JWTManager from "../utils/jwt";
+import { logout } from "../service/authService";
 
 export default function () {
   const navigation = useNavigation();
@@ -12,6 +13,7 @@ export default function () {
 
   const onPress = async () => {
     logoutClient();
+    // await logout();
     navigation.navigate("Security");
   };
 

@@ -11,5 +11,25 @@ export const login = async (username : string, password : string ) => {
     
 }
 
+export const registry =async (name : string, username : string, password : string) => {
+
+    try {
+        await httpRequest.post("auth/registry", {name, username, password}, {withCredentials :true})
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const logout =async () => {
+
+    try {
+       const res =  await httpRequest.post("auth/logout", {}, {withCredentials :true})
+       console.log(res)
+    } catch (error) {
+        console.log(error)
+    }
+    
+}
+
 // export default authService
 
