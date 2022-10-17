@@ -1,44 +1,33 @@
+import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, FlatList, SafeAreaView } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import Message from "../components/Message";
 import MessageInput from "../components/MessageInput";
+import { messages } from "../service/messageService";
 
 export default function ChatRoomScreen() {
   const route = useRoute();
 
-  // console.log("name", route.params?.conversationId);
-
   const navigation = useNavigation();
+  navigation.setOptions({ title: route.params?.name });
 
-  // const { data, error, loading } = useGetMessagesQuery({
-  //   fetchPolicy: "no-cache",
-  //   variables: {
-  //     getMessagesConversationId2: route.params?.conversationId,
-  //   },
-  // });
+  const [message, setMessage] = useState([]);
 
-  // const {
-  //   data: dataUser,
-  //   error: errorUser,
-  //   loading: loadingUser,
-  // } = useGetUserQuery({
-  //   fetchPolicy: "no-cache",
-  //   variables: {
-  //     userId: route.params?.id,
-  //   },
-  // });
+  useEffect(() => {
+    messages(route.params?.conversationId).then((res) => setMessage(res));
+  }, [message]);
 
-  // console.log(dataUser?.getUser);
-
-  // navigation.setOptions({ title: route.params?.name });
+  // useEffect(() => {
+  //   messages(route.params?.conversationId).then((res) => setMessage(res));
+  // }, [message]);
 
   return (
     <SafeAreaView style={styles.page}>
-      {/* <FlatList
-        data={data?.getMessages}
+      <FlatList
+        data={message.data}
         renderItem={({ item }) => <Message message={item} />}
       />
-      <MessageInput /> */}
+      <MessageInput conversationId={route.params?.conversationId} />
     </SafeAreaView>
   );
 }

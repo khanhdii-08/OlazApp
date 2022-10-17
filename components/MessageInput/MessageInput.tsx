@@ -15,17 +15,22 @@ import {
   MaterialCommunityIcons,
   SimpleLineIcons,
 } from "@expo/vector-icons";
+import { addText } from "../../service/messageService";
 
-const MessageInput = () => {
-  const [message, setMessage] = useState("");
+const MessageInput = ({ conversationId }) => {
+  const [content, setContent] = useState("");
 
   const sendMessage = () => {
-    console.warn("send: ", message);
-    setMessage("");
+    try {
+      const result = addText(conversationId, content);
+      setContent("");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const onPress = () => {
-    if (message) {
+    if (content) {
       sendMessage();
     } else {
     }
@@ -46,8 +51,8 @@ const MessageInput = () => {
         />
         <TextInput
           style={styles.input}
-          value={message}
-          onChangeText={(newMessage) => setMessage(newMessage)}
+          value={content}
+          onChangeText={(newContent) => setContent(newContent)}
           placeholderTextColor="#BBBBBB"
           placeholder="Tin nhắn"
         />
@@ -61,7 +66,7 @@ const MessageInput = () => {
       </View>
       <View style={styles.buttonContainer}>
         <Text style={styles.buttonText}>
-          {message ? (
+          {content ? (
             <Pressable onPress={() => sendMessage()}>
               <Ionicons name="send" size={24} color="black" />
             </Pressable>

@@ -16,23 +16,21 @@ export default function ChatRoomItem({ chatRoom }) {
 
   const navigation = useNavigation();
 
-  console.log("chat Room", chatRoom);
-
   const onPress = () => {
-    // navigation.navigate("ChatRoom", {
-    //   conversationId: chatRoom._id,
-    //   name: data?.getMyFriendByConversationId.name,
-    // });
+    navigation.navigate("ChatRoom", {
+      conversationId: chatRoom._id,
+      name: chatRoom.name,
+    });
   };
 
   return (
     <Pressable style={styles.container} onPress={() => onPress()}>
-      {/* {dataUser?.getUser.avatar ? (
+      {chatRoom.avatar ? (
         <Avatar
           size={45}
           rounded
           source={{
-            uri: dataUser.getUser.avatar,
+            uri: chatRoom.avatar,
           }}
           activeOpacity={0.2}
           containerStyle={{
@@ -43,20 +41,20 @@ export default function ChatRoomItem({ chatRoom }) {
         <Avatar
           size={45}
           rounded
-          title={dataUser?.getUser.name[0]}
+          title={chatRoom.name[0]}
           activeOpacity={0.2}
           containerStyle={{
-            backgroundColor: "#BDBDBD",
+            backgroundColor: chatRoom.avatarColor,
             marginRight: 10,
           }}
         />
-      )} */}
+      )}
 
       <View style={styles.rightContainer}>
         <View style={styles.row}>
-          {/* <Text numberOfLines={1} style={styles.name}>
-            {data?.getMyFriendByConversationId.name}
-          </Text> */}
+          <Text numberOfLines={1} style={styles.name}>
+            {chatRoom.name}
+          </Text>
           {/* {chatRoom.newMessages ? (
             <Text style={styles.textBold}>
               {data?.getMyFriendByConversationId.createdAt}

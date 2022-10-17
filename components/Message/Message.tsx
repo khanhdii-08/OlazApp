@@ -3,7 +3,8 @@ import JWTManager from "../../utils/jwt";
 
 const Message = ({ message }) => {
   const myId = JWTManager.getUserId()?.toString() as string;
-  const isMe = message.senderId === myId;
+
+  const isMe = message.user._id === myId;
 
   return (
     <View
@@ -12,7 +13,7 @@ const Message = ({ message }) => {
         isMe ? styles.rightContainer : styles.leftContainer,
       ]}
     >
-      <Text style={{ color: "black" }}>{message.messageText}</Text>
+      <Text style={{ color: "black" }}>{message.content}</Text>
     </View>
   );
 };

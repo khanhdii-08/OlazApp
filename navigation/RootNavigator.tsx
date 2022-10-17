@@ -209,7 +209,7 @@ export default function RootNavigator() {
 const ChatRoomHeader = (props) => {
   const { width } = useWindowDimensions();
 
-  console.log(props);
+  // console.log(props);
 
   return (
     <View
