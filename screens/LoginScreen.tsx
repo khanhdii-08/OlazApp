@@ -9,6 +9,7 @@ import {
   Image,
   ScrollView,
   Pressable,
+  KeyboardAvoidingView,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
@@ -56,7 +57,7 @@ const LoginScreen = () => {
   }, [username, password]);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <KeyboardAvoidingView style={styles.container}>
       <StatusBar animated={true} barStyle="default" />
       <ScrollView keyboardShouldPersistTaps="handled">
         <Text style={styles.textContent}>
@@ -127,7 +128,7 @@ const LoginScreen = () => {
           </TouchableOpacity>
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 };
 

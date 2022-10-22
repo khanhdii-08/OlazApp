@@ -4,10 +4,9 @@ import {
   Pressable,
   Text,
   View,
-  SafeAreaView,
   useWindowDimensions,
+  StyleSheet,
 } from "react-native";
-import LinearGradient from "react-native-linear-gradient";
 import TabNavigator from "./MainTabNavigator";
 import SearchScreen from "../screens/SearchScreen";
 import NotFoundScreen from "../screens/NotFoundScreen";
@@ -15,15 +14,25 @@ import { RootStackParamList, RootStackScreenProps } from "../types";
 import AddFriendScreen from "../screens/AddFriendScreen";
 import AddGroupScreen from "../screens/AddGroupScreen";
 import ChatRoomScreen from "../screens/ChatRoomScreen";
+import { Ionicons, Feather, AntDesign } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
+import SplashScreen from "../screens/SplashScreen";
 import SecurityScreen from "../screens/SecurityScreen";
 import LoginScreen from "../screens/LoginScreen";
-import { Ionicons, Feather, AntDesign } from "@expo/vector-icons";
 import RegisterScreen from "../screens/RegisterScreen";
-import SplashScreen from "../screens/SplashScreen";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function RootNavigator() {
+  const headerGradient = (
+    <LinearGradient
+      // Background Linear Gradient
+      colors={["#257afe", "#00bafa"]}
+      style={StyleSheet.absoluteFill}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 0 }}
+    />
+  );
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -41,7 +50,6 @@ export default function RootNavigator() {
           headerShown: false,
         }}
       />
-
       <Stack.Screen
         name="Root"
         component={TabNavigator}
@@ -56,9 +64,7 @@ export default function RootNavigator() {
         options={{
           headerTintColor: "white",
           headerTitle: ChatRoomHeader,
-          headerStyle: {
-            backgroundColor: "#0091ff",
-          },
+          headerBackground: () => headerGradient,
           headerBackTitleVisible: false,
           title: "Username",
         }}
@@ -143,15 +149,12 @@ export default function RootNavigator() {
             ),
           })}
         />
-
         <Stack.Screen
           name="LoginScreen"
           component={LoginScreen}
           options={({ navigation }: RootStackScreenProps<"LoginScreen">) => ({
             headerTitle: "",
-            headerStyle: {
-              backgroundColor: "#0091ff",
-            },
+            headerBackground: () => headerGradient,
             headerLeft: () => (
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <Pressable onPress={() => navigation.goBack()}>
@@ -179,9 +182,7 @@ export default function RootNavigator() {
             navigation,
           }: RootStackScreenProps<"RegisterScreen">) => ({
             headerTitle: "",
-            headerStyle: {
-              backgroundColor: "#0091ff",
-            },
+            headerBackground: () => headerGradient,
             headerLeft: () => (
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <Pressable onPress={() => navigation.goBack()}>
@@ -206,7 +207,10 @@ export default function RootNavigator() {
   );
 }
 
-const ChatRoomHeader = (props) => {
+const ChatRoomHeader = (props: {
+  children: string;
+  tintColor?: string | undefined;
+}) => {
   const { width } = useWindowDimensions();
 
   // console.log(props);

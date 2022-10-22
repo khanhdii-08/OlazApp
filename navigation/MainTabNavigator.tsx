@@ -1,4 +1,4 @@
-import { Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import * as React from "react";
@@ -11,6 +11,7 @@ import TabUserScreen from "../screens/UserScreen";
 import { RootTabParamList, RootTabScreenProps } from "../types";
 import Tooltip from "react-native-walkthrough-tooltip";
 import MenuPopup from "../components/MenuPopup/MenuPopup";
+import { LinearGradient } from "expo-linear-gradient";
 
 const BottomTab = createBottomTabNavigator<RootTabParamList>();
 
@@ -80,6 +81,16 @@ export default function TabNavigator() {
     );
   }
 
+  const headerGradient = (
+    <LinearGradient
+      // Background Linear Gradient
+      colors={["#257afe", "#00bafa"]}
+      style={StyleSheet.absoluteFill}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 0 }}
+    />
+  );
+
   return (
     <BottomTab.Navigator
       initialRouteName="TabChat"
@@ -98,9 +109,7 @@ export default function TabNavigator() {
           tabBarIcon: ({ color }) => (
             <AntDesign name="message1" size={24} color={color} />
           ),
-          headerStyle: {
-            backgroundColor: "#0091ff",
-          },
+          headerBackground: () => headerGradient,
           headerTitle: "",
           headerLeft: () => headerSearch(navigation),
           headerRight: () => headerMenuPopup(navigation),
@@ -114,9 +123,7 @@ export default function TabNavigator() {
           tabBarIcon: ({ color }) => (
             <AntDesign name="contacts" size={26} color={color} />
           ),
-          headerStyle: {
-            backgroundColor: "#0091ff",
-          },
+          headerBackground: () => headerGradient,
           headerTitle: "",
           headerLeft: () => headerSearch(navigation),
           headerRight: () => (
@@ -139,9 +146,7 @@ export default function TabNavigator() {
           tabBarIcon: ({ color }) => (
             <AntDesign name="user" size={26} color={color} />
           ),
-          headerStyle: {
-            backgroundColor: "#0091ff",
-          },
+          headerBackground: () => headerGradient,
           headerTitle: "",
           headerLeft: () => headerSearch(navigation),
           headerRight: () => (

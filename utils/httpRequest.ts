@@ -3,7 +3,7 @@ import jwt from './jwt';
 
 
 export const httpRequest = axios.create({
-    baseURL: "http://172.16.60.146:4000/",
+    baseURL: "http://192.168.1.6:4000/",
 });
 
 export const configAxios = () => {

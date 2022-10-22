@@ -20,6 +20,7 @@ export type RootStackParamList = {
   Root: NavigatorScreenParams<RootTabParamList> | undefined;
   Modal: undefined;
   NotFound: undefined;
+  Login: undefined;
   Search: undefined;
   ChatRoom: undefined;
   AddFriendScreen: undefined;
@@ -39,6 +40,8 @@ export type RootTabParamList = {
   TabContact: undefined;
   TabUser: undefined;
 };
+
+export type RootLoginParamList = {};
 
 export type RootTabScreenProps<Screen extends keyof RootTabParamList> =
   CompositeScreenProps<
