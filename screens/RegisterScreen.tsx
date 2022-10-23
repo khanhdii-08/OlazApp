@@ -10,6 +10,7 @@ import {
   ScrollView,
   Pressable,
   Alert,
+  KeyboardAvoidingView,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { useTogglePasswordVisibility } from "../hooks/useTogglePasswordVisibility";
@@ -47,7 +48,7 @@ const RegisterScreen = () => {
   }, [name, username, password]);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <KeyboardAvoidingView style={styles.container}>
       <StatusBar animated={true} barStyle="default" />
       <ScrollView keyboardShouldPersistTaps="handled">
         <Text style={styles.text}>Tên Zalo</Text>
@@ -133,7 +134,7 @@ const RegisterScreen = () => {
           </TouchableOpacity>
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 };
 

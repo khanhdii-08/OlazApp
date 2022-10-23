@@ -4,6 +4,7 @@ import {
   Pressable,
   Text,
   View,
+  SafeAreaView,
   useWindowDimensions,
   StyleSheet,
 } from "react-native";
@@ -14,12 +15,12 @@ import { RootStackParamList, RootStackScreenProps } from "../types";
 import AddFriendScreen from "../screens/AddFriendScreen";
 import AddGroupScreen from "../screens/AddGroupScreen";
 import ChatRoomScreen from "../screens/ChatRoomScreen";
-import { Ionicons, Feather, AntDesign } from "@expo/vector-icons";
-import { LinearGradient } from "expo-linear-gradient";
-import SplashScreen from "../screens/SplashScreen";
 import SecurityScreen from "../screens/SecurityScreen";
 import LoginScreen from "../screens/LoginScreen";
+import { Ionicons, Feather, AntDesign } from "@expo/vector-icons";
 import RegisterScreen from "../screens/RegisterScreen";
+import SplashScreen from "../screens/SplashScreen";
+import { LinearGradient } from "expo-linear-gradient";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -50,6 +51,7 @@ export default function RootNavigator() {
           headerShown: false,
         }}
       />
+
       <Stack.Screen
         name="Root"
         component={TabNavigator}
@@ -64,7 +66,9 @@ export default function RootNavigator() {
         options={{
           headerTintColor: "white",
           headerTitle: ChatRoomHeader,
-          headerBackground: () => headerGradient,
+          headerStyle: {
+            backgroundColor: "#0091ff",
+          },
           headerBackTitleVisible: false,
           title: "Username",
         }}
@@ -149,6 +153,7 @@ export default function RootNavigator() {
             ),
           })}
         />
+
         <Stack.Screen
           name="LoginScreen"
           component={LoginScreen}

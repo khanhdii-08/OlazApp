@@ -16,15 +16,12 @@ const SecurityScreen = () => {
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
-      <StatusBar
-        animated={true}
-        barStyle="dark-content"
-        backgroundColor="red"
-      />
+      <StatusBar animated={true} barStyle="dark-content" />
       <View style={styles.containerTop}>
-        <View style={styles.containerTop}>
-          <Text style={styles.logo}>Olaz</Text>
-        </View>
+        <Image
+          style={styles.logo}
+          source={require("../assets/images/slide_5.png")}
+        />
       </View>
       <View style={styles.containerBot}>
         <TouchableOpacity
@@ -62,9 +59,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   logo: {
-    fontSize: 90,
-    fontWeight: "bold",
-    color: "#007AFF",
+    width: 250,
+    height: 150,
   },
   btn: {
     width: 300,

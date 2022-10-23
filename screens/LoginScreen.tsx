@@ -20,27 +20,42 @@ import JWTManager from "../utils/jwt";
 import { login } from "../service/authService";
 import jwt from "../utils/jwt";
 import { configAxios } from "../utils/httpRequest";
+import { authSelector, fetchLogin } from "../store/reducers/authSlice";
+import {
+  AppDispatch,
+  RootState,
+  useAppDispatch,
+  useAppSelector,
+} from "../store";
+import { useDispatch, useSelector, TypedUseSelectorHook } from "react-redux";
+
 const LoginScreen = () => {
+  const { setIsAuthenticatied } = useAuthContext();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const { setIsAuthenticatied } = useAuthContext();
   const [error, setError] = useState("");
+  const [disabled, setDisabled] = useState(true);
 
   const navigation = useNavigation();
 
   const { passwordVisibility, rightIcon, handlePasswordVisibility } =
     useTogglePasswordVisibility("HIỆN", "ẨN");
 
-  const [disabled, setDisabled] = useState(true);
+  const dispatch = useAppDispatch();
 
-  const onPress = async () => {
-    try {
-      const result = await login(username, password);
+  const authData = useAppSelector(authSelector);
 
-      jwt.setToken(result.token);
-      configAxios();
-      setIsAuthenticatied(true);
+  useEffect(() => {
+    setIsAuthenticatied(authData.isLogin);
+    if (authData.isLogin) {
+      jwt.setToken(authData.token);
       navigation.navigate("Root");
+    }
+  }, [authData]);
+
+  const onPress = () => {
+    try {
+      dispatch(fetchLogin({ username, password }));
     } catch (error) {
       console.log(error);
       setIsAuthenticatied(false);
