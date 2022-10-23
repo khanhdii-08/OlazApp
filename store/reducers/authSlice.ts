@@ -30,9 +30,9 @@ const initialState: InitialState = {
   }
 };
 
-export const fetchLogin = createAsyncThunk(`${NAME}/fetchLogin`, async (data : {username :string, password : string}) => {
+export const fetchLogin = createAsyncThunk(`${NAME}/fetchLogin`, async ({username, password} : {username :string, password : string}) => {
   try {
-    const res = await httpRequest.post("auth/login", data, { withCredentials: true })
+    const res = await httpRequest.post("auth/login", {username, password}, { withCredentials: true })
     return res.data;
   } catch (error) {
     console.log(error)
@@ -46,7 +46,7 @@ const authSlice = createSlice({
      
     },
     extraReducers: (builder) => {
-      ///////// Longin ////////
+      ///////// Login ////////
       builder.addCase(fetchLogin.pending, (state, action) => {
         
       })

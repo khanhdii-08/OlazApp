@@ -10,6 +10,7 @@ import {
   ScrollView,
   Pressable,
   KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
@@ -21,12 +22,7 @@ import { login } from "../service/authService";
 import jwt from "../utils/jwt";
 import { configAxios } from "../utils/httpRequest";
 import { authSelector, fetchLogin } from "../store/reducers/authSlice";
-import {
-  AppDispatch,
-  RootState,
-  useAppDispatch,
-  useAppSelector,
-} from "../store";
+import { useAppDispatch, useAppSelector } from "../store";
 import { useDispatch, useSelector, TypedUseSelectorHook } from "react-redux";
 
 const LoginScreen = () => {
@@ -41,21 +37,35 @@ const LoginScreen = () => {
   const { passwordVisibility, rightIcon, handlePasswordVisibility } =
     useTogglePasswordVisibility("HIỆN", "ẨN");
 
-  const dispatch = useAppDispatch();
+  // const dispatch = useAppDispatch();
 
-  const authData = useAppSelector(authSelector);
+  // const authData = useAppSelector(authSelector);
 
-  useEffect(() => {
-    setIsAuthenticatied(authData.isLogin);
-    if (authData.isLogin) {
-      jwt.setToken(authData.token);
-      navigation.navigate("Root");
-    }
-  }, [authData]);
+  // useEffect(() => {
+  //   setIsAuthenticatied(authData.isLogin);
+  //   if (authData.isLogin) {
+  //     jwt.setToken(authData.token);
+  //     navigation.navigate("Root");
+  //   }
+  // }, [authData]);
 
-  const onPress = () => {
+  // const onPress = () => {
+  //   try {
+  //     dispatch(fetchLogin({ username, password }));
+  //   } catch (error) {
+  //     console.log(error);
+  //     setIsAuthenticatied(false);
+  //   }
+  // };
+
+  const onPress = async () => {
     try {
-      dispatch(fetchLogin({ username, password }));
+      const result = await login(username, password);
+
+      jwt.setToken(result.token);
+      configAxios();
+      setIsAuthenticatied(true);
+      navigation.navigate("Root");
     } catch (error) {
       console.log(error);
       setIsAuthenticatied(false);
@@ -72,8 +82,11 @@ const LoginScreen = () => {
   }, [username, password]);
 
   return (
-    <KeyboardAvoidingView style={styles.container}>
-      <StatusBar animated={true} barStyle="default" />
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
+      <StatusBar animated={true} barStyle="default" backgroundColor="#3399FF" />
       <ScrollView keyboardShouldPersistTaps="handled">
         <Text style={styles.textContent}>
           Vui lòng nhập tài khoản và mật khẩu để đăng nhập

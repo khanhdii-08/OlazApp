@@ -49,7 +49,7 @@ const RegisterScreen = () => {
 
   return (
     <KeyboardAvoidingView style={styles.container}>
-      <StatusBar animated={true} barStyle="default" />
+      <StatusBar animated={true} barStyle="default" backgroundColor="#3399FF" />
       <ScrollView keyboardShouldPersistTaps="handled">
         <Text style={styles.text}>Tên Zalo</Text>
         <View style={styles.parent}>

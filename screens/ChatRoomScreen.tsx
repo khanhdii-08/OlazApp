@@ -3,31 +3,33 @@ import { StyleSheet, Text, View, FlatList, SafeAreaView } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import Message from "../components/Message";
 import MessageInput from "../components/MessageInput";
-import { messages } from "../service/messageService";
+import { useAppSelector } from "../store";
+import { messageSelector } from "../store/reducers/messageSlice";
+import { conversationSelector } from "../store/reducers/conversationSlice";
 
 export default function ChatRoomScreen() {
-  const route = useRoute();
-
   const navigation = useNavigation();
-  navigation.setOptions({ title: route.params?.name });
 
-  const [message, setMessage] = useState([]);
+  const conversation = useAppSelector(conversationSelector);
 
-  useEffect(() => {
-    messages(route.params?.conversationId).then((res) => setMessage(res));
-  }, [message]);
+  navigation.setOptions({ title: conversation.conversation.name });
 
-  // useEffect(() => {
-  //   messages(route.params?.conversationId).then((res) => setMessage(res));
-  // }, [message]);
+  const message = useAppSelector(messageSelector);
+
+  // console.log(message);
 
   return (
     <SafeAreaView style={styles.page}>
       <FlatList
-        data={message.data}
+        onEndReached={() => {
+          // goToNextPage();
+        }}
+        data={message.messages.data}
         renderItem={({ item }) => <Message message={item} />}
+        // inverted
+        // contentContainerStyle={{ paddingBottom: 15 }}
       />
-      <MessageInput conversationId={route.params?.conversationId} />
+      {/* <MessageInput /> */}
     </SafeAreaView>
   );
 }

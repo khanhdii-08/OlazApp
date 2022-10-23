@@ -2,10 +2,14 @@ import {configureStore } from "@reduxjs/toolkit"
 import { useDispatch } from 'react-redux'
 import { TypedUseSelectorHook, useSelector } from 'react-redux'
 import authReducer from "./reducers/authSlice"
+import conversationReducer from "./reducers/conversationSlice"
+import messageReducer from "./reducers/messageSlice"
 
 const store = configureStore({
     reducer: {
-      authReducer
+      authReducer,
+      conversationReducer,
+      messageReducer
     },
   })
 

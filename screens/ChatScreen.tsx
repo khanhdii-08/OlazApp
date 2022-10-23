@@ -7,35 +7,47 @@ import {
   TextInput,
   FlatList,
   StatusBar,
+  ActivityIndicator,
 } from "react-native";
 
 import ChatRoomItem from "../components/ChatRoomItem";
-import { conversations } from "../service/conversationService";
+import { useAppDispatch, useAppSelector } from "../store";
+import {
+  conversationSelector,
+  getList,
+} from "../store/reducers/conversationSlice";
+import { getMessages } from "../store/reducers/messageSlice";
+import jwt from "../utils/jwt";
 
 export default function TabTwoScreen() {
-  const [listConversation, setListConversation] = useState([]);
+  const dispatch = useAppDispatch();
+
+  const conversations = useAppSelector(conversationSelector);
+
+  const user = { _id: jwt.getUserId() };
 
   useEffect(() => {
-    conversations().then((res) => setListConversation(res));
-  }, []);
+    if (!user._id) return;
+    dispatch(getList({ name: "", type: 0 }));
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (!user._id) return;
+    dispatch(getMessages(user._id));
+  }, [dispatch]);
 
   return (
     <View style={styles.page}>
       <StatusBar backgroundColor="#3399FF" />
-      <FlatList
-        data={listConversation}
-        renderItem={({ item }) => <ChatRoomItem chatRoom={item} />}
-        showsVerticalScrollIndicator={false}
-
-        // ListHeaderComponent={() => (
-        //   <FlatList
-        //     data={ChatRoomData}
-        //     renderItem={({ item }) => <ChatRoomItem chatRoom={item} />}
-        //     showsVerticalScrollIndicator={false}
-        //     horizontal
-        //   />
-        // )}
-      />
+      {conversations.isLoading ? (
+        <ActivityIndicator style={{ paddingTop: 20 }} />
+      ) : (
+        <FlatList
+          data={conversations.conversations}
+          renderItem={({ item }) => <ChatRoomItem chatRoom={item} />}
+          showsVerticalScrollIndicator={false}
+        />
+      )}
     </View>
   );
 }

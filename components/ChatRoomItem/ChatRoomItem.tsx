@@ -10,21 +10,22 @@ import {
 import { Avatar } from "react-native-elements";
 import styles from "./styles";
 import { useNavigation } from "@react-navigation/native";
+import { useAppDispatch } from "../../store";
+import { getMessages } from "../../store/reducers/messageSlice";
+import { setCurrentConversation } from "../../store/reducers/conversationSlice";
 
-export default function ChatRoomItem({ chatRoom }) {
-  // const user = chatRoom.users[1];
-
+export default function ChatRoomItem({ chatRoom }: { chatRoom: any }) {
+  const dispatch = useAppDispatch();
   const navigation = useNavigation();
 
-  const onPress = () => {
-    navigation.navigate("ChatRoom", {
-      conversationId: chatRoom._id,
-      name: chatRoom.name,
-    });
+  const onPress = (conversation: any) => {
+    dispatch(setCurrentConversation(conversation));
+    dispatch(getMessages(conversation._id));
+    navigation.navigate("ChatRoom");
   };
 
   return (
-    <Pressable style={styles.container} onPress={() => onPress()}>
+    <Pressable style={styles.container} onPress={() => onPress(chatRoom)}>
       {chatRoom.avatar ? (
         <Avatar
           size={45}

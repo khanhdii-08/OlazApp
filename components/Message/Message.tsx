@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from "react-native";
 import JWTManager from "../../utils/jwt";
 
-const Message = ({ message }) => {
+const Message = ({ message }: { message: Array<Object> }) => {
   const myId = JWTManager.getUserId()?.toString() as string;
 
   const isMe = message.user._id === myId;

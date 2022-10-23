@@ -11,17 +11,27 @@ import {
 import React from "react";
 
 import { useNavigation } from "@react-navigation/native";
+import { useAppSelector } from "../store";
 
 const SecurityScreen = () => {
+  // const authData = useAppSelector(authSelector);
+
+  // useEffect(() => {
+  //   setIsAuthenticatied(authData.isLogin);
+  //   if (authData.isLogin) {
+  //     jwt.setToken(authData.token);
+  //     navigation.navigate("Root");
+  //   }
+  // }, [authData]);
+
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
       <StatusBar animated={true} barStyle="dark-content" />
       <View style={styles.containerTop}>
-        <Image
-          style={styles.logo}
-          source={require("../assets/images/slide_5.png")}
-        />
+        <View style={styles.containerTop}>
+          <Text style={styles.logo}>Olaz</Text>
+        </View>
       </View>
       <View style={styles.containerBot}>
         <TouchableOpacity
@@ -59,8 +69,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   logo: {
-    width: 250,
-    height: 150,
+    fontSize: 90,
+    fontWeight: "bold",
+    color: "#007AFF",
   },
   btn: {
     width: 300,
