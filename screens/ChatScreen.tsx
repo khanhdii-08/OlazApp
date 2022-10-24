@@ -18,6 +18,7 @@ import {
 } from "../store/reducers/conversationSlice";
 import { getMessages } from "../store/reducers/messageSlice";
 import jwt from "../utils/jwt";
+import { socket } from "../utils/socketClient";
 
 export default function TabTwoScreen() {
   const dispatch = useAppDispatch();
@@ -28,13 +29,8 @@ export default function TabTwoScreen() {
 
   useEffect(() => {
     if (!user._id) return;
-    dispatch(getList({ name: "", type: 0 }));
-  }, [dispatch]);
-
-  useEffect(() => {
-    if (!user._id) return;
     dispatch(getMessages(user._id));
-  }, [dispatch]);
+  }, []);
 
   return (
     <View style={styles.page}>

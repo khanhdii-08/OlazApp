@@ -16,20 +16,16 @@ export default function ChatRoomScreen() {
 
   const message = useAppSelector(messageSelector);
 
-  // console.log(message);
-
   return (
     <SafeAreaView style={styles.page}>
       <FlatList
-        onEndReached={() => {
-          // goToNextPage();
-        }}
         data={message.messages.data}
         renderItem={({ item }) => <Message message={item} />}
-        // inverted
-        // contentContainerStyle={{ paddingBottom: 15 }}
+        refreshing={message.isLoading}
+        inverted
+        // ref={ref => this.flatList = ref}
       />
-      {/* <MessageInput /> */}
+      <MessageInput conversationId={conversation.conversationId} />
     </SafeAreaView>
   );
 }

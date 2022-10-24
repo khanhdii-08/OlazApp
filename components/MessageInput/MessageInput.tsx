@@ -15,23 +15,17 @@ import {
   MaterialCommunityIcons,
   SimpleLineIcons,
 } from "@expo/vector-icons";
-import { addText } from "../../service/messageService";
+import { useAppDispatch } from "../../store";
+import { sendMessage } from "../../store/reducers/messageSlice";
 
-const MessageInput = ({ conversationId }) => {
+const MessageInput = ({ conversationId }: { conversationId: string }) => {
   const [content, setContent] = useState("");
-
-  const sendMessage = () => {
-    try {
-      const result = addText(conversationId, content);
-      setContent("");
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const dispatch = useAppDispatch();
 
   const onPress = () => {
     if (content) {
-      sendMessage();
+      dispatch(sendMessage({ conversationId, content, type: "TEXT" }));
+      setContent("");
     } else {
     }
   };
@@ -67,7 +61,7 @@ const MessageInput = ({ conversationId }) => {
       <View style={styles.buttonContainer}>
         <Text style={styles.buttonText}>
           {content ? (
-            <Pressable onPress={() => sendMessage()}>
+            <Pressable onPress={() => onPress()}>
               <Ionicons name="send" size={24} color="black" />
             </Pressable>
           ) : (

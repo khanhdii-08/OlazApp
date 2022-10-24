@@ -7,14 +7,14 @@ const NAME = "conversation"
 
 export interface Conversation {
     isLoading: boolean,
-    currentConversation: string,
+    conversationId: string,
     conversations: Array<any>,
-    conversation: Object,
+    conversation: any,
 }
 
 const initialState: Conversation = {
     isLoading: false,
-    currentConversation: '',
+    conversationId: '',
     conversations: [],
     conversation: {},
 }
@@ -30,7 +30,7 @@ const conversationSlice = createSlice({
     initialState,
     reducers: {
         setCurrentConversation: (state, action) => {
-            state.currentConversation = action.payload._id;
+            state.conversationId = action.payload._id;
             state.conversation = action.payload;
         },
     },

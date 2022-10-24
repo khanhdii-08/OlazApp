@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from "react-native";
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import * as React from "react";
+import React, { useEffect } from "react";
 import { Pressable, TouchableOpacity } from "react-native";
 import { useState } from "react";
 import useColorScheme from "../hooks/useColorScheme";
@@ -12,12 +12,51 @@ import { RootTabParamList, RootTabScreenProps } from "../types";
 import Tooltip from "react-native-walkthrough-tooltip";
 import MenuPopup from "../components/MenuPopup/MenuPopup";
 import { LinearGradient } from "expo-linear-gradient";
+import { init, socket } from "../utils/socketClient";
+import jwt from "../utils/jwt";
+import { useAppDispatch, useAppSelector } from "../store";
+import {
+  conversationSelector,
+  getList,
+} from "../store/reducers/conversationSlice";
+import { rerenderMessage } from "../store/reducers/messageSlice";
 
 const BottomTab = createBottomTabNavigator<RootTabParamList>();
 
+init();
 export default function TabNavigator() {
   const colorScheme = useColorScheme();
   const [showTip, setTip] = useState(false);
+  const dispatch = useAppDispatch();
+
+  const conversations = useAppSelector(conversationSelector);
+
+  const user = { _id: jwt.getUserId() };
+
+  useEffect(() => {
+    if (!user._id) return;
+    dispatch(getList({ name: "", type: 0 }));
+  }, []);
+
+  useEffect(() => {
+    const userId = user._id;
+    if (userId) socket.emit("join", userId);
+  }, [user]);
+
+  useEffect(() => {
+    if (conversations.conversations.length === 0) return;
+
+    const conversationIds = conversations.conversations.map(
+      (conversation) => conversation._id
+    );
+    socket.emit("join-conversations", conversationIds);
+  }, [conversations]);
+
+  useEffect(() => {
+    socket.on("new-message", (conversationId: string, message: any) => {
+      if (user._id !== message.user._id) dispatch(rerenderMessage(message));
+    });
+  }, []);
 
   function headerSearch(navigation: any) {
     return (
