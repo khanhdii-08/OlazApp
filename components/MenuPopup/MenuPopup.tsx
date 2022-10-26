@@ -3,7 +3,13 @@ import React from "react";
 import { AntDesign, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import styles from "./styles";
 
-export default function MenuPopup({ navigation, setTip }) {
+export default function MenuPopup({
+  navigation,
+  setTip,
+}: {
+  navigation: any;
+  setTip: any;
+}) {
   return (
     <View style={styles.container}>
       <TouchableOpacity

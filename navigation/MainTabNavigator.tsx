@@ -89,7 +89,9 @@ export default function TabNavigator() {
   function headerMenuPopup(navigation: any) {
     return (
       <View style={{ flexDirection: "row" }}>
-        <Pressable>
+        <Pressable
+          onPress={() => (navigation.navigate("QRScreen"), navigation.reset)}
+        >
           <MaterialIcons
             name="qr-code-scanner"
             size={24}

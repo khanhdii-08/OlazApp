@@ -79,9 +79,17 @@ export default function RootNavigator() {
           component={SearchScreen}
           options={({ navigation }: RootStackScreenProps<"Search">) => ({
             headerShown: false,
-            headerBackground: () => headerSearch({ navigation }),
+            // headerBackground: () => headerSearch({ navigation }),
             animation: "none",
           })}
+        />
+
+        <Stack.Screen
+          name="QRScreen"
+          component={QRScreen}
+          options={{
+            headerShown: false,
+          }}
         />
 
         <Stack.Screen
@@ -108,8 +116,6 @@ export default function RootNavigator() {
           presentation: "card",
         }}
       >
-        <Stack.Screen name="QRScreen" component={QRScreen} options={{}} />
-
         <Stack.Screen
           name="AddFriendScreen"
           component={AddFriendScreen}
@@ -182,37 +188,3 @@ const ChatRoomHeader = (props: {
     </View>
   );
 };
-
-const headerSearch = ({ navigation }: any) => (
-  <LinearGradient
-    // Background Linear Gradient
-    colors={["#257afe", "#00bafa"]}
-    style={StyleSheet.absoluteFill}
-    start={{ x: 0, y: 0 }}
-    end={{ x: 1, y: 0 }}
-  >
-    <View
-      style={{
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-        width: "100%",
-        elevation: 4,
-        paddingStart: 10,
-        paddingEnd: 15,
-        position: "absolute",
-        bottom: Platform.OS === "ios" ? -4 : -4,
-      }}
-    >
-      <Pressable onPress={() => navigation.goBack()}>
-        <Ionicons name="chevron-back" size={26} color="white" />
-      </Pressable>
-      <SearchInput />
-      <Pressable
-        onPress={() => (navigation.navigate("QRScreen"), navigation.reset)}
-      >
-        <MaterialIcons name="qr-code-scanner" size={24} color="white" />
-      </Pressable>
-    </View>
-  </LinearGradient>
-);

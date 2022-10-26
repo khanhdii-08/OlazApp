@@ -1,11 +1,25 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import QRScanerScreen from "./QRScanerScreen";
+import MyQRScrenn from "./MyQRScrenn";
+
+const Tab = createBottomTabNavigator();
 
 const QRScreen = () => {
   return (
-    <View style={styles.container}>
-      <Text>QRScreen</Text>
-    </View>
+    <Tab.Navigator>
+      <Tab.Screen
+        name="Quét QR"
+        component={QRScanerScreen}
+        options={{ headerShown: false }}
+      />
+      <Tab.Screen
+        name="QR của tôi"
+        component={MyQRScrenn}
+        options={{ headerShown: false }}
+      />
+    </Tab.Navigator>
   );
 };
 

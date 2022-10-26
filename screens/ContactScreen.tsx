@@ -9,12 +9,13 @@ const Tab = createMaterialTopTabNavigator();
 export default function TabOneScreen() {
   return (
     <Tab.Navigator
-      initialRouteName="TabChat"
+      initialRouteName="Friend"
       screenOptions={{
         tabBarActiveTintColor: "black",
         tabBarStyle: {
           backgroundColor: "white",
         },
+        swipeEnabled: false,
       }}
     >
       <Tab.Screen name="Friend" component={FriendScreen} />

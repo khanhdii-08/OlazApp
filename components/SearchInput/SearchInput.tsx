@@ -1,8 +1,19 @@
 import { View, TextInput, TouchableOpacity, Image } from "react-native";
-import React, { useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import styles from "./styles";
-export default function SearchInput() {
-  const [search, setSearch] = useState("");
+interface SearchProps {
+  search: string;
+  setSearch: Dispatch<SetStateAction<string>>;
+}
+
+const SearchInput = ({
+  search,
+  setSearch,
+}: {
+  search: string;
+  setSearch: Dispatch<SetStateAction<string>>;
+}) => {
+  // const [search, setSearch] = useState("");
 
   return (
     <View style={styles.container}>
@@ -29,4 +40,6 @@ export default function SearchInput() {
       )}
     </View>
   );
-}
+};
+
+export default SearchInput;
