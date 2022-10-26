@@ -7,13 +7,15 @@ import {
   TextInput,
   StatusBar,
   Image,
+  Alert,
 } from "react-native";
 import React from "react";
 
-import { useNavigation } from "@react-navigation/native";
 import { useAppSelector } from "../store";
+import { LoginStackScreenProps, RootStackScreenProps } from "../types";
+import { useNavigation } from "@react-navigation/native";
 
-const SecurityScreen = () => {
+const SecurityScreen = ({ navigation }: LoginStackScreenProps<"Security">) => {
   // const authData = useAppSelector(authSelector);
 
   // useEffect(() => {
@@ -24,7 +26,8 @@ const SecurityScreen = () => {
   //   }
   // }, [authData]);
 
-  const navigation = useNavigation();
+  // const navigation = useNavigation();
+
   return (
     <View style={styles.container}>
       <StatusBar animated={true} barStyle="dark-content" />
@@ -44,7 +47,9 @@ const SecurityScreen = () => {
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.btn, styles.btnRegister]}
-          onPress={() => navigation.navigate("RegisterScreen")}
+          onPress={() => {
+            navigation.navigate("RegisterScreen");
+          }}
         >
           <Text>Đăng ký</Text>
         </TouchableOpacity>

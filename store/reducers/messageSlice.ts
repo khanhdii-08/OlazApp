@@ -1,4 +1,4 @@
-import { InitialState } from './authSlice';
+
 import { apiMessage } from './../../service/messageService';
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../../store";
@@ -41,6 +41,10 @@ const messageSlice = createSlice({
         rerenderMessage(state, action) {
             state.messages.data = [...state.messages.data, action.payload];
         },
+
+        resetMessageSlice: (state, action) => {
+            Object.assign(state, initialState); 
+          },
     },
     extraReducers : (builder) => {
         builder.addCase(getMessages.pending, (state, action) => {
@@ -76,6 +80,6 @@ const messageReducer = messageSlice.reducer;
 
 export const messageSelector = (state: RootState) => state.messageReducer;
 
-export const {rerenderMessage} =  messageSlice.actions 
+export const {rerenderMessage, resetMessageSlice} =  messageSlice.actions 
 
 export default messageReducer;

@@ -7,13 +7,13 @@ import { useAuthContext } from "../contexts/AuthContext";
 const SplashScreen = () => {
   const navigation = useNavigation();
   const { isAuthenticated } = useAuthContext();
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigation.navigate("Root");
-    } else {
-      navigation.navigate("Security");
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (isAuthenticated) {
+  //     navigation.navigate("Root");
+  //   } else {
+  //     navigation.navigate("Security");
+  //   }
+  // }, []);
 
   return (
     <View style={styles.container}>

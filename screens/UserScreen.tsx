@@ -1,20 +1,31 @@
 import { View, Text, StyleSheet, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { useAuthContext } from "../contexts/AuthContext";
 import JWTManager from "../utils/jwt";
-import { logout } from "../service/authService";
+import { disconnect } from "../utils/socketClient";
+import { useAppDispatch } from "../store";
+import { resetAuthSlice } from "../store/reducers/authSlice";
+import { useAuthContext } from "../contexts/AuthContext";
+import { resetConversationSlice } from "../store/reducers/conversationSlice";
+import { resetMessageSlice } from "../store/reducers/messageSlice";
 
 export default function () {
   const navigation = useNavigation();
+  const dispatch = useAppDispatch();
 
-  const { isAuthenticated, logoutClient } = useAuthContext();
+  const { logoutClient } = useAuthContext();
 
-  // console.log("duy : ", JWTManager.getUserId()?.toString() as string);
+  const logout = (dispatch: any) => {
+    if (dispatch) {
+      dispatch(resetAuthSlice(null));
+      dispatch(resetConversationSlice(null));
+      dispatch(resetMessageSlice(null));
+    }
+    disconnect();
+  };
 
   const onPress = async () => {
     logoutClient();
-    // await logout();
-    navigation.navigate("Security");
+    await logout(dispatch);
   };
 
   return (

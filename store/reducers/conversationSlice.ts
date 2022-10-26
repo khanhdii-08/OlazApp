@@ -19,7 +19,7 @@ const initialState: Conversation = {
     conversation: {},
 }
   
-export const getList = createAsyncThunk(`${NAME}/getList`, async ({name , type } : {name : string; type : number}) => {
+export const getConversations = createAsyncThunk(`${NAME}/getList`, async ({name , type } : {name : string; type : number}) => {
     const response = await apiConversations.getList(name ? name : '', type = 0);
     return response.data;
 });
@@ -32,17 +32,22 @@ const conversationSlice = createSlice({
         setCurrentConversation: (state, action) => {
             state.conversationId = action.payload._id;
             state.conversation = action.payload;
+
         },
+
+        resetConversationSlice: (state, action) => {
+            Object.assign(state, initialState); 
+          },
     },
     extraReducers: (builder) => {
-        builder.addCase(getList.pending, (state, action) => {
+        builder.addCase(getConversations.pending, (state, action) => {
             state.isLoading = true;
         })
-        builder.addCase(getList.fulfilled, (state, action) => {
+        builder.addCase(getConversations.fulfilled, (state, action) => {
             state.conversations = action.payload
             state.isLoading = false;
         })
-        builder.addCase(getList.rejected, (state, action) => {
+        builder.addCase(getConversations.rejected, (state, action) => {
         
         })
     },
@@ -52,6 +57,6 @@ const conversationReducer = conversationSlice.reducer;
 
 export const conversationSelector = (state: RootState) => state.conversationReducer;
 
-export const { setCurrentConversation } = conversationSlice.actions
+export const { setCurrentConversation, resetConversationSlice } = conversationSlice.actions
 
 export default conversationReducer;

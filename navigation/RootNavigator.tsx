@@ -4,9 +4,9 @@ import {
   Pressable,
   Text,
   View,
-  SafeAreaView,
   useWindowDimensions,
   StyleSheet,
+  Platform,
 } from "react-native";
 import TabNavigator from "./MainTabNavigator";
 import SearchScreen from "../screens/SearchScreen";
@@ -15,12 +15,15 @@ import { RootStackParamList, RootStackScreenProps } from "../types";
 import AddFriendScreen from "../screens/AddFriendScreen";
 import AddGroupScreen from "../screens/AddGroupScreen";
 import ChatRoomScreen from "../screens/ChatRoomScreen";
-import SecurityScreen from "../screens/SecurityScreen";
-import LoginScreen from "../screens/LoginScreen";
-import { Ionicons, Feather, AntDesign } from "@expo/vector-icons";
-import RegisterScreen from "../screens/RegisterScreen";
-import SplashScreen from "../screens/SplashScreen";
+import {
+  Ionicons,
+  Feather,
+  AntDesign,
+  MaterialIcons,
+} from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
+import SearchInput from "../components/SearchInput";
+import QRScreen from "../screens/QRScreen";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -36,29 +39,15 @@ export default function RootNavigator() {
   );
   return (
     <Stack.Navigator>
-      <Stack.Screen
-        name="Splash"
-        component={SplashScreen}
-        options={{
-          headerShown: false,
-        }}
-      />
-
-      <Stack.Screen
-        name="Security"
-        component={SecurityScreen}
-        options={{
-          headerShown: false,
-        }}
-      />
-
-      <Stack.Screen
-        name="Root"
-        component={TabNavigator}
-        options={{
-          headerShown: false,
-        }}
-      />
+      <Stack.Group screenOptions={{}}>
+        <Stack.Screen
+          name="Root"
+          component={TabNavigator}
+          options={{
+            headerShown: false,
+          }}
+        />
+      </Stack.Group>
 
       <Stack.Screen
         name="ChatRoom"
@@ -79,6 +68,7 @@ export default function RootNavigator() {
         component={NotFoundScreen}
         options={{ title: "Oops!" }}
       />
+
       <Stack.Group
         screenOptions={{
           presentation: "fullScreenModal",
@@ -89,16 +79,11 @@ export default function RootNavigator() {
           component={SearchScreen}
           options={({ navigation }: RootStackScreenProps<"Search">) => ({
             headerShown: false,
+            headerBackground: () => headerSearch({ navigation }),
             animation: "none",
           })}
         />
-      </Stack.Group>
 
-      <Stack.Group
-        screenOptions={{
-          presentation: "fullScreenModal",
-        }}
-      >
         <Stack.Screen
           name="AddGroupScreen"
           component={AddGroupScreen}
@@ -123,6 +108,8 @@ export default function RootNavigator() {
           presentation: "card",
         }}
       >
+        <Stack.Screen name="QRScreen" component={QRScreen} options={{}} />
+
         <Stack.Screen
           name="AddFriendScreen"
           component={AddFriendScreen}
@@ -148,60 +135,6 @@ export default function RootNavigator() {
                   }}
                 >
                   Thêm bạn
-                </Text>
-              </View>
-            ),
-          })}
-        />
-
-        <Stack.Screen
-          name="LoginScreen"
-          component={LoginScreen}
-          options={({ navigation }: RootStackScreenProps<"LoginScreen">) => ({
-            headerTitle: "",
-            headerBackground: () => headerGradient,
-            headerLeft: () => (
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <Pressable onPress={() => navigation.goBack()}>
-                  <Ionicons name="chevron-back" size={26} color="white" />
-                </Pressable>
-                <Text
-                  style={{
-                    marginLeft: 10,
-                    fontSize: 18,
-                    fontWeight: "bold",
-                    color: "white",
-                  }}
-                >
-                  Đăng nhập
-                </Text>
-              </View>
-            ),
-          })}
-        />
-
-        <Stack.Screen
-          name="RegisterScreen"
-          component={RegisterScreen}
-          options={({
-            navigation,
-          }: RootStackScreenProps<"RegisterScreen">) => ({
-            headerTitle: "",
-            headerBackground: () => headerGradient,
-            headerLeft: () => (
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <Pressable onPress={() => navigation.goBack()}>
-                  <Ionicons name="chevron-back" size={26} color="white" />
-                </Pressable>
-                <Text
-                  style={{
-                    marginLeft: 10,
-                    fontSize: 18,
-                    fontWeight: "bold",
-                    color: "white",
-                  }}
-                >
-                  Tạo tài khoản
                 </Text>
               </View>
             ),
@@ -249,3 +182,37 @@ const ChatRoomHeader = (props: {
     </View>
   );
 };
+
+const headerSearch = ({ navigation }: any) => (
+  <LinearGradient
+    // Background Linear Gradient
+    colors={["#257afe", "#00bafa"]}
+    style={StyleSheet.absoluteFill}
+    start={{ x: 0, y: 0 }}
+    end={{ x: 1, y: 0 }}
+  >
+    <View
+      style={{
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        width: "100%",
+        elevation: 4,
+        paddingStart: 10,
+        paddingEnd: 15,
+        position: "absolute",
+        bottom: Platform.OS === "ios" ? -4 : -4,
+      }}
+    >
+      <Pressable onPress={() => navigation.goBack()}>
+        <Ionicons name="chevron-back" size={26} color="white" />
+      </Pressable>
+      <SearchInput />
+      <Pressable
+        onPress={() => (navigation.navigate("QRScreen"), navigation.reset)}
+      >
+        <MaterialIcons name="qr-code-scanner" size={24} color="white" />
+      </Pressable>
+    </View>
+  </LinearGradient>
+);

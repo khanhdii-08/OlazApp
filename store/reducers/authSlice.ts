@@ -6,28 +6,20 @@ import httpRequest from "../../utils/httpRequest";
 
 const NAME = 'login'
 
-export interface User {
-  username: string,
-  password: string,
-  _id: string,
+export interface Auth {
+  currentUserId : string,
   isLogin: boolean,
+  isLoading: boolean,
   token: string,
   isRegister: boolean,
 }
 
-export interface InitialState {
-  user : User;
-}
-
-const initialState: InitialState = {
-  user : {
-    username: '',
-    password: '',
-    _id: '',
+const initialState: Auth = {
+    currentUserId: '',
     isLogin: false,
+    isLoading: false,
     token: '',
     isRegister: false,
-  }
 };
 
 export const fetchLogin = createAsyncThunk(`${NAME}/fetchLogin`, async ({username, password} : {username :string, password : string}) => {
@@ -43,7 +35,18 @@ const authSlice = createSlice({
     name: NAME,
     initialState,  
     reducers: {
-     
+      setLoading: (state, action) => {
+        state.isLoading = action.payload;
+      },
+      setLogin: (state, action) => {
+        state.isLogin = action.payload;
+      },
+      setCurrentUserId: (state, action) => {
+        state.currentUserId = action.payload;
+      },
+      resetAuthSlice: (state, action) => {
+        Object.assign(state, initialState); 
+      },
     },
     extraReducers: (builder) => {
       ///////// Login ////////
@@ -53,8 +56,8 @@ const authSlice = createSlice({
       builder.addCase(fetchLogin.fulfilled, (state, action) => {
         // console.log(action.payload.token)
         if(action.payload){
-          state.user.token = action.payload.token;
-          state.user.isLogin = true;
+          state.token = action.payload.token;
+          state.isLogin = true;
         }
       })  
       builder.addCase(fetchLogin.rejected, (state, action) => {
@@ -66,6 +69,9 @@ const authSlice = createSlice({
 
 const authReducer = authSlice.reducer;
 
-export const authSelector = (state: RootState) => state.authReducer.user;
+export const authSelector = (state: RootState) => state.authReducer;
+
+export const { setLoading, setLogin, setCurrentUserId, resetAuthSlice } = authSlice.actions
+
 
 export default authReducer;

@@ -4,7 +4,6 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React, { useEffect } from "react";
 import { Pressable, TouchableOpacity } from "react-native";
 import { useState } from "react";
-import useColorScheme from "../hooks/useColorScheme";
 import TabChatScreen from "../screens/ChatScreen";
 import TabContactScreen from "../screens/ContactScreen";
 import TabUserScreen from "../screens/UserScreen";
@@ -17,25 +16,25 @@ import jwt from "../utils/jwt";
 import { useAppDispatch, useAppSelector } from "../store";
 import {
   conversationSelector,
-  getList,
+  getConversations,
 } from "../store/reducers/conversationSlice";
 import { rerenderMessage } from "../store/reducers/messageSlice";
 
 const BottomTab = createBottomTabNavigator<RootTabParamList>();
 
-init();
 export default function TabNavigator() {
-  const colorScheme = useColorScheme();
+  init();
+
   const [showTip, setTip] = useState(false);
   const dispatch = useAppDispatch();
-
   const conversations = useAppSelector(conversationSelector);
-
   const user = { _id: jwt.getUserId() };
+
+  // console.log("user", user);
 
   useEffect(() => {
     if (!user._id) return;
-    dispatch(getList({ name: "", type: 0 }));
+    dispatch(getConversations({ name: "", type: 0 }));
   }, []);
 
   useEffect(() => {
@@ -152,6 +151,7 @@ export default function TabNavigator() {
           headerTitle: "",
           headerLeft: () => headerSearch(navigation),
           headerRight: () => headerMenuPopup(navigation),
+          // presentation: "fullScreenModal",
         })}
       />
       <BottomTab.Screen

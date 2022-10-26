@@ -12,13 +12,10 @@ import {
 
 import ChatRoomItem from "../components/ChatRoomItem";
 import { useAppDispatch, useAppSelector } from "../store";
-import {
-  conversationSelector,
-  getList,
-} from "../store/reducers/conversationSlice";
+import { conversationSelector } from "../store/reducers/conversationSlice";
 import { getMessages } from "../store/reducers/messageSlice";
 import jwt from "../utils/jwt";
-import { socket } from "../utils/socketClient";
+import { init, socket } from "../utils/socketClient";
 
 export default function TabTwoScreen() {
   const dispatch = useAppDispatch();

@@ -1,11 +1,4 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  TouchableOpacity,
-  Image,
-} from "react-native";
+import { View, TextInput, TouchableOpacity, Image } from "react-native";
 import React, { useState } from "react";
 import styles from "./styles";
 export default function SearchInput() {

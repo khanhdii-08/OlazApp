@@ -1,33 +1,35 @@
+import React, { useCallback, useEffect } from "react";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
-import { StyleSheet, View, Text, Pressable, Platform } from "react-native";
-
+import {
+  StyleSheet,
+  View,
+  Text,
+  Pressable,
+  Platform,
+  BackHandler,
+} from "react-native";
 import HistorySearchItem from "../components/HistorySearchItem/HistorySearchItem";
 import SearchInput from "../components/SearchInput";
-import { RootStackScreenProps } from "../types";
 import { getDefaultHeaderHeight } from "@react-navigation/elements";
 import {
   useSafeAreaFrame,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 
-export default function ModalScreen({
-  navigation,
-}: RootStackScreenProps<"Search">) {
-  const frame = useSafeAreaFrame();
-  const insets = useSafeAreaInsets();
+export default function ModalScreen() {
+  const navigation = useNavigation();
 
-  const headerHeight = getDefaultHeaderHeight(frame, false, insets.top);
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      () => true
+    );
+    return () => backHandler.remove();
+  }, []);
+
   return (
     <View style={styles.container}>
-      <View style={[styles.header, { height: headerHeight }]}>
-        <Pressable onPress={() => navigation.goBack()}>
-          <Ionicons name="chevron-back" size={26} color="white" />
-        </Pressable>
-        <SearchInput />
-        <Pressable>
-          <MaterialIcons name="qr-code-scanner" size={24} color="white" />
-        </Pressable>
-      </View>
       <Text style={{ padding: 12 }}>Liên hệ đã tìm</Text>
       <HistorySearchItem />
     </View>
