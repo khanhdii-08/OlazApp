@@ -13,6 +13,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useAppDispatch } from "../../store";
 import { getMessages } from "../../store/reducers/messageSlice";
 import { setCurrentConversation } from "../../store/reducers/conversationSlice";
+import CustomAvatar from "../CustomAvatar/CustomAvatar";
 
 export default function ChatRoomItem({ chatRoom }: { chatRoom: any }) {
   const dispatch = useAppDispatch();
@@ -27,28 +28,9 @@ export default function ChatRoomItem({ chatRoom }: { chatRoom: any }) {
   return (
     <Pressable style={styles.container} onPress={() => onPress(chatRoom)}>
       {chatRoom.avatar ? (
-        <Avatar
-          size={45}
-          rounded
-          source={{
-            uri: chatRoom.avatar,
-          }}
-          activeOpacity={0.2}
-          containerStyle={{
-            marginRight: 10,
-          }}
-        />
+        <CustomAvatar props={chatRoom} />
       ) : (
-        <Avatar
-          size={45}
-          rounded
-          title={chatRoom.name[0]}
-          activeOpacity={0.2}
-          containerStyle={{
-            backgroundColor: chatRoom.avatarColor,
-            marginRight: 10,
-          }}
-        />
+        <CustomAvatar props={chatRoom} />
       )}
 
       <View style={styles.rightContainer}>

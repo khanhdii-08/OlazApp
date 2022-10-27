@@ -10,9 +10,9 @@ import { conversationSelector } from "../store/reducers/conversationSlice";
 export default function ChatRoomScreen() {
   const navigation = useNavigation();
 
-  const conversation = useAppSelector(conversationSelector);
+  const { conversation, conversationId } = useAppSelector(conversationSelector);
 
-  navigation.setOptions({ title: conversation.conversation.name });
+  navigation.setOptions({ title: conversation.name });
 
   const message = useAppSelector(messageSelector);
 
@@ -25,7 +25,7 @@ export default function ChatRoomScreen() {
         inverted
         // ref={ref => this.flatList = ref}
       />
-      <MessageInput conversationId={conversation.conversationId} />
+      <MessageInput conversationId={conversationId} />
     </SafeAreaView>
   );
 }

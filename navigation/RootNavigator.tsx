@@ -1,5 +1,5 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import * as React from "react";
+import React, { useRef } from "react";
 import {
   Pressable,
   Text,
@@ -28,6 +28,8 @@ import QRScreen from "../screens/QRScreen";
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function RootNavigator() {
+  const input = useRef("");
+
   const headerGradient = (
     <LinearGradient
       // Background Linear Gradient
@@ -79,7 +81,7 @@ export default function RootNavigator() {
           component={SearchScreen}
           options={({ navigation }: RootStackScreenProps<"Search">) => ({
             headerShown: false,
-            // headerBackground: () => headerSearch({ navigation }),
+            headerBackground: () => () => <View></View>,
             animation: "none",
           })}
         />

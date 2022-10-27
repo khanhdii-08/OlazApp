@@ -42,7 +42,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 17,
     marginBottom: 2,
-    maxWidth:270
+    maxWidth:270,
+    paddingLeft: 10
   },
   text: {
     color: "grey",

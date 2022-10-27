@@ -4,12 +4,15 @@ import { TypedUseSelectorHook, useSelector } from 'react-redux'
 import authReducer from "./reducers/authSlice"
 import conversationReducer from "./reducers/conversationSlice"
 import messageReducer from "./reducers/messageSlice"
+import userReducer from "./reducers/userSlice"
+
 
 const store = configureStore({
     reducer: {
       authReducer,
       conversationReducer,
-      messageReducer
+      messageReducer,
+      userReducer
     },
   })
 

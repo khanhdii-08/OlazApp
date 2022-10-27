@@ -13,7 +13,6 @@ import {
   Platform,
 } from "react-native";
 import React, { useState, useEffect } from "react";
-import { useNavigation } from "@react-navigation/native";
 import { useTogglePasswordVisibility } from "../hooks/useTogglePasswordVisibility";
 import { useAuthContext } from "../contexts/AuthContext";
 

@@ -3,24 +3,25 @@ import React from "react";
 import { AntDesign } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import QRCodeScanner from "react-native-qrcode-scanner";
-import { RNCamera } from "react-native-camera";
+// import { RNCamera } from "react-native-camera";
 
 const QRScanerScreen = () => {
   return (
-    <QRCodeScanner
-      onRead={(e) => console.log("QR code scanned!", e)}
-      flashMode={RNCamera.Constants.FlashMode.torch}
-      topContent={
-        <View style={styles.displayBtn}>
-          <AntDesign name="closecircle" size={24} color="black" />
-          <MaterialCommunityIcons name="flashlight" size={24} color="black" />
-        </View>
-      }
-    >
-      {/* <View style={styles.continer}>
+    // <QRCodeScanner
+    //   onRead={(e) => console.log("QR code scanned!", e)}
+    //   flashMode={RNCamera.Constants.FlashMode.torch}
+    //   topContent={
+    //     <View style={styles.displayBtn}>
+    //       <AntDesign name="closecircle" size={24} color="black" />
+    //       <MaterialCommunityIcons name="flashlight" size={24} color="black" />
+    //     </View>
+    //   }
+    // >
+    //   {/* <View style={styles.continer}>
 
-      </View> */}
-    </QRCodeScanner>
+    //   </View> */}
+    // </QRCodeScanner>
+    <View></View>
   );
 };
 

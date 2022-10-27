@@ -20,7 +20,7 @@ const initialState: Conversation = {
 }
   
 export const getConversations = createAsyncThunk(`${NAME}/getList`, async ({name , type } : {name : string; type : number}) => {
-    const response = await apiConversations.getList(name ? name : '', type = 0);
+    const response = await apiConversations.getConversations(name ? name : '', type = 0);
     return response.data;
 });
 

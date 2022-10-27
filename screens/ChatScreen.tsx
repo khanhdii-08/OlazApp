@@ -20,7 +20,7 @@ import { init, socket } from "../utils/socketClient";
 export default function TabTwoScreen() {
   const dispatch = useAppDispatch();
 
-  const conversations = useAppSelector(conversationSelector);
+  const { isLoading, conversations } = useAppSelector(conversationSelector);
 
   const user = { _id: jwt.getUserId() };
 
@@ -32,11 +32,11 @@ export default function TabTwoScreen() {
   return (
     <View style={styles.page}>
       <StatusBar backgroundColor="#3399FF" />
-      {conversations.isLoading ? (
+      {isLoading ? (
         <ActivityIndicator style={{ paddingTop: 20 }} />
       ) : (
         <FlatList
-          data={conversations.conversations}
+          data={conversations}
           renderItem={({ item }) => <ChatRoomItem chatRoom={item} />}
           showsVerticalScrollIndicator={false}
         />
