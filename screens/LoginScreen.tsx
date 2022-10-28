@@ -21,6 +21,7 @@ import jwt from "../utils/jwt";
 import { setLogin } from "../store/reducers/authSlice";
 import { useAppDispatch } from "../store";
 import { configAxios } from "../utils/httpRequest";
+import { getConversations } from "../store/reducers/conversationSlice";
 
 const LoginScreen = () => {
   const { setIsAuthenticatied } = useAuthContext();

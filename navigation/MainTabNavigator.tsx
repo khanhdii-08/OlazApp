@@ -27,34 +27,37 @@ export default function TabNavigator() {
 
   const [showTip, setTip] = useState(false);
   const dispatch = useAppDispatch();
-  const conversations = useAppSelector(conversationSelector);
+  const { conversations } = useAppSelector(conversationSelector);
   const user = { _id: jwt.getUserId() };
 
-  // console.log("user", user);
+  useEffect(() => {
+    const userId = user._id;
+    if (userId) {
+      console.log(`user: ${user._id} is join to socket`);
+      socket.emit("join", userId);
+    }
+  }, []);
 
   useEffect(() => {
     if (!user._id) return;
     dispatch(getConversations({ name: "", type: 0 }));
+    console.log("dispatch getConversations");
   }, []);
 
   useEffect(() => {
-    const userId = user._id;
-    if (userId) socket.emit("join", userId);
-  }, [user]);
-
-  useEffect(() => {
-    if (conversations.conversations.length === 0) return;
-
-    const conversationIds = conversations.conversations.map(
+    if (conversations.length === 0) return;
+    const conversationIds = conversations.map(
       (conversation) => conversation._id
     );
     socket.emit("join-conversations", conversationIds);
+    console.log("join-conversations");
   }, [conversations]);
 
   useEffect(() => {
     socket.on("new-message", (conversationId: string, message: any) => {
       if (user._id !== message.user._id) dispatch(rerenderMessage(message));
     });
+    console.log("on new-message");
   }, []);
 
   function headerSearch(navigation: any) {
