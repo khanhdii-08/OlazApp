@@ -6,6 +6,7 @@ import { RootState } from "../../store";
 export interface User {
     isLoading : boolean,
     isError : boolean,
+    id: string,
     name : string,
     username : string,
     avatar : string,
@@ -16,6 +17,7 @@ export interface User {
 const initialState : User = {
     isLoading : true,
     isError : false,
+    id: "",
     name : "",
     username : "",
     avatar : "",
@@ -31,6 +33,13 @@ export const getUserByUserName = createAsyncThunk(`${NAME}/username`,async (user
     return res.data
 })
 
+export const getUserById = createAsyncThunk(`${NAME}/id`,async (id : string) => {
+    const res = await userApi.fetchUserById(id);
+    return res.data
+})
+
+
+
 const userSlice = createSlice({
     name : NAME,
     initialState,
@@ -44,8 +53,10 @@ const userSlice = createSlice({
             // state.isLoading = true
         })
         builder.addCase(getUserByUserName.fulfilled, (state, action) => {
+            
             if(action.payload){
                 state.isLoading =false
+                state.id = action.payload._id
                 state.name = action.payload.name
                 state.username = action.payload.username
                 state.avatar = action.payload.avatar
@@ -54,6 +65,28 @@ const userSlice = createSlice({
             }
         })
         builder.addCase(getUserByUserName.rejected, (state, action) => {
+            console.log("erorr")
+            state.isError = true;
+        })
+
+        /////////
+
+        builder.addCase(getUserById.pending, (state, action) => {
+            // state.isLoading = true
+        })
+        builder.addCase(getUserById.fulfilled, (state, action) => {
+            // console.log(action.payload)
+            if(action.payload){
+                state.isLoading =false
+                state.id = action.payload._id
+                state.name = action.payload.name
+                state.username = action.payload.username
+                state.avatar = action.payload.avatar
+                state.avatarColor = action.payload.avatarColor
+                state.status = action.payload.status
+            }
+        })
+        builder.addCase(getUserById.rejected, (state, action) => {
             console.log("erorr")
             state.isError = true;
         })

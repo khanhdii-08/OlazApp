@@ -17,26 +17,25 @@ import { LinearGradient } from "expo-linear-gradient";
 
 import { RootStackScreenProps } from "../types";
 import {
+  getUserById,
   getUserByUserName,
   resetUserSlice,
   userSelector,
 } from "../store/reducers/userSlice";
 import { useAppDispatch, useAppSelector } from "../store";
 import UserSearchItem from "../components/UserSearchItem/UserSearchItem";
+import JWTManager from "../utils/jwt";
+import userApi from "../service/userService";
 
 export default function ModalScreen({
   navigation,
 }: RootStackScreenProps<"Search">) {
   // const navigation = useNavigation();
-
-  const user = useAppSelector(userSelector);
-
-  // const props = { avatar, avatarColor, isLoading, name, status, username };
-  const dispatch = useAppDispatch();
+  const [user, setUser] = useState(null);
 
   const [search, setSearch] = useState("");
 
-  const headerSearch = ({ navigation }: { navigation: any }) => (
+  const headerSearch = () => (
     <LinearGradient
       // Background Linear Gradient
       colors={["#257afe", "#00bafa"]}
@@ -47,14 +46,16 @@ export default function ModalScreen({
       <View style={styles.header}>
         <Pressable
           onPress={() => {
-            dispatch(resetUserSlice(null)), navigation.goBack();
+            navigation.goBack();
           }}
         >
           <Ionicons name="chevron-back" size={26} color="white" />
         </Pressable>
         <SearchInput search={search} setSearch={setSearch} />
         <Pressable
-          onPress={() => (navigation.navigate("QRScreen"), navigation.reset)}
+          onPress={() => {
+            navigation.navigate("QRScreen");
+          }}
         >
           <MaterialIcons name="qr-code-scanner" size={24} color="white" />
         </Pressable>
@@ -63,11 +64,11 @@ export default function ModalScreen({
   );
 
   navigation.setOptions({
-    headerBackground: () => headerSearch({ navigation }),
+    headerBackground: () => headerSearch(),
   });
 
   useCallback(() => {
-    headerSearch({ navigation });
+    headerSearch();
   }, [search]);
 
   useEffect(() => {
@@ -83,15 +84,15 @@ export default function ModalScreen({
 
     if (phone_regex.test(search) && search.length === 10) return true;
     else {
-      dispatch(resetUserSlice(null));
       return false;
     }
   };
 
   const findMenber = (search: string) => {
     if (checkPhone(search)) {
-      dispatch(getUserByUserName(search));
+      userApi.fetchUsers(search).then((res) => setUser(res.data));
     } else {
+      setUser(null);
     }
   };
 
@@ -104,13 +105,7 @@ export default function ModalScreen({
       {search ? (
         <View>
           <Text style={{ padding: 12 }}>Tìm bạn qua số điện thoại</Text>
-          {user.isLoading ? (
-            <ActivityIndicator />
-          ) : (
-            <View>
-              <UserSearchItem props={user} />
-            </View>
-          )}
+          <View>{user ? <UserSearchItem props={user} /> : <></>}</View>
         </View>
       ) : (
         <View>

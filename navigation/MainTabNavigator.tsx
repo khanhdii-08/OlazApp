@@ -19,6 +19,8 @@ import {
   getConversations,
 } from "../store/reducers/conversationSlice";
 import { rerenderMessage } from "../store/reducers/messageSlice";
+import { getUserById } from "../store/reducers/userSlice";
+import { getFriends } from "../store/reducers/friendReducer";
 
 const BottomTab = createBottomTabNavigator<RootTabParamList>();
 
@@ -41,7 +43,8 @@ export default function TabNavigator() {
   useEffect(() => {
     if (!user._id) return;
     dispatch(getConversations({ name: "", type: 0 }));
-    console.log("dispatch getConversations");
+    dispatch(getUserById(user._id));
+    dispatch(getFriends());
   }, []);
 
   useEffect(() => {

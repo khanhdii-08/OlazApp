@@ -7,6 +7,7 @@ import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import {
   CompositeScreenProps,
   NavigatorScreenParams,
+  RouteProp,
 } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
@@ -27,7 +28,12 @@ export type RootStackParamList = {
   AddGroupScreen: undefined;
   MenuPopup: undefined;
   QRScreen: undefined;
+  RequestAddFriend: undefined;
+  ProfileUser: { userId: string };
 };
+
+export type RootRouteProps<RouteName extends keyof RootStackParamList> =
+  RouteProp<RootStackParamList, RouteName>;
 
 export type LoginStackParamList = {
   Security: undefined;

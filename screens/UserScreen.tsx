@@ -7,6 +7,7 @@ import { resetAuthSlice } from "../store/reducers/authSlice";
 import { useAuthContext } from "../contexts/AuthContext";
 import { resetConversationSlice } from "../store/reducers/conversationSlice";
 import { resetMessageSlice } from "../store/reducers/messageSlice";
+import QRCode from "react-native-qrcode-svg";
 
 export default function () {
   const navigation = useNavigation();
@@ -27,6 +28,8 @@ export default function () {
     logoutClient();
     await logout(dispatch);
   };
+
+  let logoFromFile = require("../assets/images/qr.png");
 
   return (
     <View style={styles.container}>

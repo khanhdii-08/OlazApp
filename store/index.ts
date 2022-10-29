@@ -5,14 +5,15 @@ import authReducer from "./reducers/authSlice"
 import conversationReducer from "./reducers/conversationSlice"
 import messageReducer from "./reducers/messageSlice"
 import userReducer from "./reducers/userSlice"
-
+import friendReducer from "./reducers/friendReducer"
 
 const store = configureStore({
     reducer: {
       authReducer,
       conversationReducer,
       messageReducer,
-      userReducer
+      userReducer,
+      friendReducer
     },
   })
 

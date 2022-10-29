@@ -24,6 +24,8 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import SearchInput from "../components/SearchInput";
 import QRScreen from "../screens/QRScreen";
+import RequestAddFriend from "../screens/RequestAddFriendScreen";
+import ProfileUserScreen from "../screens/ProfileUserScreen";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -71,6 +73,15 @@ export default function RootNavigator() {
         options={{ title: "Oops!" }}
       />
 
+      <Stack.Screen
+        name="QRScreen"
+        component={QRScreen}
+        options={{
+          headerShown: false,
+          animation: "slide_from_bottom",
+          gestureEnabled: false,
+        }}
+      />
       <Stack.Group
         screenOptions={{
           presentation: "fullScreenModal",
@@ -84,14 +95,6 @@ export default function RootNavigator() {
             headerBackground: () => () => <View></View>,
             animation: "none",
           })}
-        />
-
-        <Stack.Screen
-          name="QRScreen"
-          component={QRScreen}
-          options={{
-            headerShown: false,
-          }}
         />
 
         <Stack.Screen
@@ -146,6 +149,46 @@ export default function RootNavigator() {
                 </Text>
               </View>
             ),
+          })}
+        />
+
+        <Stack.Screen
+          name="RequestAddFriend"
+          component={RequestAddFriend}
+          options={({
+            navigation,
+          }: RootStackScreenProps<"RequestAddFriend">) => ({
+            headerBackVisible: false,
+            headerTitle: "",
+            headerStyle: {
+              backgroundColor: "#0091ff",
+            },
+            headerLeft: () => (
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <Pressable onPress={() => navigation.goBack()}>
+                  <Ionicons name="chevron-back" size={26} color="white" />
+                </Pressable>
+                <Text
+                  style={{
+                    marginLeft: 10,
+                    fontSize: 18,
+                    fontWeight: "bold",
+                    color: "white",
+                  }}
+                >
+                  Lời mời kết bạn
+                </Text>
+              </View>
+            ),
+          })}
+        />
+
+        <Stack.Screen
+          name="ProfileUser"
+          component={ProfileUserScreen}
+          options={({ navigation }: RootStackScreenProps<"ProfileUser">) => ({
+            headerBackTitle: "",
+            headerTitle: "",
           })}
         />
       </Stack.Group>

@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
@@ -48,6 +49,8 @@ const AppScreen = () => {
 
   useEffect(() => {
     handleCheckLogin();
+
+    // console.log(a);
   }, []);
 
   return isLoading ? (

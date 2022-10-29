@@ -18,8 +18,16 @@ export default function TabOneScreen() {
         swipeEnabled: false,
       }}
     >
-      <Tab.Screen name="Friend" component={FriendScreen} />
-      <Tab.Screen name="Group" component={GroupScreen} />
+      <Tab.Screen
+        name="Friend"
+        component={FriendScreen}
+        options={{ title: "BẠN BÈ" }}
+      />
+      <Tab.Screen
+        name="Group"
+        component={GroupScreen}
+        options={{ title: "NHÓM" }}
+      />
       <Tab.Screen name="OA" component={OAScreen} />
     </Tab.Navigator>
   );

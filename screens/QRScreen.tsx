@@ -8,7 +8,7 @@ const Tab = createBottomTabNavigator();
 
 const QRScreen = () => {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator initialRouteName="QRScanerScreen">
       <Tab.Screen
         name="Quét QR"
         component={QRScanerScreen}
