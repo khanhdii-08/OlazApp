@@ -64,6 +64,7 @@ export default function RootNavigator() {
           },
           headerBackTitleVisible: false,
           title: "Username",
+          headerBackButtonMenuEnabled: false,
         }}
       />
 

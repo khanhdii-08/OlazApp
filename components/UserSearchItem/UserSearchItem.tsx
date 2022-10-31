@@ -9,8 +9,6 @@ const UserSearchItem = ({ props }: any) => {
 
   const dataAvatar = { avatar, name, totalMembers, avatarColor };
 
-  //   console.log(dataAvatar);
-
   return (
     <Pressable style={styles.container}>
       <CustomAvatar props={dataAvatar} />
@@ -30,7 +28,15 @@ const UserSearchItem = ({ props }: any) => {
             <Text style={{ color: "#0091ff" }}>Kết bạn</Text>
           </Pressable>
         ) : (
-          <></>
+          <View>
+            {status === "FOLLOWER" ? (
+              <Pressable style={styles.btn}>
+                <Text style={{ color: "#0091ff" }}>Đồng ý</Text>
+              </Pressable>
+            ) : (
+              <></>
+            )}
+          </View>
         )}
       </View>
     </Pressable>

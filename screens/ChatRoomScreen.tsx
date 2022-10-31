@@ -1,31 +1,61 @@
-import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, FlatList, SafeAreaView } from "react-native";
+import React, { useState, useEffect, useRef } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  FlatList,
+  SafeAreaView,
+  ActivityIndicator,
+} from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import Message from "../components/Message";
 import MessageInput from "../components/MessageInput";
 import { useAppDispatch, useAppSelector } from "../store";
 import { getMessages, messageSelector } from "../store/reducers/messageSlice";
 import { conversationSelector } from "../store/reducers/conversationSlice";
-import jwt from "../utils/jwt";
 
 export default function ChatRoomScreen() {
   const navigation = useNavigation();
+
+  let listViewRef: any;
 
   const { conversation, conversationId } = useAppSelector(conversationSelector);
 
   navigation.setOptions({ title: conversation.name });
 
-  const message = useAppSelector(messageSelector);
+  const { messages, isLoading } = useAppSelector(messageSelector);
+
+  // useEffect(() => {
+  //   listViewRef.scrollToIndex({
+  //     animated: true,
+  //     index: 1,
+  //     viewOffset: 0,
+  //     viewPosition: 0.5,
+  //   });
+  // }, []);
 
   return (
     <SafeAreaView style={styles.page}>
-      <FlatList
-        data={message.messages.data}
-        renderItem={({ item }) => <Message message={item} />}
-        refreshing={message.isLoading}
-        inverted
-        // ref={ref => this.flatList = ref}
-      />
+      {isLoading ? (
+        <ActivityIndicator
+          style={{
+            paddingTop: 20,
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        />
+      ) : (
+        <FlatList
+          inverted
+          data={[...messages.data].reverse()}
+          // keyExtractor={(item) => item._id}
+          renderItem={({ item }) => <Message message={item} />}
+          // ref={(ref) => {
+          //   listViewRef = ref;
+          // }}
+        />
+      )}
       <MessageInput conversationId={conversationId} />
     </SafeAreaView>
   );

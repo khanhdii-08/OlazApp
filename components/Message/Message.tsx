@@ -6,7 +6,6 @@ const Message = ({ message }: { message: any }) => {
 
   const isMe = message.user._id === myId;
 
-  // console.log(sortMessage);
   return (
     <View
       style={[

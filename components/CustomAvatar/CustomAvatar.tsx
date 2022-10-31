@@ -8,21 +8,29 @@ const CustomAvatar = ({ props }: any) => {
   const arr = Array.from(Array(totalMembers), (_, index) => index + 1);
 
   return typeof avatar === "string" ? (
-    <Avatar
-      rounded
-      title={name[0]}
-      overlayContainerStyle={{
-        backgroundColor: avatarColor,
-      }}
-      source={
-        avatar.length
-          ? {
-              uri: avatar,
-            }
-          : {}
-      }
-      size="medium"
-    />
+    <>
+      {avatar.length ? (
+        <Avatar
+          rounded
+          overlayContainerStyle={{
+            backgroundColor: avatarColor,
+          }}
+          source={{
+            uri: avatar,
+          }}
+          size="medium"
+        />
+      ) : (
+        <Avatar
+          rounded
+          title={name[0]}
+          overlayContainerStyle={{
+            backgroundColor: avatarColor,
+          }}
+          size="medium"
+        />
+      )}
+    </>
   ) : (
     <View style={styles.container}>
       {arr.map((value) =>

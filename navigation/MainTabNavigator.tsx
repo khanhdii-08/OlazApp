@@ -20,7 +20,11 @@ import {
 } from "../store/reducers/conversationSlice";
 import { rerenderMessage } from "../store/reducers/messageSlice";
 import { getUserById } from "../store/reducers/userSlice";
-import { getFriends } from "../store/reducers/friendReducer";
+import {
+  getFriends,
+  getListInvite,
+  getListMeInvite,
+} from "../store/reducers/friendReducer";
 
 const BottomTab = createBottomTabNavigator<RootTabParamList>();
 
@@ -45,6 +49,8 @@ export default function TabNavigator() {
     dispatch(getConversations({ name: "", type: 0 }));
     dispatch(getUserById(user._id));
     dispatch(getFriends());
+    dispatch(getListInvite());
+    dispatch(getListMeInvite());
   }, []);
 
   useEffect(() => {
