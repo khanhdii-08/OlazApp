@@ -91,11 +91,11 @@ export default function RootNavigator() {
         <Stack.Screen
           name="Search"
           component={SearchScreen}
-          options={({ navigation }: RootStackScreenProps<"Search">) => ({
+          options={{
             headerShown: false,
-            headerBackground: () => () => <View></View>,
+            headerBackground: () => <></>,
             animation: "none",
-          })}
+          }}
         />
 
         <Stack.Screen

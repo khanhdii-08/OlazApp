@@ -1,8 +1,15 @@
-import { StyleSheet, Text, View, ActivityIndicator } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  ActivityIndicator,
+  ImageBackground,
+} from "react-native";
 import React, { useEffect } from "react";
 
 import { useNavigation } from "@react-navigation/native";
 import { useAuthContext } from "../contexts/AuthContext";
+import { StatusBar } from "expo-status-bar";
 
 const SplashScreen = () => {
   const navigation = useNavigation();
@@ -16,17 +23,22 @@ const SplashScreen = () => {
   // }, []);
 
   return (
-    <View style={styles.container}>
-      <ActivityIndicator />
-    </View>
+    <ImageBackground
+      style={styles.background}
+      source={require("../assets/images/splash.png")}
+      resizeMode="cover"
+    ></ImageBackground>
   );
 };
 
 export default SplashScreen;
 
 const styles = StyleSheet.create({
-  container: {
+  background: {
     flex: 1,
     justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#0068FF",
+    resizeMode: "cover",
   },
 });

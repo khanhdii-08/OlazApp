@@ -1,19 +1,35 @@
 import { StyleSheet, Text, View } from "react-native";
 import JWTManager from "../../utils/jwt";
+import MessageDivider from "./MessageDivider";
 
-const Message = ({ message }: { message: any }) => {
+const Message = ({ index, message }: { index: any; message: any }) => {
+  const nextMessage: any = message?.[index + 1];
+
+  const nextMessageTime: any = new Date(nextMessage?.createdAt);
+  const messageTime: any = new Date(message.createdAt);
+  const messageTimeTemp: any = new Date(message.createdAt);
+
+  // console.log(messageTimeTemp);
+
+  const isSeparate =
+    messageTimeTemp.setMinutes(messageTimeTemp.getMinutes() - 5) >
+    nextMessageTime;
+
   const myId = JWTManager.getUserId()?.toString() as string;
 
   const isMe = message.user._id === myId;
 
   return (
-    <View
-      style={[
-        styles.container,
-        isMe ? styles.rightContainer : styles.leftContainer,
-      ]}
-    >
-      <Text style={{ color: "black" }}>{message.content}</Text>
+    <View>
+      {isSeparate && <MessageDivider dateString={messageTime} />}
+      <View
+        style={[
+          styles.container,
+          isMe ? styles.rightContainer : styles.leftContainer,
+        ]}
+      >
+        <Text style={{ color: "black" }}>{message.content}</Text>
+      </View>
     </View>
   );
 };

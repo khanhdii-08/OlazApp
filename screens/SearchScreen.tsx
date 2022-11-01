@@ -63,9 +63,11 @@ export default function ModalScreen({
     </LinearGradient>
   );
 
-  navigation.setOptions({
-    headerBackground: () => headerSearch(),
-  });
+  useEffect(() => {
+    navigation.setOptions({
+      headerBackground: () => headerSearch(),
+    });
+  }, [false]);
 
   useCallback(() => {
     headerSearch();

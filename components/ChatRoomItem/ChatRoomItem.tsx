@@ -15,13 +15,24 @@ import { getMessages } from "../../store/reducers/messageSlice";
 import { setCurrentConversation } from "../../store/reducers/conversationSlice";
 import CustomAvatar from "../CustomAvatar/CustomAvatar";
 
+export interface ParamsApi {
+  page: number;
+  size: number;
+}
+
 export default function ChatRoomItem({ chatRoom }: { chatRoom: any }) {
   const dispatch = useAppDispatch();
   const navigation = useNavigation();
 
+  const paramsApi: ParamsApi = {
+    page: 0,
+    size: 20,
+  };
+
   const onPress = (conversation: any) => {
+    const conversationId: string = conversation._id;
     dispatch(setCurrentConversation(conversation));
-    dispatch(getMessages(conversation._id));
+    dispatch(getMessages({ conversationId, paramsApi }));
     navigation.navigate("ChatRoom");
   };
 
