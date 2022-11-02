@@ -19,7 +19,9 @@ import { useAppDispatch } from "../../store";
 import { sendMessage } from "../../store/reducers/messageSlice";
 import EmojiSelector from "react-native-emoji-selector";
 
-const MessageInput = ({ conversationId }: { conversationId: string }) => {
+const MessageInput = (props: any) => {
+  const { conversationId, scrollViewRef } = props;
+
   const [content, setContent] = useState("");
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
   const dispatch = useAppDispatch();
@@ -28,6 +30,7 @@ const MessageInput = ({ conversationId }: { conversationId: string }) => {
     if (content) {
       dispatch(sendMessage({ conversationId, content, type: "TEXT" }));
       setContent("");
+      scrollViewRef.current.scrollToOffset({ animated: true, offset: 0 });
       setIsEmojiPickerOpen(false);
     } else {
     }

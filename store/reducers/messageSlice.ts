@@ -21,6 +21,10 @@ const initialState: Message = {
 
 const NAME = "message";
 
+const getUniqueListBy = (arr: Array<any>, key: string) => {
+  return [...new Map(arr.map((item) => [item[key], item])).values()];
+};
+
 export const getMessages = createAsyncThunk(
   `${NAME}`,
   async (params: { conversationId: string; paramsApi: ParamsApi }) => {
@@ -58,7 +62,12 @@ const messageSlice = createSlice({
     builder.addCase(getMessages.fulfilled, (state, action) => {
       state.isLoading = false;
       state.error = false;
-      state.messages = action.payload;
+      if (state.messages.length === 0) {
+        state.messages = action.payload;
+      } else {
+        const temp = [...action.payload.data, ...state.messages.data];
+        state.messages.data = getUniqueListBy(temp, "_id");
+      }
     });
     builder.addCase(getMessages.rejected, (state, action) => {
       state.error = true;

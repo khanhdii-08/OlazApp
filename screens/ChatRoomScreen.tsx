@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import {
   StyleSheet,
   Text,
@@ -32,6 +32,8 @@ export default function ChatRoomScreen() {
   const navigation = useNavigation();
   const dispatch = useAppDispatch();
 
+  const scrollViewRef: any = useRef();
+
   const { conversation, conversationId } = useAppSelector(conversationSelector);
   const { messages, isLoading } = useAppSelector(messageSelector);
 
@@ -40,18 +42,15 @@ export default function ChatRoomScreen() {
     size: 20,
   });
 
-  const scrollViewRef: any = useRef();
-
   useEffect(() => {
     navigation.setOptions({ title: conversation.name });
   }, [false]);
 
-  // console.log(messages.totalPages);
-
   const goToNextPage = async () => {
-    console.log("duy", apiParams.page);
     const currentPage = apiParams.page;
     const totalPages = messages.totalPages;
+
+    console.log(currentPage, totalPages);
 
     if (currentPage < totalPages - 1) {
       const nextPage = currentPage + 1;
@@ -81,7 +80,6 @@ export default function ChatRoomScreen() {
           }}
           inverted
           data={[...messages.data].reverse()}
-          // data={messages.data}
           keyExtractor={(item) => item._id}
           renderItem={({ item, index }) => (
             <Message index={index} message={item} />
@@ -92,37 +90,15 @@ export default function ChatRoomScreen() {
           }
           ref={scrollViewRef}
           // onContentSizeChange={() =>
-          //   scrollViewRef.current.scrollToEnd({ animated: true, offset: 0 })
+          //   scrollViewRef.current.scrollToOffset({ animated: true, offset: 0 })
           // }
         />
       )}
-      <MessageInput conversationId={conversationId} />
+      <MessageInput
+        conversationId={conversationId}
+        scrollViewRef={scrollViewRef}
+      />
     </View>
-
-    // <View style={styles.page}>
-    //   {!messages.data ? (
-    //     <ActivityIndicator
-    //       style={{
-    //         paddingTop: 20,
-    //         flex: 1,
-    //         justifyContent: "center",
-    //         alignItems: "center",
-    //       }}
-    //     />
-    //   ) : (
-    //     <ScrollView
-    //       ref={scrollViewRef}
-    //       onContentSizeChange={() =>
-    //         scrollViewRef.current.scrollToEnd({ animated: true })
-    //       }
-    //     >
-    //       {[...messages.data].map((item) => (
-    //         <Message key={item._id} message={item} />
-    //       ))}
-    //     </ScrollView>
-    //   )}
-
-    // </View>
   );
 }
 

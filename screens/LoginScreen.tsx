@@ -39,7 +39,7 @@ const LoginScreen = () => {
   const onPress = async () => {
     try {
       const result = await login(username, password);
-      await AsyncStorage.setItem("refreshToken", result.refreshToken);
+      // await AsyncStorage.setItem("refreshToken", result.refreshToken);
       jwt.setToken(result.token);
       configAxios();
       dispatch(setLogin(true));

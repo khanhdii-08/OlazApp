@@ -27,11 +27,13 @@ import QRScreen from "../screens/QRScreen";
 import RequestAddFriend from "../screens/RequestAddFriendScreen";
 import ProfileUserScreen from "../screens/ProfileUserScreen";
 import EditUserScreen from "../screens/EditUserScreen";
+import { useAppDispatch } from "../store";
+import { resetMessageSlice } from "../store/reducers/messageSlice";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function RootNavigator() {
-  const input = useRef("");
+  const dispatch = useAppDispatch();
 
   const headerGradient = (
     <LinearGradient
@@ -57,7 +59,7 @@ export default function RootNavigator() {
       <Stack.Screen
         name="ChatRoom"
         component={ChatRoomScreen}
-        options={{
+        options={({ navigation }: RootStackScreenProps<"ChatRoom">) => ({
           headerTintColor: "white",
           headerTitle: ChatRoomHeader,
           headerStyle: {
@@ -65,8 +67,17 @@ export default function RootNavigator() {
           },
           headerBackTitleVisible: false,
           title: "Username",
-          headerBackButtonMenuEnabled: false,
-        }}
+          headerBackVisible: false,
+          headerLeft: () => (
+            <Pressable
+              onPress={() => {
+                dispatch(resetMessageSlice(null)), navigation.goBack();
+              }}
+            >
+              <Ionicons name="chevron-back" size={26} color="white" />
+            </Pressable>
+          ),
+        })}
       />
 
       <Stack.Screen
