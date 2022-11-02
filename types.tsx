@@ -29,6 +29,7 @@ export type RootStackParamList = {
   MenuPopup: undefined;
   QRScreen: undefined;
   RequestAddFriend: undefined;
+  EditUser: undefined;
   ProfileUser: { userId: string };
 };
 

@@ -24,7 +24,8 @@ import {
   getFriends,
   getListInvite,
   getListMeInvite,
-} from "../store/reducers/friendReducer";
+} from "../store/reducers/friendSlice";
+import { getProfile } from "../store/reducers/meSlice";
 
 const BottomTab = createBottomTabNavigator<RootTabParamList>();
 
@@ -51,6 +52,7 @@ export default function TabNavigator() {
     dispatch(getFriends());
     dispatch(getListInvite());
     dispatch(getListMeInvite());
+    dispatch(getProfile());
   }, []);
 
   useEffect(() => {

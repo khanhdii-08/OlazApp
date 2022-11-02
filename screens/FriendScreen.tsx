@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import FriendItem from "../components/FriendItem/FriendItem";
 import { useAppSelector } from "../store";
-import { friendSeletor } from "../store/reducers/friendReducer";
+import { friendSeletor } from "../store/reducers/friendSlice";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 

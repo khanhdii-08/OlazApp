@@ -16,16 +16,17 @@ import { resetMessageSlice } from "../store/reducers/messageSlice";
 import { Avatar } from "react-native-elements";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 import { userSelector } from "../store/reducers/userSlice";
+import { meSelector } from "../store/reducers/meSlice";
 
 export default function () {
   const navigation = useNavigation();
   const dispatch = useAppDispatch();
 
-  const user = useAppSelector(userSelector);
+  const { userProfile } = useAppSelector(meSelector);
 
   const { logoutClient } = useAuthContext();
 
-  const logout = (dispatch: any) => {
+  const logout = () => {
     if (dispatch) {
       dispatch(resetAuthSlice(null));
       dispatch(resetConversationSlice(null));
@@ -36,40 +37,43 @@ export default function () {
 
   const onPress = async () => {
     logoutClient();
-    await logout(dispatch);
+    await logout();
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.containerTop}>
         <View style={styles.header}>
-          {user.avatar.length ? (
+          {userProfile.avatar.length ? (
             <Avatar
               rounded
               overlayContainerStyle={{
-                backgroundColor: user.avatarColor,
+                backgroundColor: userProfile.avatarColor,
               }}
               source={{
-                uri: user.avatar,
+                uri: userProfile.avatar,
               }}
               size="medium"
             />
           ) : (
             <Avatar
               rounded
-              title={user.name[0]}
+              title={userProfile.name[0]}
               overlayContainerStyle={{
-                backgroundColor: user.avatarColor,
+                backgroundColor: userProfile.avatarColor,
               }}
               size="medium"
             />
           )}
-          <Text style={styles.textNameUser}>{user.name}</Text>
+          <Text style={styles.textNameUser}>{userProfile.name}</Text>
         </View>
         <View>
-          <TouchableOpacity style={styles.Wallet}>
-            <Ionicons name="wallet-outline" size={35} color="#1E90FF" />
-            <Text style={styles.textWallet}>Ví QR</Text>
+          <TouchableOpacity
+            style={styles.Wallet}
+            onPress={() => navigation.navigate("EditUser")}
+          >
+            <AntDesign name="edit" size={24} color="#1E90FF" />
+            <Text style={styles.textWallet}>Chỉnh sửa thông tin</Text>
           </TouchableOpacity>
         </View>
         <View>
@@ -82,7 +86,7 @@ export default function () {
       <View style={{ alignItems: "flex-end", marginEnd: 20 }}>
         <TouchableOpacity
           onPress={onPress}
-          style={[styles.btnLogout, { opacity: 1 }]}
+          style={[styles.btnLogout, { opacity: 0.7 }]}
         >
           <View>
             <Pressable onPress={onPress}>
@@ -117,6 +121,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 10,
     borderRadius: 30,
+    // backgroundColor: "#CDC9C9",
     backgroundColor: "#ee4d2d",
     // margin: 300,
   },

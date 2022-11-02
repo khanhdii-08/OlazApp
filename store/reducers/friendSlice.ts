@@ -1,4 +1,4 @@
-import { RootState } from "./../index";
+import { RootState } from "../index";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { apiFriend } from "../../service/friendService";
 

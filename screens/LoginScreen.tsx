@@ -22,6 +22,7 @@ import { setLogin } from "../store/reducers/authSlice";
 import { useAppDispatch } from "../store";
 import { configAxios } from "../utils/httpRequest";
 import { getConversations } from "../store/reducers/conversationSlice";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const LoginScreen = () => {
   const { setIsAuthenticatied } = useAuthContext();
@@ -38,6 +39,7 @@ const LoginScreen = () => {
   const onPress = async () => {
     try {
       const result = await login(username, password);
+      await AsyncStorage.setItem("refreshToken", result.refreshToken);
       jwt.setToken(result.token);
       configAxios();
       dispatch(setLogin(true));

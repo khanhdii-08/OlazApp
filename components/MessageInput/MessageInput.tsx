@@ -17,66 +17,91 @@ import {
 } from "@expo/vector-icons";
 import { useAppDispatch } from "../../store";
 import { sendMessage } from "../../store/reducers/messageSlice";
+import EmojiSelector from "react-native-emoji-selector";
 
 const MessageInput = ({ conversationId }: { conversationId: string }) => {
   const [content, setContent] = useState("");
+  const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
   const dispatch = useAppDispatch();
 
   const onPress = () => {
     if (content) {
       dispatch(sendMessage({ conversationId, content, type: "TEXT" }));
       setContent("");
+      setIsEmojiPickerOpen(false);
     } else {
     }
   };
 
   return (
     <KeyboardAvoidingView
-      style={styles.root}
+      style={[styles.root, { height: isEmojiPickerOpen ? "50%" : "auto" }]}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       keyboardVerticalOffset={70}
     >
-      <View style={styles.inputContainer}>
-        <SimpleLineIcons
-          name="emotsmile"
-          size={24}
-          color="#595959"
-          style={styles.icon}
-        />
-        <TextInput
-          style={styles.input}
-          value={content}
-          onChangeText={(newContent) => setContent(newContent)}
-          placeholderTextColor="#BBBBBB"
-          placeholder="Tin nhắn"
-        />
-        <Feather name="camera" size={24} color="#595959" style={styles.icon} />
-        <MaterialCommunityIcons
-          name="microphone-outline"
-          size={24}
-          color="#595959"
-          style={styles.icon}
-        />
-      </View>
-      <View style={styles.buttonContainer}>
-        <Text style={styles.buttonText}>
+      <View style={styles.row}>
+        <View style={styles.inputContainer}>
+          <Pressable
+            onPress={() =>
+              setIsEmojiPickerOpen((currentValue) => !currentValue)
+            }
+          >
+            <SimpleLineIcons
+              name="emotsmile"
+              size={24}
+              color="#595959"
+              style={styles.icon}
+            />
+          </Pressable>
+          <TextInput
+            style={styles.input}
+            value={content}
+            onChangeText={(newContent) => setContent(newContent)}
+            placeholderTextColor="#BBBBBB"
+            placeholder="Tin nhắn"
+            onBlur={() => setIsEmojiPickerOpen(false)}
+          />
+          <Feather
+            name="camera"
+            size={24}
+            color="#595959"
+            style={styles.icon}
+          />
+          <MaterialCommunityIcons
+            name="microphone-outline"
+            size={24}
+            color="#595959"
+            style={styles.icon}
+          />
+        </View>
+
+        <Pressable style={styles.buttonContainer} onPress={() => onPress()}>
           {content ? (
-            <Pressable onPress={() => onPress()}>
-              <Ionicons name="send" size={24} color="black" />
-            </Pressable>
+            <Ionicons name="send" size={18} color="white" />
           ) : (
             <AntDesign name="plus" size={24} color="white" />
           )}
-        </Text>
+        </Pressable>
       </View>
+
+      {isEmojiPickerOpen && (
+        <EmojiSelector
+          onEmojiSelected={(emoji) =>
+            setContent((currentContent) => currentContent + emoji)
+          }
+          columns={8}
+        />
+      )}
     </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
   root: {
-    flexDirection: "row",
     padding: 10,
+  },
+  row: {
+    flexDirection: "row",
   },
   inputContainer: {
     backgroundColor: "#f2f2f2",
@@ -103,10 +128,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     justifyContent: "center",
     alignItems: "center",
-  },
-  buttonText: {
-    color: "white",
-    fontSize: 30,
   },
 });
 

@@ -26,6 +26,7 @@ import SearchInput from "../components/SearchInput";
 import QRScreen from "../screens/QRScreen";
 import RequestAddFriend from "../screens/RequestAddFriendScreen";
 import ProfileUserScreen from "../screens/ProfileUserScreen";
+import EditUserScreen from "../screens/EditUserScreen";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -69,9 +70,9 @@ export default function RootNavigator() {
       />
 
       <Stack.Screen
-        name="NotFound"
-        component={NotFoundScreen}
-        options={{ title: "Oops!" }}
+        name="EditUser"
+        component={EditUserScreen}
+        options={{ headerShown: false }}
       />
 
       <Stack.Screen
