@@ -1,15 +1,16 @@
 import { StyleSheet, Text, View } from "react-native";
 import JWTManager from "../../utils/jwt";
 import MessageDivider from "./MessageDivider";
+import dateUtils from "../../utils/dateUtils";
 
-const Message = ({ index, message }: { index: any; message: any }) => {
-  const nextMessage: any = message?.[index + 1];
+const Message = (props: any) => {
+  const { index, item, messages } = props;
+
+  const nextMessage: any = messages?.[index + 1];
 
   const nextMessageTime: any = new Date(nextMessage?.createdAt);
-  const messageTime: any = new Date(message.createdAt);
-  const messageTimeTemp: any = new Date(message.createdAt);
-
-  // console.log(messageTimeTemp);
+  const messageTime: any = new Date(item.createdAt);
+  const messageTimeTemp: any = new Date(item.createdAt);
 
   const isSeparate =
     messageTimeTemp.setMinutes(messageTimeTemp.getMinutes() - 5) >
@@ -17,7 +18,7 @@ const Message = ({ index, message }: { index: any; message: any }) => {
 
   const myId = JWTManager.getUserId()?.toString() as string;
 
-  const isMe = message.user._id === myId;
+  const isMe = item.user._id === myId;
 
   return (
     <View>
@@ -28,7 +29,12 @@ const Message = ({ index, message }: { index: any; message: any }) => {
           isMe ? styles.rightContainer : styles.leftContainer,
         ]}
       >
-        <Text style={{ color: "black" }}>{message.content}</Text>
+        <View>
+          <Text style={{ color: "black" }}>{item.content}</Text>
+          <Text style={{ color: "black", fontSize: 10 }}>
+            {dateUtils.getTime(item.createdAt)}
+          </Text>
+        </View>
       </View>
     </View>
   );
@@ -41,6 +47,7 @@ const styles = StyleSheet.create({
     margin: 10,
     borderRadius: 10,
     maxWidth: "75%",
+    minWidth: "20%",
   },
   leftContainer: {
     backgroundColor: "white",

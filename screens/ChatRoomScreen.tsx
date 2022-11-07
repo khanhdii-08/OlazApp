@@ -31,7 +31,6 @@ export interface Message {
 export default function ChatRoomScreen() {
   const navigation = useNavigation();
   const dispatch = useAppDispatch();
-
   const scrollViewRef: any = useRef();
 
   const { conversation, conversationId } = useAppSelector(conversationSelector);
@@ -49,9 +48,6 @@ export default function ChatRoomScreen() {
   const goToNextPage = async () => {
     const currentPage = apiParams.page;
     const totalPages = messages.totalPages;
-
-    console.log(currentPage, totalPages);
-
     if (currentPage < totalPages - 1) {
       const nextPage = currentPage + 1;
       const newParam = { ...apiParams, page: nextPage };
@@ -82,7 +78,11 @@ export default function ChatRoomScreen() {
           data={[...messages.data].reverse()}
           keyExtractor={(item) => item._id}
           renderItem={({ item, index }) => (
-            <Message index={index} message={item} />
+            <Message
+              index={index}
+              item={item}
+              messages={[...messages.data].reverse()}
+            />
           )}
           initialNumToRender={20}
           ListFooterComponent={() =>

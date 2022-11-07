@@ -3,10 +3,10 @@ import dateUtils from "../../utils/dateUtils";
 
 const MessageDivider = (props: any) => {
   const { dateString, isLoading } = props;
+
   const time = dateUtils.getTime(dateString);
   const date = dateUtils.getDate(dateString);
-
-  console.log(time, date);
+  const dateNow = dateUtils.getDate(new Date());
 
   return isLoading ? (
     <View style={styles.loading}>
@@ -15,7 +15,9 @@ const MessageDivider = (props: any) => {
     </View>
   ) : (
     <View style={styles.container}>
-      <Text style={styles.date}>{`${time}, ${date}`}</Text>
+      <Text style={styles.date}>{`${time}, ${
+        date === dateNow ? "Hôm nay" : date
+      }`}</Text>
     </View>
   );
 };
