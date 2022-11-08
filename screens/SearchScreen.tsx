@@ -26,6 +26,7 @@ import { useAppDispatch, useAppSelector } from "../store";
 import UserSearchItem from "../components/UserSearchItem/UserSearchItem";
 import JWTManager from "../utils/jwt";
 import userApi from "../service/userService";
+import { useNavigation } from "@react-navigation/native";
 
 export default function ModalScreen({
   navigation,
@@ -54,7 +55,7 @@ export default function ModalScreen({
         <SearchInput search={search} setSearch={setSearch} />
         <Pressable
           onPress={() => {
-            navigation.navigate("QRScreen");
+            navigation.navigate("Root"), navigation.navigate("QRScreen");
           }}
         >
           <MaterialIcons name="qr-code-scanner" size={24} color="white" />
@@ -67,7 +68,7 @@ export default function ModalScreen({
     navigation.setOptions({
       headerBackground: () => headerSearch(),
     });
-  }, [false]);
+  }, [search]);
 
   useCallback(() => {
     headerSearch();

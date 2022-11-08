@@ -1,9 +1,15 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Image } from "react-native";
 import JWTManager from "../../utils/jwt";
 import MessageDivider from "./MessageDivider";
 import dateUtils from "../../utils/dateUtils";
+import jwt from "../../utils/jwt";
+import HTMLView from "react-native-htmlview";
+
+// HTMLElement;
 
 const Message = (props: any) => {
+  const user = { _id: jwt.getUserId() };
+
   const { index, item, messages } = props;
 
   const nextMessage: any = messages?.[index + 1];
@@ -16,28 +22,79 @@ const Message = (props: any) => {
     messageTimeTemp.setMinutes(messageTimeTemp.getMinutes() - 5) >
     nextMessageTime;
 
-  const myId = JWTManager.getUserId()?.toString() as string;
+  const myId = user._id;
 
   const isMe = item.user._id === myId;
+
+  const listImage = item.type === "GROUP_IMAGE" && item.content?.split(";");
+
+  // listImage.splice(listImage.length - 1, 1);
 
   return (
     <View>
       {isSeparate && <MessageDivider dateString={messageTime} />}
-      <View
-        style={[
-          styles.container,
-          isMe ? styles.rightContainer : styles.leftContainer,
-        ]}
-      >
-        <View>
-          <Text style={{ color: "black" }}>{item.content}</Text>
-          <Text style={{ color: "black", fontSize: 10 }}>
-            {dateUtils.getTime(item.createdAt)}
-          </Text>
-        </View>
-      </View>
+      {item.type === "TEXT" ? (
+        chatContent.messageText(item, isMe)
+      ) : item.type === "GROUP_IMAGE" ? (
+        chatContent.messageGroupImage(item, isMe)
+      ) : item.type === "NOTIFY" ? (
+        chatContent.messageNotify(item, isMe)
+      ) : (
+        <></>
+      )}
     </View>
   );
+};
+
+const chatContent = {
+  messageNotify: (item: any, isMe: boolean) => {
+    const { type, content, user } = item;
+    const contentWithSenderName = `<p> ${
+      isMe ? "Bạn" : user.name
+    } ${content}</p`;
+    return (
+      <View style={[styles.containerNotify]}>
+        <View>
+          <HTMLView
+            value={contentWithSenderName}
+            stylesheet={{ p: { fontSize: 13, flexWrap: "wrap" } }}
+          />
+        </View>
+      </View>
+    );
+  },
+  messageText: (item: any, isMe: boolean) => (
+    <View
+      style={[
+        styles.container,
+        isMe ? styles.rightContainer : styles.leftContainer,
+      ]}
+    >
+      <View>
+        <Text style={{ color: "black" }}>{item.content}</Text>
+        <Text style={{ color: "black", fontSize: 10 }}>
+          {dateUtils.getTime(item.createdAt)}
+        </Text>
+      </View>
+    </View>
+  ),
+  messageGroupImage: (item: any, isMe: boolean) => (
+    <View
+      style={[
+        styles.container,
+        isMe ? styles.rightContainer : styles.leftContainer,
+      ]}
+    >
+      <View>
+        {item.type === "GROUP_IMAGE" && (
+          <Image source={{ uri: item.content }} />
+        )}
+        <Text style={{ color: "black", fontSize: 10 }}>
+          {dateUtils.getTime(item.createdAt)}
+        </Text>
+      </View>
+    </View>
+  ),
 };
 
 const styles = StyleSheet.create({
@@ -48,6 +105,17 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     maxWidth: "75%",
     minWidth: "20%",
+  },
+  containerNotify: {
+    backgroundColor: "#fcfdff",
+    alignSelf: "center",
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row",
+    borderRadius: 100,
+    paddingVertical: 1,
+    paddingHorizontal: 10,
+    marginBottom: 10,
   },
   leftContainer: {
     backgroundColor: "white",

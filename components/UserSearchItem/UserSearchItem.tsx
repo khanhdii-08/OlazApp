@@ -6,7 +6,6 @@ const UserSearchItem = ({ props }: any) => {
   const { avatar, avatarColor, name, status, username } = props;
 
   const totalMembers: number = 0;
-
   const dataAvatar = { avatar, name, totalMembers, avatarColor };
 
   return (

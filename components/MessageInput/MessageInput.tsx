@@ -18,13 +18,31 @@ import {
 import { useAppDispatch } from "../../store";
 import { sendMessage } from "../../store/reducers/messageSlice";
 import EmojiSelector from "react-native-emoji-selector";
+import * as ImagePicker from "expo-image-picker";
 
 const MessageInput = (props: any) => {
   const { conversationId, scrollViewRef } = props;
 
+  const [image, setImage] = useState<String | null>(null);
+
   const [content, setContent] = useState("");
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
   const dispatch = useAppDispatch();
+
+  const pickImage = async () => {
+    let result: any = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsMultipleSelection: true,
+      selectionLimit: 0,
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.cancelled) {
+      setImage(result.uri);
+    }
+  };
 
   const onPress = () => {
     if (content) {
@@ -64,12 +82,24 @@ const MessageInput = (props: any) => {
             placeholder="Tin nhắn"
             onBlur={() => setIsEmojiPickerOpen(false)}
           />
-          <Feather
-            name="camera"
-            size={24}
-            color="#595959"
-            style={styles.icon}
-          />
+          <Pressable onPress={pickImage}>
+            <Feather
+              name="image"
+              size={24}
+              color="#595959"
+              style={styles.icon}
+            />
+          </Pressable>
+
+          <Pressable>
+            <Feather
+              name="camera"
+              size={24}
+              color="#595959"
+              style={styles.icon}
+            />
+          </Pressable>
+
           <MaterialCommunityIcons
             name="microphone-outline"
             size={24}

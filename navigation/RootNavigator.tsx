@@ -86,15 +86,6 @@ export default function RootNavigator() {
         options={{ headerShown: false }}
       />
 
-      <Stack.Screen
-        name="QRScreen"
-        component={QRScreen}
-        options={{
-          headerShown: false,
-          animation: "slide_from_bottom",
-          gestureEnabled: false,
-        }}
-      />
       <Stack.Group
         screenOptions={{
           presentation: "fullScreenModal",
@@ -107,6 +98,15 @@ export default function RootNavigator() {
             headerShown: false,
             headerBackground: () => <></>,
             animation: "none",
+          }}
+        />
+
+        <Stack.Screen
+          name="QRScreen"
+          component={QRScreen}
+          options={{
+            headerShown: false,
+            presentation: "fullScreenModal",
           }}
         />
 

@@ -17,17 +17,6 @@ import { getMessages, messageSelector } from "../store/reducers/messageSlice";
 import { conversationSelector } from "../store/reducers/conversationSlice";
 import MessageDivider from "../components/Message/MessageDivider";
 
-export interface Message {
-  _id: string;
-  text: string;
-  createdAt: Date;
-  user: {
-    _id: string;
-    name: string;
-    avatar: string;
-  };
-}
-
 export default function ChatRoomScreen() {
   const navigation = useNavigation();
   const dispatch = useAppDispatch();
@@ -89,9 +78,6 @@ export default function ChatRoomScreen() {
             isLoading ? <MessageDivider isLoading={true} /> : null
           }
           ref={scrollViewRef}
-          // onContentSizeChange={() =>
-          //   scrollViewRef.current.scrollToOffset({ animated: true, offset: 0 })
-          // }
         />
       )}
       <MessageInput

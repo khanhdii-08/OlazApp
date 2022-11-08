@@ -6,7 +6,12 @@ const MessageDivider = (props: any) => {
 
   const time = dateUtils.getTime(dateString);
   const date = dateUtils.getDate(dateString);
-  const dateNow = dateUtils.getDate(new Date());
+  const dateTemp = new Date();
+  const dateNow = dateUtils.getDate(dateTemp);
+
+  dateTemp.setDate(dateTemp.getDate() - 1);
+
+  const dataOld = dateUtils.getDate(dateTemp);
 
   return isLoading ? (
     <View style={styles.loading}>
@@ -16,7 +21,7 @@ const MessageDivider = (props: any) => {
   ) : (
     <View style={styles.container}>
       <Text style={styles.date}>{`${time}, ${
-        date === dateNow ? "Hôm nay" : date
+        date === dateNow ? "Hôm nay" : date === dataOld ? "Hôm qua" : date
       }`}</Text>
     </View>
   );
@@ -27,13 +32,11 @@ export default MessageDivider;
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "rgba(52, 52, 52, 0.3)",
-    // backgroundColor: "#B4B9BF",
     alignSelf: "center",
     justifyContent: "center",
     borderRadius: 100,
     paddingVertical: 1,
     paddingHorizontal: 10,
-    // marginVertical: 5,
     marginBottom: 10,
   },
   loading: {
