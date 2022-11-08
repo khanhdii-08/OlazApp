@@ -78,6 +78,7 @@ export default function ChatRoomScreen() {
             isLoading ? <MessageDivider isLoading={true} /> : null
           }
           ref={scrollViewRef}
+          contentContainerStyle={{ paddingBottom: 15 }}
         />
       )}
       <MessageInput

@@ -13,11 +13,15 @@ import {
 import ChatRoomItem from "../components/ChatRoomItem";
 import { useAppDispatch, useAppSelector } from "../store";
 import { conversationSelector } from "../store/reducers/conversationSlice";
-import { getMessages } from "../store/reducers/messageSlice";
+import { getMessages, resetMessageSlice } from "../store/reducers/messageSlice";
 import jwt from "../utils/jwt";
 
 export default function TabTwoScreen() {
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(resetMessageSlice(null));
+  });
 
   const { isLoading, conversations } = useAppSelector(conversationSelector);
 
