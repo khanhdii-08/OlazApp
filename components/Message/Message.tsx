@@ -1,5 +1,4 @@
 import { StyleSheet, Text, View, Image } from "react-native";
-import JWTManager from "../../utils/jwt";
 import MessageDivider from "./MessageDivider";
 import dateUtils from "../../utils/dateUtils";
 import jwt from "../../utils/jwt";
@@ -25,8 +24,6 @@ const Message = (props: any) => {
   const myId = user._id;
 
   const isMe = item.user._id === myId;
-
-  const listImage = item.type === "GROUP_IMAGE" && item.content?.split(";");
 
   // listImage.splice(listImage.length - 1, 1);
 
@@ -78,23 +75,41 @@ const chatContent = {
       </View>
     </View>
   ),
-  messageGroupImage: (item: any, isMe: boolean) => (
-    <View
-      style={[
-        styles.container,
-        isMe ? styles.rightContainer : styles.leftContainer,
-      ]}
-    >
-      <View>
-        {item.type === "GROUP_IMAGE" && (
-          <Image source={{ uri: item.content }} />
-        )}
-        <Text style={{ color: "black", fontSize: 10 }}>
-          {dateUtils.getTime(item.createdAt)}
-        </Text>
+  messageGroupImage: (item: any, isMe: boolean) => {
+    const listImage = item.type === "GROUP_IMAGE" && item.content?.split(";");
+    listImage.splice(listImage.length - 1, 1);
+
+    // console.log(listImage);
+    return (
+      <View
+        style={[
+          styles.container,
+          isMe ? styles.rightContainer : styles.leftContainer,
+        ]}
+      >
+        <View>
+          {listImage &&
+            listImage.map((file: string) => {
+              // if (checkType(file) === "VIDEO")
+              //   return (
+              //     <video
+              //       controls
+              //       key={file}
+              //       src={file}
+              //       alt={file}
+              //       className="imageMessage"
+              //     />
+              //   );
+              // else
+              <Image source={{ uri: file }} key={file} />;
+            })}
+          <Text style={{ color: "black", fontSize: 10 }}>
+            {dateUtils.getTime(item.createdAt)}
+          </Text>
+        </View>
       </View>
-    </View>
-  ),
+    );
+  },
 };
 
 const styles = StyleSheet.create({
