@@ -7,13 +7,13 @@ import {
   Pressable,
 } from "react-native";
 
-import { Avatar } from "react-native-elements";
 import styles from "./styles";
 import { useNavigation } from "@react-navigation/native";
 import { useAppDispatch } from "../../store";
 import { getMessages } from "../../store/reducers/messageSlice";
 import { setCurrentConversation } from "../../store/reducers/conversationSlice";
 import CustomAvatar from "../CustomAvatar/CustomAvatar";
+import jwt from "../../utils/jwt";
 
 export interface ParamsApi {
   page: number;
@@ -21,6 +21,8 @@ export interface ParamsApi {
 }
 
 export default function ChatRoomItem({ chatRoom }: { chatRoom: any }) {
+  const user = { _id: jwt.getUserId() };
+
   const dispatch = useAppDispatch();
   const navigation = useNavigation();
 
@@ -38,43 +40,43 @@ export default function ChatRoomItem({ chatRoom }: { chatRoom: any }) {
 
   return (
     <Pressable style={styles.container} onPress={() => onPress(chatRoom)}>
-      {chatRoom.avatar ? (
-        <CustomAvatar props={chatRoom} />
-      ) : (
-        <CustomAvatar props={chatRoom} />
-      )}
+      <CustomAvatar props={chatRoom} />
 
       <View style={styles.rightContainer}>
         <View style={styles.row}>
           <Text numberOfLines={1} style={styles.name}>
             {chatRoom.name}
           </Text>
-          {/* {chatRoom.newMessages ? (
+          {/* {1 ? (
             <Text style={styles.textBold}>
-              {data?.getMyFriendByConversationId.createdAt}
+              {chatRoom.lastMessage?.getMyFriendByConversationId.createdAt}
             </Text>
           ) : (
             <Text style={styles.text}>{chatRoom.lastMessage.createdAt}</Text>
           )} */}
         </View>
         <View>
-          {/* {chatRoom.newMessages ? (
+          {chatRoom.newMessages ? (
             <Text
               numberOfLines={1}
               style={[styles.textBold, { maxWidth: 280 }]}
             >
-              {chatRoom.lastMessage.content}
+              {chatRoom.lastMessage.user.name +
+                " :" +
+                chatRoom.lastMessage.content}
             </Text>
           ) : (
             <Text numberOfLines={1} style={styles.text}>
-              {chatRoom.lastMessage.content}
+              {chatRoom.lastMessage.user.name +
+                " " +
+                chatRoom.lastMessage.content}
             </Text>
           )}
           {chatRoom.newMessages && (
             <View style={styles.badgeContainer}>
               <Text style={styles.badgeText}>{chatRoom.newMessages}</Text>
             </View>
-          )} */}
+          )}
         </View>
       </View>
     </Pressable>

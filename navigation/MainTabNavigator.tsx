@@ -16,7 +16,9 @@ import jwt from "../utils/jwt";
 import { useAppDispatch, useAppSelector } from "../store";
 import {
   conversationSelector,
+  getConversationById,
   getConversations,
+  setLastMessageInConversation,
 } from "../store/reducers/conversationSlice";
 import { rerenderMessage } from "../store/reducers/messageSlice";
 import { getUserById } from "../store/reducers/userSlice";
@@ -43,7 +45,7 @@ export default function TabNavigator() {
       console.log(`user: ${user._id} is join to socket`);
       socket.emit("join", userId);
     }
-  }, []);
+  }, [jwt.getUserId()]);
 
   useEffect(() => {
     if (!user._id) return;
@@ -65,10 +67,44 @@ export default function TabNavigator() {
   }, [conversations]);
 
   useEffect(() => {
+    socket.on("create-individual-conversation", (converId: string) => {
+      console.log("1");
+      socket.emit("join-conversation", converId);
+      dispatch(getConversationById(converId));
+    });
+  }, []);
+
+  useEffect(() => {
+    socket.on(
+      "create-individual-conversation-when-was-friend",
+      (conversationId: string) => {
+        console.log("duy 2");
+        dispatch(getConversationById(conversationId));
+      }
+    );
+  }, []);
+
+  useEffect(() => {
     socket.on("new-message", (conversationId: string, message: any) => {
       if (user._id !== message.user._id) dispatch(rerenderMessage(message));
+      dispatch(setLastMessageInConversation({ conversationId, message }));
     });
+
+    socket.on("create-conversation", (conversationId: string) => {
+      console.log("3");
+      dispatch(getConversationById(conversationId));
+    });
+
     console.log("on new-message");
+  }, []);
+
+  useEffect(() => {
+    socket.on(
+      "has-change-conversation-when-have-new-message",
+      (conversationId: string, message: any) => {
+        dispatch(setLastMessageInConversation({ conversationId, message }));
+      }
+    );
   }, []);
 
   function headerSearch(navigation: any) {

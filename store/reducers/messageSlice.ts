@@ -48,7 +48,11 @@ const messageSlice = createSlice({
   initialState,
   reducers: {
     rerenderMessage(state, action) {
-      state.messages.data = [...state.messages.data, action.payload];
+      if (state.messages.data) {
+        const temp = [...state.messages.data, action.payload];
+        state.messages.data = getUniqueListBy(temp, "_id");
+      } else {
+      }
     },
 
     resetMessageSlice: (state, action) => {

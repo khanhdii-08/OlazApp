@@ -19,9 +19,12 @@ import { useAppDispatch } from "../../store";
 import { sendMessage } from "../../store/reducers/messageSlice";
 import EmojiSelector from "react-native-emoji-selector";
 import * as ImagePicker from "expo-image-picker";
+import { useHeaderHeight } from "@react-navigation/elements";
 
 const MessageInput = (props: any) => {
   const { conversationId, scrollViewRef } = props;
+
+  const headerHeight = useHeaderHeight();
 
   const [image, setImage] = useState<String | null>(null);
 
@@ -58,7 +61,7 @@ const MessageInput = (props: any) => {
     <KeyboardAvoidingView
       style={[styles.root, { height: isEmojiPickerOpen ? "50%" : "auto" }]}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
-      keyboardVerticalOffset={70}
+      keyboardVerticalOffset={headerHeight}
     >
       <View style={styles.row}>
         <View style={styles.inputContainer}>
@@ -82,39 +85,40 @@ const MessageInput = (props: any) => {
             placeholder="Tin nhắn"
             onBlur={() => setIsEmojiPickerOpen(false)}
           />
-          <Pressable onPress={pickImage}>
-            <Feather
-              name="image"
-              size={24}
-              color="#595959"
-              style={styles.icon}
-            />
-          </Pressable>
 
-          <Pressable>
-            <Feather
-              name="camera"
-              size={24}
-              color="#595959"
-              style={styles.icon}
-            />
-          </Pressable>
-
-          <MaterialCommunityIcons
-            name="microphone-outline"
-            size={24}
-            color="#595959"
-            style={styles.icon}
-          />
-        </View>
-
-        <Pressable style={styles.buttonContainer} onPress={() => onPress()}>
           {content ? (
-            <Ionicons name="send" size={18} color="white" />
+            <Pressable onPress={() => onPress()}>
+              <Ionicons name="send" size={24} color="blue" />
+            </Pressable>
           ) : (
-            <AntDesign name="plus" size={24} color="white" />
+            <>
+              <MaterialCommunityIcons
+                name="microphone-outline"
+                size={24}
+                color="#595959"
+                style={styles.icon}
+              />
+
+              <Pressable>
+                <Feather
+                  name="camera"
+                  size={24}
+                  color="#595959"
+                  style={styles.icon}
+                />
+              </Pressable>
+
+              <Pressable onPress={pickImage}>
+                <Feather
+                  name="image"
+                  size={24}
+                  color="#595959"
+                  style={styles.icon}
+                />
+              </Pressable>
+            </>
           )}
-        </Pressable>
+        </View>
       </View>
 
       {isEmojiPickerOpen && (
@@ -130,22 +134,18 @@ const MessageInput = (props: any) => {
 };
 
 const styles = StyleSheet.create({
-  root: {
-    padding: 10,
-  },
+  root: {},
   row: {
     flexDirection: "row",
   },
   inputContainer: {
     backgroundColor: "#f2f2f2",
     flex: 1,
-    marginRight: 10,
-    borderRadius: 25,
     borderWidth: 1,
     borderColor: "#dedede",
     alignItems: "center",
     flexDirection: "row",
-    padding: 5,
+    padding: 10,
   },
   input: {
     flex: 1,

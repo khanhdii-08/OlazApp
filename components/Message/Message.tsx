@@ -4,8 +4,6 @@ import dateUtils from "../../utils/dateUtils";
 import jwt from "../../utils/jwt";
 import HTMLView from "react-native-htmlview";
 
-// HTMLElement;
-
 const Message = (props: any) => {
   const user = { _id: jwt.getUserId() };
 
@@ -24,8 +22,6 @@ const Message = (props: any) => {
   const myId = user._id;
 
   const isMe = item.user._id === myId;
-
-  // listImage.splice(listImage.length - 1, 1);
 
   return (
     <View>
@@ -46,16 +42,17 @@ const Message = (props: any) => {
 const chatContent = {
   messageNotify: (item: any, isMe: boolean) => {
     const { type, content, user } = item;
-    const contentWithSenderName = `<p> ${
-      isMe ? "Bạn" : user.name
-    } ${content}</p`;
+    const contentWithSenderName = `${isMe ? "Bạn" : user.name} ${content}`;
     return (
       <View style={[styles.containerNotify]}>
         <View>
-          <HTMLView
+          {/* <HTMLView
             value={contentWithSenderName}
             stylesheet={{ p: { fontSize: 13, flexWrap: "wrap" } }}
-          />
+          /> */}
+          <Text style={{ fontSize: 13, flexWrap: "wrap" }}>
+            {contentWithSenderName}
+          </Text>
         </View>
       </View>
     );

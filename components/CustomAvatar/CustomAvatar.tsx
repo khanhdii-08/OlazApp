@@ -7,30 +7,34 @@ const CustomAvatar = ({ props }: any) => {
 
   const arr = Array.from(Array(totalMembers), (_, index) => index + 1);
 
+  const getAcronym = (name: string) => {
+    if (name) {
+      const acronym = name
+        .split(/\s/)
+        .reduce((response, word) => (response += word.slice(0, 1)), "")
+        .toUpperCase();
+
+      return acronym.slice(0, 2);
+    }
+    return "";
+  };
+
   return typeof avatar === "string" ? (
-    <>
-      {avatar.length ? (
-        <Avatar
-          rounded
-          overlayContainerStyle={{
-            backgroundColor: avatarColor,
-          }}
-          source={{
-            uri: avatar,
-          }}
-          size="medium"
-        />
-      ) : (
-        <Avatar
-          rounded
-          title={name[0]}
-          overlayContainerStyle={{
-            backgroundColor: avatarColor,
-          }}
-          size="medium"
-        />
-      )}
-    </>
+    <Avatar
+      rounded
+      title={getAcronym(name)}
+      overlayContainerStyle={{
+        backgroundColor: avatarColor,
+      }}
+      source={
+        avatar.length !== 0
+          ? {
+              uri: avatar,
+            }
+          : {}
+      }
+      size="medium"
+    />
   ) : (
     <View style={styles.container}>
       {arr.map((value) =>

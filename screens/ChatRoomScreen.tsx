@@ -13,14 +13,21 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import Message from "../components/Message";
 import MessageInput from "../components/MessageInput";
 import { useAppDispatch, useAppSelector } from "../store";
-import { getMessages, messageSelector } from "../store/reducers/messageSlice";
+import {
+  getMessages,
+  messageSelector,
+  rerenderMessage,
+} from "../store/reducers/messageSlice";
 import { conversationSelector } from "../store/reducers/conversationSlice";
 import MessageDivider from "../components/Message/MessageDivider";
+import { socket } from "../utils/socketClient";
+import jwt from "../utils/jwt";
 
 export default function ChatRoomScreen() {
   const navigation = useNavigation();
   const dispatch = useAppDispatch();
   const scrollViewRef: any = useRef();
+  const user = { _id: jwt.getUserId() };
 
   const { conversation, conversationId } = useAppSelector(conversationSelector);
   const { messages, isLoading } = useAppSelector(messageSelector);
@@ -48,7 +55,7 @@ export default function ChatRoomScreen() {
   };
 
   return (
-    <View style={styles.page}>
+    <SafeAreaView style={styles.page}>
       {!messages.data ? (
         <ActivityIndicator
           style={{
@@ -85,7 +92,7 @@ export default function ChatRoomScreen() {
         conversationId={conversationId}
         scrollViewRef={scrollViewRef}
       />
-    </View>
+    </SafeAreaView>
   );
 }
 

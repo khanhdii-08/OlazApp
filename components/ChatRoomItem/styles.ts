@@ -23,7 +23,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     position: "absolute",
     left: 300,
-
   },
   badgeText: {
     color: "white",
@@ -32,6 +31,7 @@ const styles = StyleSheet.create({
   rightContainer: {
     flex: 1,
     justifyContent: "center",
+    marginLeft: 10,
   },
   row: {
     flexDirection: "row",
@@ -42,17 +42,15 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 17,
     marginBottom: 2,
-    maxWidth:270,
-    paddingLeft: 10
+    maxWidth: 270,
   },
   text: {
     color: "grey",
-    maxWidth:280
+    maxWidth: 280,
   },
   textBold: {
     fontWeight: "bold",
-  }
+  },
 });
-
 
 export default styles;

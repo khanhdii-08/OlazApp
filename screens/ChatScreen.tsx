@@ -19,9 +19,9 @@ import jwt from "../utils/jwt";
 export default function TabTwoScreen() {
   const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    dispatch(resetMessageSlice(null));
-  });
+  // useEffect(() => {
+  //   dispatch(resetMessageSlice(null));
+  // });
 
   const { isLoading, conversations } = useAppSelector(conversationSelector);
 
