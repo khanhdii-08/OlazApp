@@ -47,16 +47,16 @@ export default function ChatRoomItem({ chatRoom }: { chatRoom: any }) {
           <Text numberOfLines={1} style={styles.name}>
             {chatRoom.name}
           </Text>
-          {/* {1 ? (
+          {chatRoom.numberUnread ? (
             <Text style={styles.textBold}>
-              {chatRoom.lastMessage?.getMyFriendByConversationId.createdAt}
+              {chatRoom.lastMessage.createdAt}
             </Text>
           ) : (
             <Text style={styles.text}>{chatRoom.lastMessage.createdAt}</Text>
-          )} */}
+          )}
         </View>
         <View>
-          {chatRoom.newMessages ? (
+          {chatRoom.numberUnread ? (
             <Text
               numberOfLines={1}
               style={[styles.textBold, { maxWidth: 280 }]}
@@ -68,14 +68,16 @@ export default function ChatRoomItem({ chatRoom }: { chatRoom: any }) {
           ) : (
             <Text numberOfLines={1} style={styles.text}>
               {chatRoom.lastMessage.user.name +
-                " " +
+                " :" +
                 chatRoom.lastMessage.content}
             </Text>
           )}
-          {chatRoom.newMessages && (
+          {chatRoom.numberUnread ? (
             <View style={styles.badgeContainer}>
-              <Text style={styles.badgeText}>{chatRoom.newMessages}</Text>
+              <Text style={styles.badgeText}>{chatRoom.numberUnread}</Text>
             </View>
+          ) : (
+            <></>
           )}
         </View>
       </View>
