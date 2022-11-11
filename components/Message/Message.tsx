@@ -3,11 +3,14 @@ import MessageDivider from "./MessageDivider";
 import dateUtils from "../../utils/dateUtils";
 import jwt from "../../utils/jwt";
 import HTMLView from "react-native-htmlview";
+import MessageImage from "./MessageImage";
+import GroupImage from "./GroupImage";
 
 const Message = (props: any) => {
   const user = { _id: jwt.getUserId() };
 
   const { index, item, messages } = props;
+  // console.log(item.content);
 
   const nextMessage: any = messages?.[index + 1];
 
@@ -28,8 +31,10 @@ const Message = (props: any) => {
       {isSeparate && <MessageDivider dateString={messageTime} />}
       {item.type === "TEXT" ? (
         chatContent.messageText(item, isMe)
+      ) : item.type === "IMAGE" ? (
+        <MessageImage item={item} isMe={isMe} />
       ) : item.type === "GROUP_IMAGE" ? (
-        chatContent.messageGroupImage(item, isMe)
+        <GroupImage item={item} isMe={isMe} />
       ) : item.type === "NOTIFY" ? (
         chatContent.messageNotify(item, isMe)
       ) : (
@@ -46,10 +51,6 @@ const chatContent = {
     return (
       <View style={[styles.containerNotify]}>
         <View>
-          {/* <HTMLView
-            value={contentWithSenderName}
-            stylesheet={{ p: { fontSize: 13, flexWrap: "wrap" } }}
-          /> */}
           <Text style={{ fontSize: 13, flexWrap: "wrap" }}>
             {contentWithSenderName}
           </Text>
@@ -72,41 +73,6 @@ const chatContent = {
       </View>
     </View>
   ),
-  messageGroupImage: (item: any, isMe: boolean) => {
-    const listImage = item.type === "GROUP_IMAGE" && item.content?.split(";");
-    listImage.splice(listImage.length - 1, 1);
-
-    // console.log(listImage);
-    return (
-      <View
-        style={[
-          styles.container,
-          isMe ? styles.rightContainer : styles.leftContainer,
-        ]}
-      >
-        <View>
-          {listImage &&
-            listImage.map((file: string) => {
-              // if (checkType(file) === "VIDEO")
-              //   return (
-              //     <video
-              //       controls
-              //       key={file}
-              //       src={file}
-              //       alt={file}
-              //       className="imageMessage"
-              //     />
-              //   );
-              // else
-              <Image source={{ uri: file }} key={file} />;
-            })}
-          <Text style={{ color: "black", fontSize: 10 }}>
-            {dateUtils.getTime(item.createdAt)}
-          </Text>
-        </View>
-      </View>
-    );
-  },
 };
 
 const styles = StyleSheet.create({
@@ -115,8 +81,8 @@ const styles = StyleSheet.create({
     padding: 10,
     margin: 10,
     borderRadius: 10,
-    maxWidth: "75%",
-    minWidth: "20%",
+    maxWidth: "82%",
+    minWidth: "22%",
   },
   containerNotify: {
     backgroundColor: "#fcfdff",

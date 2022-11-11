@@ -8,18 +8,15 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import {
-  AntDesign,
-  Feather,
-  Ionicons,
-  MaterialCommunityIcons,
-  SimpleLineIcons,
-} from "@expo/vector-icons";
+import { Feather, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useAppDispatch } from "../../store";
 import { sendMessage } from "../../store/reducers/messageSlice";
 import EmojiSelector from "react-native-emoji-selector";
 import * as ImagePicker from "expo-image-picker";
 import { useHeaderHeight } from "@react-navigation/elements";
+import { Icon } from "react-native-elements";
+import { useKeyboard } from "../../hooks/useKeyboard";
+import EmojiPicker from "../EmojiPicker/EmojiPicker";
 
 const MessageInput = (props: any) => {
   const { conversationId, scrollViewRef } = props;
@@ -29,6 +26,9 @@ const MessageInput = (props: any) => {
   const [image, setImage] = useState<String | null>(null);
 
   const [content, setContent] = useState("");
+
+  console.log("+1");
+
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
   const dispatch = useAppDispatch();
 
@@ -70,11 +70,10 @@ const MessageInput = (props: any) => {
               setIsEmojiPickerOpen((currentValue) => !currentValue)
             }
           >
-            <SimpleLineIcons
-              name="emotsmile"
+            <MaterialCommunityIcons
+              name="sticker-emoji"
               size={24}
-              color="#595959"
-              style={styles.icon}
+              color="black"
             />
           </Pressable>
           <TextInput
@@ -121,14 +120,7 @@ const MessageInput = (props: any) => {
         </View>
       </View>
 
-      {isEmojiPickerOpen && (
-        <EmojiSelector
-          onEmojiSelected={(emoji) =>
-            setContent((currentContent) => currentContent + emoji)
-          }
-          columns={8}
-        />
-      )}
+      {/* {isEmojiPickerOpen && <EmojiPicker setContent={setContent} />} */}
     </KeyboardAvoidingView>
   );
 };

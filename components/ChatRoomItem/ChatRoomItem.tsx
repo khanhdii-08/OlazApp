@@ -55,14 +55,14 @@ export default function ChatRoomItem({ chatRoom }: { chatRoom: any }) {
             <Text style={styles.text}>{chatRoom.lastMessage.createdAt}</Text>
           )}
         </View>
-        <View>
+        <View style={styles.content}>
           {chatRoom.numberUnread ? (
             <Text
               numberOfLines={1}
               style={[styles.textBold, { maxWidth: 280 }]}
             >
               {chatRoom.lastMessage.user.name +
-                " :" +
+                ": " +
                 chatRoom.lastMessage.content}
             </Text>
           ) : (
