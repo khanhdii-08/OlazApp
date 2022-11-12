@@ -30,6 +30,57 @@ export const apiMessage = {
       type,
     });
   },
+
+  sendFile: async ({
+    formData,
+    attachInfo,
+    callback,
+  }: {
+    formData: any;
+    attachInfo: any;
+    callback: any;
+  }) => {
+    const { type, conversationId } = attachInfo;
+    const config = {
+      params: {
+        type,
+        conversationId,
+      },
+      onUploadProgress: function (progressEvent: any) {
+        let percentCompleted = Math.round(
+          (progressEvent.loaded * 100) / progressEvent.total
+        );
+        callback(percentCompleted);
+      },
+    };
+
+    return await httpRequest.post(`/messages/files`, formData, config);
+  },
+
+  sendFiles: async ({
+    formData,
+    attachInfo,
+    callback,
+  }: {
+    formData: any;
+    attachInfo: any;
+    callback: any;
+  }) => {
+    const { type, conversationId } = attachInfo;
+    const config = {
+      params: {
+        type,
+        conversationId,
+      },
+      onUploadProgress: function (progressEvent: any) {
+        let percentCompleted = Math.round(
+          (progressEvent.loaded * 100) / progressEvent.total
+        );
+        callback(percentCompleted);
+      },
+    };
+    return await httpRequest.post(`/messages/multiple/files`, formData, config);
+  },
 };
 
 // export const messages = async (conversationId : string) => {

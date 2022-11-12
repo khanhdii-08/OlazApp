@@ -72,7 +72,7 @@ export default function ChatRoomScreen() {
           }}
           inverted
           data={[...messages.data].reverse()}
-          keyExtractor={(item) => item._id}
+          keyExtractor={(item, index) => index.toString()}
           renderItem={({ item, index }) => (
             <Message
               index={index}

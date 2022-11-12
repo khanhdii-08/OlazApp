@@ -2,7 +2,6 @@ import { StyleSheet, Text, View, Image } from "react-native";
 import MessageDivider from "./MessageDivider";
 import dateUtils from "../../utils/dateUtils";
 import jwt from "../../utils/jwt";
-import HTMLView from "react-native-htmlview";
 import MessageImage from "./MessageImage";
 import GroupImage from "./GroupImage";
 
@@ -15,8 +14,8 @@ const Message = (props: any) => {
   const nextMessage: any = messages?.[index + 1];
 
   const nextMessageTime: any = new Date(nextMessage?.createdAt);
-  const messageTime: any = new Date(item.createdAt);
-  const messageTimeTemp: any = new Date(item.createdAt);
+  const messageTime: any = new Date(item?.createdAt);
+  const messageTimeTemp: any = new Date(item?.createdAt);
 
   const isSeparate =
     messageTimeTemp.setMinutes(messageTimeTemp.getMinutes() - 5) >
@@ -33,6 +32,8 @@ const Message = (props: any) => {
         chatContent.messageText(item, isMe)
       ) : item.type === "IMAGE" ? (
         <MessageImage item={item} isMe={isMe} />
+      ) : item.type === "VIDEO" ? (
+        <Text>duy</Text>
       ) : item.type === "GROUP_IMAGE" ? (
         <GroupImage item={item} isMe={isMe} />
       ) : item.type === "NOTIFY" ? (
@@ -67,7 +68,7 @@ const chatContent = {
     >
       <View>
         <Text style={{ color: "black" }}>{item.content}</Text>
-        <Text style={{ color: "black", fontSize: 10 }}>
+        <Text style={{ color: "black", fontSize: 10, marginTop: 5 }}>
           {dateUtils.getTime(item.createdAt)}
         </Text>
       </View>

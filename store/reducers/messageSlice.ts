@@ -43,6 +43,34 @@ export const sendMessage = createAsyncThunk(
   }
 );
 
+export const sendImage = createAsyncThunk(
+  "message/image",
+  async (data: any) => {
+    const { formData, attachInfo, callback } = data;
+
+    const response = await apiMessage.sendFile({
+      formData,
+      attachInfo,
+      callback,
+    });
+    return response.data;
+  }
+);
+
+export const sendImages = createAsyncThunk(
+  "message/images",
+  async (data: any) => {
+    const { formData, attachInfo, callback } = data;
+    console.log(data);
+    const response = await apiMessage.sendFiles({
+      formData,
+      attachInfo,
+      callback,
+    });
+    return response.data;
+  }
+);
+
 const messageSlice = createSlice({
   name: NAME,
   initialState,
@@ -89,6 +117,26 @@ const messageSlice = createSlice({
     builder.addCase(sendMessage.rejected, (state, action) => {
       state.error = true;
     });
+
+    ////////////
+
+    // builder.addCase(sendImage.pending, (state, action) => {
+    //   console.log("error");
+    // });
+
+    builder.addCase(sendImage.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.error = false;
+      state.messages.data = [...state.messages.data, action.payload];
+    });
+
+    ///////////
+
+    // builder.addCase(sendImages.fulfilled, (state, action) => {
+    //   state.isLoading = false;
+    //   state.error = false;
+    //   state.messages = action.payload;
+    // });
   },
 });
 

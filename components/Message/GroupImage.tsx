@@ -45,39 +45,37 @@ const GroupImage = (props: any) => {
     >
       <View style={styles.groupImage}>
         {listImage.map((link: string, index: number) => {
-          return (
-            <>
-              {checkType(link) === "VIDEO" ? (
-                <Video
-                  key={link}
-                  style={[styles.imageStyle, { width: "50%" }]}
-                  source={{ uri: link }}
-                  useNativeControls
-                  isLooping
-                  volume={1.0}
-                />
-              ) : (
-                <TouchableOpacity
-                  key={link}
-                  onPress={() => {
-                    handleViewingImage(link);
-                  }}
-                  style={{ width: "50%" }}
-                >
-                  <Image
-                    source={{ uri: link }}
-                    style={styles.imageStyle}
-                    resizeMode="stretch"
-                  />
-                </TouchableOpacity>
-              )}
-            </>
+          return checkType(link) === "VIDEO" ? (
+            <Video
+              key={link}
+              style={[styles.imageStyle, { width: "50%" }]}
+              source={{ uri: link }}
+              useNativeControls
+              isLooping
+              volume={1.0}
+            />
+          ) : (
+            <TouchableOpacity
+              key={link}
+              onPress={() => {
+                handleViewingImage(link);
+              }}
+              style={{ width: "50%" }}
+            >
+              <Image
+                source={{ uri: link }}
+                style={styles.imageStyle}
+                resizeMode="stretch"
+              />
+            </TouchableOpacity>
           );
         })}
       </View>
-      <Text style={{ color: "black", fontSize: 10 }}>
-        {dateUtils.getTime(item.createdAt)}
-      </Text>
+      <View style={styles.textTime}>
+        <Text style={{ color: "white", fontSize: 10 }}>
+          {dateUtils.getTime(item.createdAt)}
+        </Text>
+      </View>
       <ImageView
         images={[{ uri: url }]}
         imageIndex={0}
@@ -111,5 +109,14 @@ const styles = StyleSheet.create({
   rightImageGroup: {
     marginLeft: "auto",
     marginRight: 10,
+  },
+  textTime: {
+    backgroundColor: "rgba(52, 52, 52, 0.3)",
+    width: 50,
+    borderRadius: 100,
+    paddingVertical: 1,
+    paddingHorizontal: 10,
+    marginBottom: 10,
+    marginTop: 5,
   },
 });

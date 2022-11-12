@@ -17,6 +17,8 @@ const ratio = win.width / 541;
 const MessageImage = (props: any) => {
   const { item, isMe } = props;
 
+  console.log(item.content);
+
   const checkType = (content: string) => {
     const splitTempt = content.split(".");
     const fileExtension = splitTempt[splitTempt.length - 1];
@@ -60,7 +62,7 @@ const MessageImage = (props: any) => {
           </TouchableOpacity>
         )}
         <View style={styles.textTime}>
-          <Text style={{ color: "black", fontSize: 10 }}>
+          <Text style={{ color: "white", fontSize: 10 }}>
             {dateUtils.getTime(item.createdAt)}
           </Text>
         </View>
@@ -97,16 +99,11 @@ const styles = StyleSheet.create({
   },
   textTime: {
     backgroundColor: "rgba(52, 52, 52, 0.3)",
-    alignSelf: "center",
-    justifyContent: "center",
+    width: 50,
     borderRadius: 100,
     paddingVertical: 1,
     paddingHorizontal: 10,
     marginBottom: 10,
-  },
-  date: {
-    color: "#FFF",
-    fontSize: 12,
-    textAlignVertical: "center",
+    marginTop: 5,
   },
 });
