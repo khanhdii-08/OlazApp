@@ -38,9 +38,13 @@ export type RootRouteProps<RouteName extends keyof RootStackParamList> =
 
 export type LoginStackParamList = {
   Security: undefined;
-  LoginScreen: undefined;
+  LoginScreen: undefined | { username: string };
   RegisterScreen: undefined;
+  ConfirmAccount: undefined | { user: any };
 };
+
+export type LoginRouteProps<RouteName extends keyof LoginStackParamList> =
+  RouteProp<LoginStackParamList, RouteName>;
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> =
   NativeStackScreenProps<RootStackParamList, Screen>;

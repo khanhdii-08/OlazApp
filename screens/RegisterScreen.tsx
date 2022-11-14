@@ -32,16 +32,21 @@ const RegisterScreen = ({
     useTogglePasswordVisibility("HIỆN", "ẨN");
   const [disabled, setDisabled] = useState(true);
 
-  const onSubmit = async () => {
+  const onSubmit = async (user: { username: string; password: string }) => {
     try {
-      const result = await registry(name, username, password);
-
-      // Alert.alert("Bạn đã đăng ký thành công xin mời bạn đăng nhập");
-      // navigation.navigate("LoginScreen");
+      await registry(name, username, password);
+      navigation.navigate("ConfirmAccount", { user: user });
     } catch (error) {
       console.log(error);
+
       const account = await getUser(username);
-      console.log(account);
+
+      if (account.isActived) {
+        Alert.alert("Số điện thoại đã đăng ký, xin mời đăng mập");
+        navigation.navigate("LoginScreen", { username: username });
+      } else {
+        navigation.navigate("ConfirmAccount", { user: account });
+      }
     }
   };
 
@@ -83,12 +88,12 @@ const RegisterScreen = ({
             </TouchableOpacity>
           )}
         </View>
-        <Text style={styles.text}>Tên Đăng Nhập</Text>
+        <Text style={styles.text}>Số điện thoại</Text>
         <View style={styles.parent}>
           <TextInput
             style={styles.textInput}
             value={username}
-            placeholder="Gồm 2-40 ký tự"
+            placeholder="....."
             placeholderTextColor="#717070"
             onChangeText={(value) => setUsername(value)}
           />
@@ -136,7 +141,7 @@ const RegisterScreen = ({
 
         <View style={{ alignItems: "center" }}>
           <TouchableOpacity
-            onPress={onSubmit}
+            onPress={() => onSubmit({ username: username, password: password })}
             disabled={disabled}
             style={[styles.btn, { opacity: disabled ? 0.3 : 1 }]}
           >

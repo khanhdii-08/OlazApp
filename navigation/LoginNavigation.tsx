@@ -8,6 +8,7 @@ import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import SecurityScreen from "../screens/SecurityScreen";
 import { LoginStackParamList } from "../types";
+import ConfirmAccountScreen from "../screens/ConfirmAccountScreen";
 
 const Stack = createNativeStackNavigator<LoginStackParamList>();
 
@@ -90,6 +91,8 @@ const LoginNavigation = () => {
             ),
           }}
         />
+
+        <Stack.Screen name="ConfirmAccount" component={ConfirmAccountScreen} />
       </Stack.Group>
     </Stack.Navigator>
   );

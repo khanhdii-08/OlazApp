@@ -23,6 +23,8 @@ import { useAppDispatch } from "../store";
 import { configAxios } from "../utils/httpRequest";
 import { getConversations } from "../store/reducers/conversationSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useRoute } from "@react-navigation/native";
+import { LoginRouteProps } from "../types";
 
 const LoginScreen = () => {
   const { setIsAuthenticatied } = useAuthContext();
@@ -32,6 +34,12 @@ const LoginScreen = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [disabled, setDisabled] = useState(true);
+
+  const route = useRoute<LoginRouteProps<"LoginScreen">>();
+  const usernameRoute: string | undefined = route.params?.username;
+  useEffect(() => {
+    setUsername(usernameRoute as string);
+  }, []);
 
   const { passwordVisibility, rightIcon, handlePasswordVisibility } =
     useTogglePasswordVisibility("HIỆN", "ẨN");
