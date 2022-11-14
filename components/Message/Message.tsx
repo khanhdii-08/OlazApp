@@ -30,10 +30,8 @@ const Message = (props: any) => {
       {isSeparate && <MessageDivider dateString={messageTime} />}
       {item.type === "TEXT" ? (
         chatContent.messageText(item, isMe)
-      ) : item.type === "IMAGE" ? (
+      ) : item.type === "IMAGE" || item.type === "VIDEO" ? (
         <MessageImage item={item} isMe={isMe} />
-      ) : item.type === "VIDEO" ? (
-        <Text>duy</Text>
       ) : item.type === "GROUP_IMAGE" ? (
         <GroupImage item={item} isMe={isMe} />
       ) : item.type === "NOTIFY" ? (

@@ -17,8 +17,6 @@ const ratio = win.width / 541;
 const MessageImage = (props: any) => {
   const { item, isMe } = props;
 
-  console.log(item.content);
-
   const checkType = (content: string) => {
     const splitTempt = content.split(".");
     const fileExtension = splitTempt[splitTempt.length - 1];

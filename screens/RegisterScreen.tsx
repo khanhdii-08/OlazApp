@@ -11,14 +11,18 @@ import {
   Pressable,
   Alert,
   KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { useTogglePasswordVisibility } from "../hooks/useTogglePasswordVisibility";
 import { useNavigation } from "@react-navigation/native";
-import { registry } from "../service/authService";
+import { getUser, registry } from "../service/authService";
+import { LoginStackScreenProps } from "../types";
 
-const RegisterScreen = () => {
-  const navigation = useNavigation();
+const RegisterScreen = ({
+  navigation,
+}: LoginStackScreenProps<"RegisterScreen">) => {
+  // const navigation = useNavigation();
 
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
@@ -31,10 +35,13 @@ const RegisterScreen = () => {
   const onSubmit = async () => {
     try {
       const result = await registry(name, username, password);
-      Alert.alert("Bạn đã đăng ký thành công xin mời bạn đăng nhập");
-      navigation.navigate("LoginScreen");
+
+      // Alert.alert("Bạn đã đăng ký thành công xin mời bạn đăng nhập");
+      // navigation.navigate("LoginScreen");
     } catch (error) {
       console.log(error);
+      const account = await getUser(username);
+      console.log(account);
     }
   };
 
@@ -48,7 +55,10 @@ const RegisterScreen = () => {
   }, [name, username, password]);
 
   return (
-    <KeyboardAvoidingView style={styles.container}>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
       <StatusBar animated={true} barStyle="default" backgroundColor="#3399FF" />
       <ScrollView keyboardShouldPersistTaps="handled">
         <Text style={styles.text}>Tên Zalo</Text>

@@ -90,6 +90,8 @@ const MessageInput = (props: any) => {
     } else {
       const formData = new FormData();
 
+      console.log(filePaths[0].type);
+
       formData.append("file", {
         name: filePaths[0].fileName,
         type: filePaths[0].type,
