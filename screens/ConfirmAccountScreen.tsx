@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRoute } from "@react-navigation/native";
 import { LoginRouteProps } from "../types";
 import { Button } from "react-native-elements";
@@ -18,6 +18,8 @@ import {
 } from "react-native-confirmation-code-field";
 import { setLoading } from "../store/reducers/authSlice";
 import { useAppDispatch } from "../store";
+import { StatusBar } from "expo-status-bar";
+import { confirmAccount, resetOTP } from "../service/authService";
 
 const CELL_COUNT = 6;
 const RESEND_OTP_TIME_LIMIT = 60;
@@ -57,47 +59,48 @@ const ConfirmAccountScreen = () => {
   const handleOnResendOtp = async () => {
     //clear input field
     setOtpValue("");
+    setErrorMessage("");
     setResendButtonDisabledTime(RESEND_OTP_TIME_LIMIT);
     startResendOtpTimer();
     dispatch(setLoading(true));
-    // const response = await loginApi.changePassword({
-    //   username: account.username,
-    // });
+    const response = await resetOTP(account.username);
     dispatch(setLoading(false));
   };
 
   const handleConfirm = async () => {
     if (otpValue.length === 6) {
       dispatch(setLoading(true));
-
       try {
         const response = await handleConfirmAccount(account.username, otpValue);
         // await handleLogin();
       } catch (error) {
-        console.error("ConfirmAccountScreen", error);
+        console.log("ConfirmAccountScreen", error);
         dispatch(setLoading(false));
         setErrorMessage("OTP không đúng hoặc hết hạn");
       }
-
-      // if (response.data) {
-      //   dispatch(setLoading(false));
-      //   setErrorMessage(response.data.message);
-      // } else {
-      //   await handleLogin();
-      // }
     } else {
       setErrorMessage("OTP không hợp lệ");
     }
   };
 
   const handleConfirmAccount = async (username: string, otp: string) => {
-    // const response = await loginApi.confirmAccount({ username, otp });
-    // return response;
+    const response = await confirmAccount({ username, otp });
+    return response;
   };
+
+  //start timer on screen on launch
+  useEffect(() => {
+    startResendOtpTimer();
+    return () => {
+      if (resendOtpTimerInterval) {
+        clearInterval(resendOtpTimerInterval);
+      }
+    };
+  }, [resendButtonDisabledTime]);
 
   return (
     <KeyboardAvoidingView behavior="height" style={styles.container}>
-      {/* <StatusBar style="light" /> */}
+      <StatusBar style="light" />
       {/* <Spinner
         visible={isLoading}
         textContent={"Loading..."}
@@ -112,6 +115,8 @@ const ConfirmAccountScreen = () => {
               Đã gửi mã OTP đến {account.username}
             </Text>
             <CodeField
+              ref={ref}
+              {...props}
               value={otpValue}
               onChangeText={setOtpValue}
               cellCount={CELL_COUNT}
@@ -133,12 +138,13 @@ const ConfirmAccountScreen = () => {
 
             <Text
               style={{
+                ...styles.errorText,
                 marginLeft: 24,
                 marginTop: 20,
                 marginBottom: -12,
               }}
             >
-              duy
+              {errorMessage}
             </Text>
 
             {/* View for resend otp  */}
@@ -275,5 +281,10 @@ const styles = StyleSheet.create({
   resendCodeContainer: {
     flexDirection: "row",
     alignItems: "center",
+  },
+  errorText: {
+    marginTop: -10,
+    marginLeft: 10,
+    color: "red",
   },
 });

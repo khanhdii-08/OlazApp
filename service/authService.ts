@@ -43,4 +43,15 @@ export const getUser = async (username: string) => {
   const res = await httpRequest.get(`auth/users/${username}`);
   return res.data;
 };
+
+export const confirmAccount = async (account: {
+  username: string;
+  otp: string;
+}) => {
+  return httpRequest.post("auth/confirm", account);
+};
+
+export const resetOTP = async (username: string) => {
+  return httpRequest.post("auth/reset-otp", { username });
+};
 // export default authService
