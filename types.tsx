@@ -41,6 +41,7 @@ export type LoginStackParamList = {
   LoginScreen: undefined | { username: string };
   RegisterScreen: undefined;
   ConfirmAccount: undefined | { user: any };
+  SettingAccountFirst: undefined;
 };
 
 export type LoginRouteProps<RouteName extends keyof LoginStackParamList> =

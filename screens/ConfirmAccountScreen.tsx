@@ -7,7 +7,7 @@ import {
   View,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { useRoute } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { LoginRouteProps } from "../types";
 import { Button } from "react-native-elements";
 import {
@@ -19,11 +19,16 @@ import {
 import { setLoading } from "../store/reducers/authSlice";
 import { useAppDispatch } from "../store";
 import { StatusBar } from "expo-status-bar";
-import { confirmAccount, resetOTP } from "../service/authService";
+import { confirmAccount, login, resetOTP } from "../service/authService";
+import jwt from "../utils/jwt";
+import { configAxios } from "../utils/httpRequest";
+import { getProfile } from "../store/reducers/meSlice";
 
 const CELL_COUNT = 6;
 const RESEND_OTP_TIME_LIMIT = 60;
 const ConfirmAccountScreen = () => {
+  const navigation = useNavigation();
+
   const dispatch = useAppDispatch();
 
   const route = useRoute<LoginRouteProps<"ConfirmAccount">>();
@@ -72,7 +77,9 @@ const ConfirmAccountScreen = () => {
       dispatch(setLoading(true));
       try {
         const response = await handleConfirmAccount(account.username, otpValue);
-        // await handleLogin();
+        // dispatch()
+        // console.log("res", response);
+        await handleLogin();
       } catch (error) {
         console.log("ConfirmAccountScreen", error);
         dispatch(setLoading(false));
@@ -81,6 +88,14 @@ const ConfirmAccountScreen = () => {
     } else {
       setErrorMessage("OTP không hợp lệ");
     }
+  };
+
+  const handleLogin = async () => {
+    const result = await login(account.username, account.password);
+    jwt.setToken(result.token);
+    configAxios();
+    dispatch(getProfile());
+    navigation.navigate("SettingAccountFirst");
   };
 
   const handleConfirmAccount = async (username: string, otp: string) => {

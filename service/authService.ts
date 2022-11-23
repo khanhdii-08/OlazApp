@@ -54,4 +54,5 @@ export const confirmAccount = async (account: {
 export const resetOTP = async (username: string) => {
   return httpRequest.post("auth/reset-otp", { username });
 };
+
 // export default authService

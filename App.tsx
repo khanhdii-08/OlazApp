@@ -6,6 +6,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Provider } from "react-redux";
 import useCachedResources from "./hooks/useCachedResources";
 import { LoginStackNavigation, Navigation } from "./navigation";
+import SettingAccountFirstScreen from "./screens/SettingAccountFirstScreen";
 import SplashScreen from "./screens/SplashScreen";
 import store, { useAppSelector } from "./store";
 import { authSelector } from "./store/reducers/authSlice";

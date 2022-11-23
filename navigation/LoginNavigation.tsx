@@ -9,6 +9,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import SecurityScreen from "../screens/SecurityScreen";
 import { LoginStackParamList } from "../types";
 import ConfirmAccountScreen from "../screens/ConfirmAccountScreen";
+import SettingAccountFirstScreen from "../screens/SettingAccountFirstScreen";
 
 const Stack = createNativeStackNavigator<LoginStackParamList>();
 
@@ -93,6 +94,10 @@ const LoginNavigation = () => {
         />
 
         <Stack.Screen name="ConfirmAccount" component={ConfirmAccountScreen} />
+        <Stack.Screen
+          name="SettingAccountFirst"
+          component={SettingAccountFirstScreen}
+        />
       </Stack.Group>
     </Stack.Navigator>
   );
