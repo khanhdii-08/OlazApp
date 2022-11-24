@@ -2,6 +2,7 @@ import { apiMessage } from "./../../service/messageService";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../../store";
 import { ParamsApi } from "../../components/ChatRoomItem/ChatRoomItem";
+import { BASE_URL } from "@env";
 
 export interface Message {
   isLoading: boolean;
@@ -53,6 +54,7 @@ export const sendImage = createAsyncThunk(
       attachInfo,
       callback,
     });
+
     return response.data;
   }
 );
@@ -61,7 +63,6 @@ export const sendImages = createAsyncThunk(
   "message/images",
   async (data: any) => {
     const { formData, attachInfo, callback } = data;
-    console.log(data);
     const response = await apiMessage.sendFiles({
       formData,
       attachInfo,
@@ -132,11 +133,11 @@ const messageSlice = createSlice({
 
     ///////////
 
-    // builder.addCase(sendImages.fulfilled, (state, action) => {
-    //   state.isLoading = false;
-    //   state.error = false;
-    //   state.messages = action.payload;
-    // });
+    builder.addCase(sendImages.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.error = false;
+      state.messages.data = [...state.messages.data, action.payload];
+    });
   },
 });
 

@@ -23,46 +23,51 @@ import { Icon } from "react-native-elements";
 import { useKeyboard } from "../../hooks/useKeyboard";
 import EmojiPicker from "../EmojiPicker/EmojiPicker";
 import { Video } from "expo-av";
+import Spinner from "react-native-loading-spinner-overlay";
 
 const MessageInput = (props: any) => {
   const { conversationId, scrollViewRef } = props;
-
-  const TYPE_MATCH_MEDIA = [
-    "image/png",
-    "image/jpeg",
-    "image/gif",
-    "video/mp4",
-  ];
-
   const headerHeight = useHeaderHeight();
-
-  const [images, setImage] = useState<Array<string> | null>(null);
-
   const [content, setContent] = useState("");
-
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [loadingText, setLoadingText] = useState("upload... 0%");
+
   const dispatch = useAppDispatch();
 
-  const formData = new FormData();
-
   const pickImage = async () => {
-    let result: any = await ImagePicker.launchImageLibraryAsync({
+    let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsMultipleSelection: true,
-      selectionLimit: 0,
+      selectionLimit: 10,
       quality: 1,
     });
 
     if (!result.cancelled) {
       const listFile = [...result.selected].map((e) => e);
       imageUpload(listFile);
-      // setImage(listFile);
+    }
+  };
+
+  const takePhoto = async () => {
+    const result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+    });
+
+    if (!result.cancelled) {
+      let listFile: Array<any> = [result];
+      imageUpload(listFile);
     }
   };
 
   const imageUpload = (filePaths: any) => {
     const callback = (percentCompleted: any) => {
-      console.log(percentCompleted);
+      if (percentCompleted < 99) {
+        setLoadingText(`upload... ${percentCompleted}%`);
+      } else {
+        setIsLoading(false);
+        setLoadingText("upload... 0%");
+      }
     };
 
     if (filePaths.length > 1) {
@@ -83,18 +88,20 @@ const MessageInput = (props: any) => {
       };
 
       try {
+        setIsLoading(true);
         dispatch(sendImages({ formData, attachInfo, callback }));
       } catch (error) {
         console.log(error);
+        setIsLoading(false);
       }
     } else {
       const formData = new FormData();
 
-      console.log(filePaths[0].type);
+      const filename = Date.now().toString();
 
       formData.append("file", {
-        name: filePaths[0].fileName,
-        type: filePaths[0].type,
+        name: filePaths[0].fileName ? filePaths[0].fileName : `${filename}.png`,
+        type: filePaths[0].type === "video" ? "video/mp4" : filePaths[0].type,
         uri:
           Platform.OS === "ios"
             ? filePaths[0].uri.replace("file://", "")
@@ -104,17 +111,17 @@ const MessageInput = (props: any) => {
       let mineType = "IMAGE";
       if (filePaths[0].type === "video") mineType = "VIDEO";
 
-      console.log(mineType);
-
       const attachInfo = {
         type: mineType,
         conversationId: conversationId,
       };
 
       try {
+        setIsLoading(true);
         dispatch(sendImage({ formData, attachInfo, callback }));
       } catch (error) {
         console.log(error);
+        setIsLoading(false);
       }
     }
   };
@@ -129,19 +136,17 @@ const MessageInput = (props: any) => {
     }
   };
 
-  const checkType = (content: string) => {
-    const splitTempt = content.split(".");
-    const fileExtension = splitTempt[splitTempt.length - 1];
-    if (fileExtension === "mp4") return "VIDEO";
-    return "IMAGE";
-  };
-
   return (
     <KeyboardAvoidingView
       style={[styles.root, { height: isEmojiPickerOpen ? "50%" : "auto" }]}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       keyboardVerticalOffset={headerHeight}
     >
+      <Spinner
+        visible={isLoading}
+        textContent={loadingText}
+        textStyle={{ color: "white" }}
+      />
       {/* {images && (
         <SafeAreaView style={styles.sendImageContainer}>
           <Pressable
@@ -217,7 +222,7 @@ const MessageInput = (props: any) => {
                 style={styles.icon}
               />
 
-              <Pressable>
+              <Pressable onPress={takePhoto}>
                 <Feather
                   name="camera"
                   size={28}
