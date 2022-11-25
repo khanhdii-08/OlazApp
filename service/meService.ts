@@ -4,9 +4,21 @@ const meApi = {
   fetchProfile: () => {
     return httpRequest.get(`/m/profile`);
   },
+
   updateAvatar: (image: any) => {
-    console.log(image);
     return httpRequest.patch("/m/avatar", image);
+  },
+
+  updateProfile: ({
+    name,
+    gender,
+    dateOfBirth,
+  }: {
+    name: string;
+    gender: any;
+    dateOfBirth: any;
+  }) => {
+    return httpRequest.put("/m/profile", { name, dateOfBirth, gender });
   },
 };
 

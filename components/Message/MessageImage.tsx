@@ -10,6 +10,7 @@ import React, { useState } from "react";
 import dateUtils from "../../utils/dateUtils";
 import { Video, Audio } from "expo-av";
 import ImageView from "react-native-image-viewing";
+import { BackgroundImage } from "react-native-elements/dist/config";
 
 const win = Dimensions.get("window");
 const ratio = win.width / 541;
@@ -54,8 +55,8 @@ const MessageImage = (props: any) => {
           >
             <Image
               source={{ uri: item.content }}
-              style={styles.imageStyle}
-              resizeMode="stretch"
+              style={[styles.imageStyle, { backgroundColor: "black" }]}
+              resizeMode="contain"
             />
           </TouchableOpacity>
         )}
@@ -80,7 +81,7 @@ export default MessageImage;
 const styles = StyleSheet.create({
   imageStyle: {
     width: win.width - 100,
-    height: 362 * ratio, //362 is actual height of image
+    height: 362 * ratio + 180, //362 is actual height of image
     borderRadius: 10,
   },
   viewImage: {

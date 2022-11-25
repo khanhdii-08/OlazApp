@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -22,8 +22,9 @@ import { useHeaderHeight } from "@react-navigation/elements";
 import { Icon } from "react-native-elements";
 import { useKeyboard } from "../../hooks/useKeyboard";
 import EmojiPicker from "../EmojiPicker/EmojiPicker";
-import { Video } from "expo-av";
+import { Audio, Video } from "expo-av";
 import Spinner from "react-native-loading-spinner-overlay";
+import AudioPlayer from "../AudioPlayer";
 
 const MessageInput = (props: any) => {
   const { conversationId, scrollViewRef } = props;
@@ -32,12 +33,15 @@ const MessageInput = (props: any) => {
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [loadingText, setLoadingText] = useState("upload... 0%");
+  const [recording, setRecording] = useState<Audio.Recording | null>(null);
+  const [soundURI, setSoundURI] = useState<string | null>(null);
 
   const dispatch = useAppDispatch();
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
+      videoQuality: ImagePicker.UIImagePickerControllerQualityType.High,
       allowsMultipleSelection: true,
       selectionLimit: 10,
       quality: 1,
@@ -52,6 +56,9 @@ const MessageInput = (props: any) => {
   const takePhoto = async () => {
     const result = await ImagePicker.launchCameraAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
+      videoQuality: ImagePicker.UIImagePickerControllerQualityType.High,
+      allowsEditing: false,
+      quality: 1,
     });
 
     if (!result.cancelled) {
@@ -97,10 +104,13 @@ const MessageInput = (props: any) => {
     } else {
       const formData = new FormData();
 
-      const filename = Date.now().toString();
+      const nameTemp = Date.now().toString();
+
+      const fileName =
+        filePaths[0].type === "video" ? `${nameTemp}.mp4` : `${nameTemp}.png`;
 
       formData.append("file", {
-        name: filePaths[0].fileName ? filePaths[0].fileName : `${filename}.png`,
+        name: filePaths[0].fileName ? filePaths[0].fileName : fileName,
         type: filePaths[0].type === "video" ? "video/mp4" : filePaths[0].type,
         uri:
           Platform.OS === "ios"
@@ -126,13 +136,102 @@ const MessageInput = (props: any) => {
     }
   };
 
+  ////Audio
+  async function startRecording() {
+    try {
+      console.log("Requesting permissions..");
+      await Audio.requestPermissionsAsync();
+      await Audio.setAudioModeAsync({
+        allowsRecordingIOS: true,
+        playsInSilentModeIOS: true,
+      });
+
+      console.log("Starting recording..");
+      const { recording } = await Audio.Recording.createAsync(
+        Audio.RecordingOptionsPresets.HIGH_QUALITY
+      );
+      setRecording(recording);
+      console.log("Recording started");
+    } catch (err) {
+      console.error("Failed to start recording", err);
+    }
+  }
+
+  async function stopRecording() {
+    console.log("Stopping recording..");
+    if (!recording) {
+      return;
+    }
+
+    setRecording(null);
+    await recording.stopAndUnloadAsync();
+    await Audio.setAudioModeAsync({
+      allowsRecordingIOS: false,
+    });
+
+    const uri = recording.getURI();
+    console.log("Recording stopped and stored at", uri);
+    if (!uri) {
+      return;
+    }
+    setSoundURI(uri);
+  }
+
+  const uploadAudio = (sound: string) => {
+    console.log(sound);
+
+    const callback = (percentCompleted: any) => {
+      if (percentCompleted < 99) {
+        setLoadingText(`upload... ${percentCompleted}%`);
+      } else {
+        setIsLoading(false);
+        setLoadingText("upload... 0%");
+      }
+    };
+
+    const formData = new FormData();
+    const filename = Date.now().toString();
+    formData.append("file", {
+      name: `${filename}.mp3`,
+      type: "video/mp3",
+      uri: Platform.OS === "ios" ? sound.replace("file://", "") : sound,
+    });
+
+    const attachInfo = {
+      type: "AUDIO",
+      conversationId: conversationId,
+    };
+
+    try {
+      setIsLoading(true);
+      dispatch(sendImage({ formData, attachInfo, callback }));
+      setSoundURI(null);
+    } catch (error) {
+      console.log(error);
+      setIsLoading(false);
+    }
+  };
+
   const onPress = () => {
-    if (content) {
+    if (content && soundURI) {
+      try {
+        setIsLoading(true);
+        dispatch(sendMessage({ conversationId, content, type: "TEXT" }));
+        uploadAudio(soundURI);
+        setContent("");
+        scrollViewRef.current.scrollToOffset({ animated: true, offset: 0 });
+        setIsEmojiPickerOpen(false);
+      } catch (error) {
+        console.log(error);
+        setIsLoading(false);
+      }
+    } else if (content && !soundURI) {
       dispatch(sendMessage({ conversationId, content, type: "TEXT" }));
       setContent("");
       scrollViewRef.current.scrollToOffset({ animated: true, offset: 0 });
       setIsEmojiPickerOpen(false);
-    } else {
+    } else if (!content && soundURI) {
+      uploadAudio(soundURI);
     }
   };
 
@@ -184,6 +283,8 @@ const MessageInput = (props: any) => {
         </SafeAreaView>
       )} */}
 
+      {soundURI && <AudioPlayer soundURI={soundURI} />}
+
       <View style={styles.row}>
         <View style={styles.inputContainer}>
           <Pressable
@@ -209,18 +310,20 @@ const MessageInput = (props: any) => {
             onFocus={() => setIsEmojiPickerOpen(false)}
           />
 
-          {content ? (
+          {content || soundURI ? (
             <Pressable onPress={() => onPress()}>
               <Ionicons name="send" size={28} color="blue" />
             </Pressable>
           ) : (
             <>
-              <MaterialCommunityIcons
-                name="microphone-outline"
-                size={28}
-                color="#595959"
-                style={styles.icon}
-              />
+              <Pressable onPress={recording ? stopRecording : startRecording}>
+                <MaterialCommunityIcons
+                  name={recording ? "microphone" : "microphone-outline"}
+                  size={28}
+                  color={recording ? "red" : "#595959"}
+                  style={styles.icon}
+                />
+              </Pressable>
 
               <Pressable onPress={takePhoto}>
                 <Feather

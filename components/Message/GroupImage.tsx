@@ -43,7 +43,7 @@ const GroupImage = (props: any) => {
         isMe ? styles.rightImageGroup : styles.leftImageGroup,
       ]}
     >
-      <View style={styles.groupImage}>
+      <View style={[styles.groupImage]}>
         {listImage.map((link: string, index: number) => {
           return checkType(link) === "VIDEO" ? (
             <Video
@@ -64,8 +64,8 @@ const GroupImage = (props: any) => {
             >
               <Image
                 source={{ uri: link }}
-                style={styles.imageStyle}
-                resizeMode="stretch"
+                style={[styles.imageStyle, { backgroundColor: "black" }]}
+                resizeMode="contain"
               />
             </TouchableOpacity>
           );
@@ -96,8 +96,6 @@ const styles = StyleSheet.create({
   groupImage: {
     flexDirection: "row",
     flexWrap: "wrap",
-
-    // justifyContent: "space-between",
   },
   imageStyle: {
     height: 362 * ratio, //362 is actual height of image

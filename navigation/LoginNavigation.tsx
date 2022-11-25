@@ -93,10 +93,23 @@ const LoginNavigation = () => {
           }}
         />
 
-        <Stack.Screen name="ConfirmAccount" component={ConfirmAccountScreen} />
+        <Stack.Screen
+          name="ConfirmAccount"
+          component={ConfirmAccountScreen}
+          options={{
+            headerBackground: () => headerGradient,
+            headerTitle: "Xác thực tài khoản",
+            headerTintColor: "white",
+          }}
+        />
         <Stack.Screen
           name="SettingAccountFirst"
           component={SettingAccountFirstScreen}
+          options={{
+            headerBackground: () => headerGradient,
+            headerTitle: "Cài đặt tài khoản lần đầu",
+            headerTintColor: "white",
+          }}
         />
       </Stack.Group>
     </Stack.Navigator>

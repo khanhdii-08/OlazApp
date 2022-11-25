@@ -94,8 +94,9 @@ const ConfirmAccountScreen = () => {
     const result = await login(account.username, account.password);
     jwt.setToken(result.token);
     configAxios();
-    dispatch(getProfile());
-    navigation.navigate("SettingAccountFirst");
+    dispatch(getProfile()).then((e) =>
+      navigation.navigate("SettingAccountFirst")
+    );
   };
 
   const handleConfirmAccount = async (username: string, otp: string) => {

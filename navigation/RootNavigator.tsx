@@ -92,16 +92,6 @@ export default function RootNavigator() {
         }}
       >
         <Stack.Screen
-          name="Search"
-          component={SearchScreen}
-          options={{
-            headerShown: false,
-            headerBackground: () => <></>,
-            animation: "none",
-          }}
-        />
-
-        <Stack.Screen
           name="QRScreen"
           component={QRScreen}
           options={{
@@ -134,6 +124,16 @@ export default function RootNavigator() {
           presentation: "card",
         }}
       >
+        <Stack.Screen
+          name="Search"
+          component={SearchScreen}
+          options={{
+            headerShown: false,
+            headerBackground: () => <></>,
+            animation: "none",
+          }}
+        />
+
         <Stack.Screen
           name="AddFriendScreen"
           component={AddFriendScreen}
@@ -202,6 +202,7 @@ export default function RootNavigator() {
           options={({ navigation }: RootStackScreenProps<"ProfileUser">) => ({
             headerBackTitle: "",
             headerTitle: "",
+            headerShown: false,
           })}
         />
       </Stack.Group>

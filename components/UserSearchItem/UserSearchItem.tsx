@@ -1,15 +1,20 @@
-import { StyleSheet, Text, View, Pressable } from "react-native";
+import { StyleSheet, Text, View, Pressable, Alert } from "react-native";
 import React from "react";
 import CustomAvatar from "../CustomAvatar/CustomAvatar";
+import { useNavigation } from "@react-navigation/native";
 
 const UserSearchItem = ({ props }: any) => {
-  const { avatar, avatarColor, name, status, username } = props;
+  const navigation = useNavigation();
 
+  const { avatar, avatarColor, name, status, username, _id } = props;
   const totalMembers: number = 0;
   const dataAvatar = { avatar, name, totalMembers, avatarColor };
 
   return (
-    <Pressable style={styles.container}>
+    <Pressable
+      style={styles.container}
+      onPress={() => navigation.navigate("ProfileUser", { userId: _id })}
+    >
       <CustomAvatar props={dataAvatar} />
       <View style={styles.rightContainer}>
         <View>
@@ -23,7 +28,7 @@ const UserSearchItem = ({ props }: any) => {
         </View>
 
         {status === "NOT_FRIEND" ? (
-          <Pressable style={styles.btn}>
+          <Pressable style={styles.btn} onPress={() => Alert.alert("kb")}>
             <Text style={{ color: "#0091ff" }}>Kết bạn</Text>
           </Pressable>
         ) : (

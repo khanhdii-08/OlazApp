@@ -22,6 +22,14 @@ export const getProfile = createAsyncThunk(`${NAME}/fetchProfile`, async () => {
   return res.data;
 });
 
+export const updateAvatar = createAsyncThunk(
+  `${NAME}/fetchUpdateAvatar`,
+  async (image: FormData) => {
+    const res = await meApi.updateAvatar(image);
+    return res.data;
+  }
+);
+
 const meSlice = createSlice({
   name: NAME,
   initialState,
@@ -30,13 +38,23 @@ const meSlice = createSlice({
     ///////
 
     builder.addCase(getProfile.pending, (state, action) => {
-      state.isLoading = false;
+      state.isLoading = true;
     });
+
     builder.addCase(getProfile.fulfilled, (state, action) => {
+      state.isLoading = false;
       state.userProfile = action.payload;
     });
 
     ////
+    builder.addCase(updateAvatar.pending, (state, action) => {
+      state.isLoading = true;
+    });
+
+    builder.addCase(updateAvatar.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.userProfile.avatar = action.payload;
+    });
   },
 });
 

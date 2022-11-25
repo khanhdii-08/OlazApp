@@ -6,25 +6,26 @@ import {
   Platform,
   Button,
   Pressable,
+  ActivityIndicator,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Avatar } from "react-native-elements";
-import { Entypo, Fontisto } from "@expo/vector-icons";
+import { AntDesign, Entypo, Fontisto } from "@expo/vector-icons";
 import RadioGroup, { RadioButtonProps } from "react-native-radio-buttons-group";
-import DatePicker from "react-native-date-picker";
-import DateTimePicker from "@react-native-community/datetimepicker";
-// import DatePicker from "@react-native-community/datetimepicker";
 import * as ImagePicker from "expo-image-picker";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { useAppSelector } from "../store";
-import { meSelector } from "../store/reducers/meSlice";
+import { useAppDispatch, useAppSelector } from "../store";
+import { meSelector, updateAvatar } from "../store/reducers/meSlice";
 import meApi from "../service/meService";
+import { setLogin } from "../store/reducers/authSlice";
+import Modal from "react-native-modal";
 
 const radioButtonsData: RadioButtonProps[] = [
   {
     id: "1", // acts as primary key, should be unique and non-empty string
     label: "",
     value: "true",
+    selected: true,
   },
   {
     id: "2",
@@ -34,25 +35,26 @@ const radioButtonsData: RadioButtonProps[] = [
 ];
 
 const SettingAccountFirstScreen = () => {
-  const { userProfile } = useAppSelector(meSelector);
+  const dispatch = useAppDispatch();
 
+  const { userProfile, isLoading } = useAppSelector(meSelector);
   const [radioButtons, setRadioButtons] =
     useState<RadioButtonProps[]>(radioButtonsData);
 
-  const [image, setImage] = useState(null);
-  const [gender, setGender] = useState(true);
+  const [image, setImage] = useState<string>("");
+  const [gender, setGender] = useState<any>(true);
 
   function onPressRadioButton(radioButtonsArray: RadioButtonProps[]) {
     radioButtonsArray.forEach((e) => {
       if (e.selected) {
-        setGender(Boolean(e.value));
+        console.log(e.value);
+        setGender(e.value);
       }
     });
   }
 
   const [dateOfBirth, setDateOfBirth] = useState(new Date(1598051730000));
   const [dobTitle, setDobTitle] = useState("");
-
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
   const showDatePicker = () => {
@@ -65,6 +67,7 @@ const SettingAccountFirstScreen = () => {
 
   const handleConfirm = (date: Date) => {
     setDobTitle(handleDateOfBirth(date));
+    setDateOfBirth(date);
     hideDatePicker();
   };
 
@@ -97,29 +100,51 @@ const SettingAccountFirstScreen = () => {
     setDateOfBirth(dob);
   }, []);
 
+  const [isModalVisible, setModalVisible] = useState(false);
+
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
+
   const pickImage = async () => {
     let result: any = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 4],
       quality: 1,
     });
+    setModalVisible(!isModalVisible);
 
     if (!result.cancelled) {
       setImage(result.uri);
-
-      const formData = new FormData();
-      formData.append("file", {
-        name: "dyt",
-        type: result.type,
-        uri:
-          Platform.OS === "ios"
-            ? result.uri.replace("file://", "")
-            : result.uri,
-      });
-
-      meApi.updateAvatar(formData);
+      upAvatar(result);
     }
+  };
+
+  const takePhoto = async () => {
+    const result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 4],
+      quality: 1,
+    });
+    setModalVisible(!isModalVisible);
+
+    if (!result.cancelled) {
+      setImage(result.uri);
+      upAvatar(result);
+    }
+  };
+
+  const upAvatar = (image: any) => {
+    const fileName = Date.now().toString();
+    const formData = new FormData();
+    formData.append("file", {
+      name: image.fileName ? image.fileName : `${fileName}.png`,
+      type: image.type,
+      uri: Platform.OS === "ios" ? image.uri.replace("file://", "") : image.uri,
+    });
+    dispatch(updateAvatar(formData));
   };
 
   const onPress = () => {
@@ -128,14 +153,47 @@ const SettingAccountFirstScreen = () => {
       month: dateOfBirth.getMonth() + 1,
       year: dateOfBirth.getFullYear(),
     };
-    console.log(image, gender, dobTitle);
+
+    try {
+      meApi
+        .updateProfile({
+          name: userProfile.name,
+          gender: gender === true ? 1 : 0,
+          dateOfBirth: dateOfBirthObj,
+        })
+        .then((res) => dispatch(setLogin(true)));
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
     <SafeAreaView>
+      <Modal isVisible={isModalVisible} style={{ alignItems: "center" }}>
+        <View style={styles.containerModal}>
+          <Pressable
+            style={{
+              flexDirection: "row",
+              justifyContent: "flex-end",
+              padding: 5,
+            }}
+            onPress={toggleModal}
+          >
+            <AntDesign name="close" size={24} color="black" />
+          </Pressable>
+          {/* <Button title="Hide modal" onPress={toggleModal} /> */}
+          <View style={{}}>
+            <Button title="Chọn ảnh từ camera" onPress={takePhoto} />
+            <Button title="Chọn ảnh từ thư viện" onPress={pickImage} />
+          </View>
+        </View>
+      </Modal>
+
       <View style={[styles.layout]}>
-        <Text style={{ padding: 10 }}>Chọn ảnh đại diện</Text>
-        <Pressable style={styles.avatarContainer} onPress={pickImage}>
+        <Text style={{ padding: 10, fontWeight: "bold" }}>
+          Chọn ảnh đại diện
+        </Text>
+        <Pressable style={styles.avatarContainer} onPress={toggleModal}>
           <Avatar
             rounded
             title={getAcronym(userProfile.name)}
@@ -160,7 +218,7 @@ const SettingAccountFirstScreen = () => {
         </Pressable>
       </View>
       <View style={styles.layout}>
-        <Text style={{ padding: 10 }}>Chọn giới tính</Text>
+        <Text style={{ padding: 10, fontWeight: "bold" }}>Chọn giới tính</Text>
         <View style={{ marginLeft: 100, marginRight: 100 }}>
           <View style={styles.iconSex}>
             <Fontisto name="male" size={64} color="black" />
@@ -185,6 +243,7 @@ const SettingAccountFirstScreen = () => {
         <Text
           style={{
             padding: 10,
+            fontWeight: "bold",
           }}
         >
           Chọn ngày sinh
@@ -214,13 +273,16 @@ const SettingAccountFirstScreen = () => {
             }}
           >
             <Pressable onPress={showDatePicker}>
-              <Fontisto name="date" size={24} color="black" />
+              <Fontisto name="date" size={34} color="black" />
             </Pressable>
-            <Text style={{ marginLeft: 20 }}>{dobTitle}</Text>
+            <Text style={{ marginLeft: 20, fontSize: 24 }}>{dobTitle}</Text>
           </View>
           <View style={{ alignItems: "flex-end" }}>
             <Pressable style={styles.btn} onPress={onPress}>
-              <Text>Tiếp tục</Text>
+              <View style={[styles.btn, { flexDirection: "row" }]}>
+                <Text style={{ fontSize: 14, color: "white" }}>Tiếp tục</Text>
+                <AntDesign name="right" size={14} color="white" />
+              </View>
             </Pressable>
           </View>
         </View>
@@ -232,6 +294,12 @@ const SettingAccountFirstScreen = () => {
 export default SettingAccountFirstScreen;
 
 const styles = StyleSheet.create({
+  containerModal: {
+    height: 150,
+    width: "80%",
+    backgroundColor: "white",
+  },
+
   container: {
     flex: 1,
   },
@@ -255,8 +323,8 @@ const styles = StyleSheet.create({
   },
   btn: {
     backgroundColor: "red",
-    width: 50,
-    height: 50,
+    width: 70,
+    height: 42,
     borderRadius: 50,
     justifyContent: "center",
     alignItems: "center",
