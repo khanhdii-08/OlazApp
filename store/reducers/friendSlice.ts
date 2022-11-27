@@ -1,12 +1,14 @@
 import { RootState } from "../index";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { apiFriend } from "../../service/friendService";
+import { isLoading } from "expo-font";
 
 export interface Friend {
   user: any;
   friends: Array<any>;
   friendInvites: Array<any>;
   friendMeInvites: Array<any>;
+  isLoading: boolean;
 }
 
 const initialState: Friend = {
@@ -14,6 +16,7 @@ const initialState: Friend = {
   friends: [],
   friendInvites: [],
   friendMeInvites: [],
+  isLoading: false,
 };
 
 const NAME = "friend";
@@ -28,6 +31,14 @@ export const inviteFriend = createAsyncThunk(
   async (result: any) => {
     const rs = await apiFriend.inviteFriend(result._id);
     return result;
+  }
+);
+
+export const acceptFriend = createAsyncThunk(
+  "friend/accept",
+  async (id: string) => {
+    const rs = await apiFriend.acceptFriend(id);
+    return id;
   }
 );
 
@@ -48,15 +59,34 @@ const friendSlice = createSlice({
   name: NAME,
   initialState,
 
-  reducers: {},
+  reducers: {
+    recieveInvite: (state, action) => {
+      if (action.payload)
+        state.friendInvites = [action.payload, ...state.friendInvites];
+    },
+
+    setNewFriend: (state, action) => {
+      const friend = state.friendMeInvites.find(
+        (friendMeInvite) => friendMeInvite._id === action.payload
+      );
+      const newList = state.friendMeInvites.filter(
+        (friendMeInvite) => friendMeInvite._id !== action.payload
+      );
+      console.log("friend", friend);
+      console.log("newList", newList);
+
+      state.friends = [friend, ...state.friends];
+      state.friendMeInvites = newList;
+    },
+  },
 
   extraReducers: (builder) => {
     ////////
-    builder.addCase(getFriends.pending, (action, payload) => {});
+    builder.addCase(getFriends.pending, (state, action) => {});
     builder.addCase(getFriends.fulfilled, (state, action) => {
       state.friends = action.payload;
     });
-    builder.addCase(getFriends.rejected, (action, payload) => {});
+    builder.addCase(getFriends.rejected, (state, action) => {});
 
     ////////
     // builder.addCase(getFriends.pending, (action, payload) => {});
@@ -66,24 +96,45 @@ const friendSlice = createSlice({
     // builder.addCase(getFriends.rejected, (action, payload) => {});
 
     ////////
-    builder.addCase(getListInvite.pending, (action, payload) => {});
+    builder.addCase(getListInvite.pending, (state, action) => {});
     builder.addCase(getListInvite.fulfilled, (state, action) => {
       state.friendInvites = action.payload;
     });
-    builder.addCase(getListInvite.rejected, (action, payload) => {});
+    builder.addCase(getListInvite.rejected, (state, action) => {});
 
     ///
 
-    builder.addCase(getListMeInvite.pending, (action, payload) => {});
+    builder.addCase(getListMeInvite.pending, (state, action) => {});
     builder.addCase(getListMeInvite.fulfilled, (state, action) => {
       state.friendMeInvites = action.payload;
     });
-    builder.addCase(getListMeInvite.rejected, (action, payload) => {});
+    builder.addCase(getListMeInvite.rejected, (state, action) => {});
+
+    //////
+    builder.addCase(inviteFriend.pending, (state, action) => {
+      state.isLoading = true;
+    });
+    builder.addCase(inviteFriend.fulfilled, (state, action) => {
+      const { _id, name, username, avatar, avatarColor } = action.payload;
+      const friendMeInvite = { _id, name, username, avatar, avatarColor };
+      state.friendMeInvites = [friendMeInvite, ...state.friendMeInvites];
+      state.isLoading = false;
+    });
+
+    builder.addCase(acceptFriend.fulfilled, (state, action) => {
+      const friend = state.friendInvites.find(
+        (friend) => friend._id === action.payload
+      );
+      state.friendInvites = state.friendInvites.filter(
+        (friend) => friend._id !== action.payload
+      );
+      state.friends = [friend, ...state.friends];
+    });
   },
 });
 
 const friendReducer = friendSlice.reducer;
 
 export const friendSeletor = (state: RootState) => state.friendReducer;
-
+export const { recieveInvite, setNewFriend } = friendSlice.actions;
 export default friendReducer;

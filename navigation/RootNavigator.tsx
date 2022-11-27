@@ -71,7 +71,7 @@ export default function RootNavigator() {
           headerLeft: () => (
             <Pressable
               onPress={() => {
-                dispatch(resetMessageSlice(null)), navigation.goBack();
+                dispatch(resetMessageSlice(null)), navigation.navigate("Root");
               }}
             >
               <Ionicons name="chevron-back" size={26} color="white" />

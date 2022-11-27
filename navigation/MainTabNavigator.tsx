@@ -26,6 +26,8 @@ import {
   getFriends,
   getListInvite,
   getListMeInvite,
+  recieveInvite,
+  setNewFriend,
 } from "../store/reducers/friendSlice";
 import { getProfile } from "../store/reducers/meSlice";
 
@@ -78,7 +80,6 @@ export default function TabNavigator() {
     socket.on(
       "create-individual-conversation-when-was-friend",
       (conversationId: string) => {
-        console.log("duy 2");
         dispatch(getConversationById(conversationId));
       }
     );
@@ -105,6 +106,17 @@ export default function TabNavigator() {
         dispatch(setLastMessageInConversation({ conversationId, message }));
       }
     );
+  }, []);
+
+  useEffect(() => {
+    socket.on("send-friend-invite", (fq: object) => {
+      dispatch(recieveInvite(fq));
+    });
+
+    socket.on("accept-friend", (value: any) => {
+      console.log(value);
+      dispatch(setNewFriend(value._id));
+    });
   }, []);
 
   function headerSearch(navigation: any) {

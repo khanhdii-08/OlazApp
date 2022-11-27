@@ -2,12 +2,40 @@ import { StyleSheet, Text, View, Pressable } from "react-native";
 import React from "react";
 import { Avatar } from "react-native-elements";
 import { Feather, AntDesign } from "@expo/vector-icons";
+import { useAppDispatch, useAppSelector } from "../../store";
+import {
+  conversationSelector,
+  setCurrentConversation,
+} from "../../store/reducers/conversationSlice";
+import { getConversationByUserId } from "../../utils/functionGlobal";
+import { getMessages } from "../../store/reducers/messageSlice";
+import { useNavigation } from "@react-navigation/native";
+import { ParamsApi } from "../ChatRoomItem/ChatRoomItem";
 
 const FriendItem = ({ friendItem }: { friendItem: any }) => {
   // console.log("data", friendItem);
+  const navigation = useNavigation();
+  const dispatch = useAppDispatch();
+
+  const { conversations } = useAppSelector(conversationSelector);
+
+  const paramsApi: ParamsApi = {
+    page: 0,
+    size: 20,
+  };
+
+  const onPressMessage = () => {
+    const conversation = getConversationByUserId(friendItem._id, conversations);
+    if (conversation) {
+      const conversationId: string = conversation._id;
+      dispatch(setCurrentConversation(conversation));
+      dispatch(getMessages({ conversationId, paramsApi }));
+      navigation.navigate("ChatRoom");
+    }
+  };
 
   return (
-    <View style={styles.container}>
+    <Pressable style={styles.container} onPress={onPressMessage}>
       <View style={styles.containerLeft}>
         <Avatar
           rounded
@@ -36,7 +64,7 @@ const FriendItem = ({ friendItem }: { friendItem: any }) => {
           style={{ marginLeft: 24, marginRight: 34 }}
         />
       </View>
-    </View>
+    </Pressable>
   );
 };
 

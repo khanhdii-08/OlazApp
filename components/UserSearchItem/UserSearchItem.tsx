@@ -1,14 +1,32 @@
 import { StyleSheet, Text, View, Pressable, Alert } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import CustomAvatar from "../CustomAvatar/CustomAvatar";
 import { useNavigation } from "@react-navigation/native";
+import { useAppDispatch } from "../../store";
+import { inviteFriend } from "../../store/reducers/friendSlice";
 
 const UserSearchItem = ({ props }: any) => {
   const navigation = useNavigation();
+  const dispatch = useAppDispatch();
 
   const { avatar, avatarColor, name, status, username, _id } = props;
   const totalMembers: number = 0;
   const dataAvatar = { avatar, name, totalMembers, avatarColor };
+
+  const text: string =
+    status === "NOT_FRIEND" ? "Kết bạn" : status === "FOLLOWER" ? "Đồng ý" : "";
+  const [textStatus, setTextStatus] = useState(text);
+
+  const onPress = () => {
+    if (status === "NOT_FRIEND") {
+      dispatch(inviteFriend(props));
+      Alert.alert("Yêu cầu kết bạn đã được gửi");
+      setTextStatus("");
+    } else if (status === "FOLLOWER") {
+      Alert.alert("Đã đồng ý kết bạn");
+      setTextStatus("");
+    }
+  };
 
   return (
     <Pressable
@@ -27,9 +45,18 @@ const UserSearchItem = ({ props }: any) => {
           </View>
         </View>
 
-        {status === "NOT_FRIEND" ? (
-          <Pressable style={styles.btn} onPress={() => Alert.alert("kb")}>
-            <Text style={{ color: "#0091ff" }}>Kết bạn</Text>
+        {textStatus && (
+          <Pressable style={styles.btn} onPress={onPress}>
+            <Text style={{ color: "#0091ff" }}>{textStatus}</Text>
+          </Pressable>
+        )}
+
+        {/* {status === "NOT_FRIEND" ? (
+          <Pressable
+            style={styles.btn}
+            onPress={() => setTextStatus("")}
+          >
+            <Text style={{ color: "#0091ff" }}></Text>
           </Pressable>
         ) : (
           <View>
@@ -41,7 +68,7 @@ const UserSearchItem = ({ props }: any) => {
               <></>
             )}
           </View>
-        )}
+        )} */}
       </View>
     </Pressable>
   );

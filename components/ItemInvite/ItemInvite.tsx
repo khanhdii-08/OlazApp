@@ -1,19 +1,34 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { Avatar } from "react-native-elements";
+import { getAcronym } from "../../utils/functionGlobal";
+import { useAppDispatch } from "../../store";
+import { acceptFriend } from "../../store/reducers/friendSlice";
+import { useNavigation } from "@react-navigation/native";
 
 const ItemInvite = ({ friendInvite }: any) => {
+  const dispatch = useAppDispatch();
+  const navigation = useNavigation();
+  const onPressAcceptFriend = () => {
+    dispatch(acceptFriend(friendInvite._id));
+  };
+
   return (
-    <View style={styles.container}>
+    <Pressable
+      style={styles.container}
+      onPress={() =>
+        navigation.navigate("ProfileUser", { userId: friendInvite._id })
+      }
+    >
       <View style={styles.item}>
         <Avatar
           rounded
-          title={friendInvite.name[0]}
+          title={getAcronym(friendInvite.name)}
           overlayContainerStyle={{
             backgroundColor: friendInvite.avatarColor,
           }}
           source={
-            friendInvite.avatar.length
+            friendInvite.avatar.length > 0
               ? {
                   uri: friendInvite.avatar,
                 }
@@ -30,14 +45,14 @@ const ItemInvite = ({ friendInvite }: any) => {
               </Pressable>
             </View>
             <View>
-              <Pressable style={styles.btn}>
+              <Pressable style={styles.btn} onPress={onPressAcceptFriend}>
                 <Text style={{ color: "#0091ff" }}>Đồng ý</Text>
               </Pressable>
             </View>
           </View>
         </View>
       </View>
-    </View>
+    </Pressable>
   );
 };
 
@@ -45,11 +60,14 @@ export default ItemInvite;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    // flex: 1,
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#dbdbdb",
   },
   item: {
     flexDirection: "row",
-    alignItems: "center",
+    // alignItems: "center",
   },
   containerRight: {
     paddingLeft: 20,
@@ -57,10 +75,13 @@ const styles = StyleSheet.create({
   },
   text: {
     fontWeight: "bold",
-    height: 35,
+    fontSize: 17,
+    padding: 5,
+    // height: 35,
   },
   btnContainer: {
     flexDirection: "row",
+    paddingBottom: 2,
   },
   btn: {
     height: 35,

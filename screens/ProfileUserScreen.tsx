@@ -8,28 +8,75 @@ import {
   TouchableOpacity,
   Pressable,
   ActivityIndicator,
+  Alert,
 } from "react-native";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 import { Avatar } from "react-native-elements";
-import { useAppSelector } from "../store";
+import { useAppDispatch, useAppSelector } from "../store";
 import { useNavigation } from "@react-navigation/native";
 import { meSelector } from "../store/reducers/meSlice";
-
 import React, { useEffect, useState } from "react";
 import userApi from "../service/userService";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { acceptFriend, inviteFriend } from "../store/reducers/friendSlice";
+import { getAcronym, getConversationByUserId } from "../utils/functionGlobal";
+import {
+  conversationSelector,
+  setCurrentConversation,
+} from "../store/reducers/conversationSlice";
+import jwt from "../utils/jwt";
+import { getMessages } from "../store/reducers/messageSlice";
+import { ParamsApi } from "../components/ChatRoomItem/ChatRoomItem";
 
 const ProfileUserScreen = () => {
+  const dispatch = useAppDispatch();
+
+  const paramsApi: ParamsApi = {
+    page: 0,
+    size: 20,
+  };
+
+  const meId = jwt.getUserId();
+  const { conversations } = useAppSelector(conversationSelector);
+
   const navigation = useNavigation();
   const route = useRoute<RootRouteProps<"ProfileUser">>();
   const [user, setUser] = useState<any>(null);
-
+  const [status, setStatus] = useState<string>("");
   const idUser = route.params.userId;
 
   useEffect(() => {
-    userApi.fetchUserById(idUser).then((res) => setUser(res.data));
+    userApi.fetchUserById(idUser).then((res) => {
+      setUser(res.data), setStatus(res.data.status);
+    });
   }, []);
 
-  // console.log("user", user);
+  const onPress = () => {
+    if (status === "FRIEND") {
+      if (meId) {
+        const conversation = getConversationByUserId(user._id, conversations);
+        if (conversation) {
+          const conversationId: string = conversation._id;
+          dispatch(setCurrentConversation(conversation));
+          dispatch(getMessages({ conversationId, paramsApi }));
+          navigation.navigate("ChatRoom");
+        }
+      }
+    } else if (status === "NOT_FRIEND") {
+      dispatch(inviteFriend(user));
+      setStatus("");
+      Alert.alert("Yêu cầu kết bạn đã được gửi");
+    }
+  };
+
+  const onPressAccept = () => {
+    dispatch(acceptFriend(user._id));
+    setStatus("");
+  };
+
+  const onPressNoAccept = () => {
+    Alert.alert("No accept");
+  };
 
   return (
     <>
@@ -57,9 +104,6 @@ const ProfileUserScreen = () => {
             {user.avatar.length ? (
               <Avatar
                 rounded
-                overlayContainerStyle={{
-                  backgroundColor: user?.avatarColor,
-                }}
                 source={{
                   uri: user.avatar,
                 }}
@@ -68,11 +112,11 @@ const ProfileUserScreen = () => {
             ) : (
               <Avatar
                 rounded
-                title={user.name[0]}
+                title={getAcronym(user.name)}
                 overlayContainerStyle={{
                   backgroundColor: user.avatarColor,
                 }}
-                size={100}
+                size={120}
               />
             )}
             <View style={{ flexDirection: "row" }}>
@@ -93,8 +137,11 @@ const ProfileUserScreen = () => {
             }}
           >
             <View>
-              {user.status === "FRIEND" && (
-                <TouchableOpacity style={[styles.btnEdit, { opacity: 1 }]}>
+              {status === "FRIEND" && (
+                <TouchableOpacity
+                  onPress={onPress}
+                  style={[styles.btnEdit, { opacity: 1 }]}
+                >
                   <View style={styles.iconEdit}>
                     <AntDesign name="message1" size={24} color="#0099FF" />
                     <Text style={styles.textEdit}> Nhắn Tin</Text>
@@ -103,8 +150,9 @@ const ProfileUserScreen = () => {
               )}
             </View>
             <View>
-              {user.status === "NOT_FRIEND" ? (
+              {status === "NOT_FRIEND" ? (
                 <TouchableOpacity
+                  onPress={onPress}
                   style={[styles.btnAdd, { opacity: 1, width: 300 }]}
                 >
                   <AntDesign name="adduser" size={24} color="black" />
@@ -112,20 +160,30 @@ const ProfileUserScreen = () => {
                 </TouchableOpacity>
               ) : (
                 <View>
-                  {user.status === "FOLLOWER" ? (
-                    <View>
+                  {status === "FOLLOWER" ? (
+                    <View
+                      style={{
+                        flexDirection: "row",
+                      }}
+                    >
                       <TouchableOpacity
-                        style={[styles.btnAdd, { opacity: 1, width: 100 }]}
+                        onPress={onPressNoAccept}
+                        style={[
+                          styles.btnAdd,
+                          {
+                            backgroundColor: "#dbdbdb",
+                            marginRight: 8,
+                          },
+                        ]}
                       >
                         <Text>Từ chối</Text>
                       </TouchableOpacity>
                       <TouchableOpacity
+                        onPress={onPressAccept}
                         style={[
                           styles.btnAdd,
                           {
-                            opacity: 1,
-                            width: 100,
-                            backgroundColor: "#B0E2FF",
+                            marginLeft: 8,
                           },
                         ]}
                       >
@@ -152,7 +210,6 @@ export default ProfileUserScreen;
 const styles = StyleSheet.create({
   container: {
     width: "100%",
-    //flex: 1,
   },
   image: {
     height: 290,
@@ -169,8 +226,8 @@ const styles = StyleSheet.create({
     flex: 1,
     height: "10%",
     alignItems: "center",
-    marginTop: "55%",
-    marginLeft: "25%",
+    marginTop: "50%",
+    marginLeft: "28%",
     marginBottom: 0,
     position: "absolute",
     borderRadius: 50,
@@ -202,24 +259,16 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     backgroundColor: "#B0E2FF",
   },
-  btnSend: {
-    width: 10,
-    height: 45,
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 10,
-    borderRadius: 30,
-    backgroundColor: "#B0E2FF",
-  },
   iconEdit: {
     flexDirection: "row",
   },
   btnAdd: {
     flexDirection: "row",
     backgroundColor: "#B0E2FF",
-    height: 45,
+    height: 40,
     borderRadius: 30,
     alignItems: "center",
     justifyContent: "center",
+    width: 100,
   },
 });
