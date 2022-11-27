@@ -6,9 +6,14 @@ import {
   Alert,
   Animated,
 } from "react-native";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { Avatar } from "react-native-elements";
-import { Feather, AntDesign, MaterialIcons } from "@expo/vector-icons";
+import {
+  Feather,
+  AntDesign,
+  MaterialIcons,
+  Ionicons,
+} from "@expo/vector-icons";
 import { useAppDispatch, useAppSelector } from "../../store";
 import {
   conversationSelector,
@@ -21,11 +26,13 @@ import { ParamsApi } from "../ChatRoomItem/ChatRoomItem";
 import { Swipeable } from "react-native-gesture-handler";
 import { deleteFriendAsync } from "../../store/reducers/friendSlice";
 
-const FriendItem = ({ friendItem }: { friendItem: any }) => {
-  // console.log("data", friendItem);
+const FriendItem = (props: any) => {
+  const { friendItem, isShowButton, handleGroup } = props;
+
   const navigation = useNavigation();
   const dispatch = useAppDispatch();
   const { conversations } = useAppSelector(conversationSelector);
+  const [nameIcon, setNameIcon] = useState<string>("person-add");
 
   const paramsApi: ParamsApi = {
     page: 0,
@@ -57,6 +64,16 @@ const FriendItem = ({ friendItem }: { friendItem: any }) => {
     );
   };
 
+  const onPressAddGroup = () => {
+    if (nameIcon === "person-add") {
+      handleGroup();
+      setNameIcon("person-remove");
+    } else if (nameIcon === "person-remove") {
+      handleGroup();
+      setNameIcon("person-add");
+    }
+  };
+
   return (
     <Swipeable ref={sipeRef} renderRightActions={rightSipe}>
       <View style={styles.container}>
@@ -82,17 +99,32 @@ const FriendItem = ({ friendItem }: { friendItem: any }) => {
         </Pressable>
 
         <View style={styles.containerRight}>
-          <Pressable onPress={() => Alert.alert("gọi")}>
-            <Feather name="phone" size={24} color="black" />
-          </Pressable>
-          <Pressable onPress={() => Alert.alert("gọi video")}>
-            <AntDesign
-              name="videocamera"
-              size={24}
-              color="black"
-              style={{ marginLeft: 24, marginRight: 34 }}
-            />
-          </Pressable>
+          {isShowButton ? (
+            <Pressable onPressIn={onPressAddGroup}>
+              <Ionicons
+                name={nameIcon}
+                size={24}
+                color={nameIcon === "person-add" ? "#0091ff" : "red"}
+                style={{ marginRight: 24 }}
+              />
+
+              {/* <Ionicons name="person-remove" size={24} color="black" /> */}
+            </Pressable>
+          ) : (
+            <>
+              <Pressable onPress={() => Alert.alert("gọi")}>
+                <Feather name="phone" size={24} color="black" />
+              </Pressable>
+              <Pressable onPress={() => Alert.alert("gọi video")}>
+                <AntDesign
+                  name="videocamera"
+                  size={24}
+                  color="black"
+                  style={{ marginLeft: 24, marginRight: 34 }}
+                />
+              </Pressable>
+            </>
+          )}
         </View>
       </View>
     </Swipeable>
@@ -115,6 +147,7 @@ const styles = StyleSheet.create({
   containerRight: {
     flexDirection: "row",
     alignItems: "center",
+    // paddingRight: 20,
   },
   deleteFriend: {
     backgroundColor: "red",

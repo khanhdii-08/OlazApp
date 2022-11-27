@@ -1,9 +1,9 @@
-import {StyleSheet} from "react-native"
+import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
   container: {
     width: 240,
-    height: 320,
+    height: "auto",
     backgroundColor: "white",
   },
   buttonContainer: {
@@ -20,4 +20,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default styles
+export default styles;

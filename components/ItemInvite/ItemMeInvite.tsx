@@ -4,10 +4,12 @@ import { Avatar } from "react-native-elements";
 import { getAcronym } from "../../utils/functionGlobal";
 import { useAppDispatch } from "../../store";
 import { deleteMeInvive } from "../../store/reducers/friendSlice";
+import { useNavigation } from "@react-navigation/native";
 
 const ItemMeInvite = (props: any) => {
   const { friendMeInvite } = props;
   const dispatch = useAppDispatch();
+  const navigation = useNavigation();
   // console.log(friendMeInvite);
 
   const onPress = () => {
@@ -15,7 +17,12 @@ const ItemMeInvite = (props: any) => {
   };
 
   return (
-    <View style={styles.container}>
+    <Pressable
+      style={styles.container}
+      onPress={() =>
+        navigation.navigate("ProfileUser", { userId: friendMeInvite._id })
+      }
+    >
       <View style={styles.item}>
         <Avatar
           rounded
@@ -42,7 +49,7 @@ const ItemMeInvite = (props: any) => {
           </View>
         </View>
       </View>
-    </View>
+    </Pressable>
   );
 };
 

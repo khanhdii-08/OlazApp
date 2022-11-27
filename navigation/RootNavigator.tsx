@@ -99,7 +99,13 @@ export default function RootNavigator() {
             presentation: "fullScreenModal",
           }}
         />
+      </Stack.Group>
 
+      <Stack.Group
+        screenOptions={{
+          presentation: "card",
+        }}
+      >
         <Stack.Screen
           name="AddGroupScreen"
           component={AddGroupScreen}
@@ -110,6 +116,7 @@ export default function RootNavigator() {
             headerStyle: {
               backgroundColor: "#EEEEEE",
             },
+            animation: "slide_from_bottom",
             headerLeft: () => (
               <Pressable onPress={() => navigation.goBack()}>
                 <Text>Hủy</Text>
@@ -117,13 +124,7 @@ export default function RootNavigator() {
             ),
           })}
         />
-      </Stack.Group>
 
-      <Stack.Group
-        screenOptions={{
-          presentation: "card",
-        }}
-      >
         <Stack.Screen
           name="Search"
           component={SearchScreen}
@@ -224,7 +225,8 @@ const ChatRoomHeader = (props: {
         flexDirection: "row",
         justifyContent: "space-between",
         width: width - 50,
-        padding: 10,
+        paddingLeft: 10,
+        paddingRight: 10,
         alignItems: "center",
       }}
     >

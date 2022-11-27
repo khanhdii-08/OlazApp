@@ -95,7 +95,6 @@ export default function TabNavigator() {
     });
 
     socket.on("create-conversation", (conversationId: string) => {
-      console.log("3");
       dispatch(getConversationById(conversationId));
     });
 

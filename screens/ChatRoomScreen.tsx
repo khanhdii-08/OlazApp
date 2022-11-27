@@ -37,8 +37,15 @@ export default function ChatRoomScreen() {
     size: 20,
   });
 
+  console.log("duyy");
+
+  console.log(conversation.name);
+
   useEffect(() => {
-    navigation.setOptions({ title: conversation.name });
+    console.log(conversation.name);
+    if (conversation.name) {
+      navigation.setOptions({ title: conversation.name });
+    }
   }, [false]);
 
   const goToNextPage = async () => {
@@ -78,6 +85,7 @@ export default function ChatRoomScreen() {
               index={index}
               item={item}
               messages={[...messages.data].reverse()}
+              avatarColor={conversation.avatarColor}
             />
           )}
           initialNumToRender={20}

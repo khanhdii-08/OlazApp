@@ -4,9 +4,6 @@ import { httpRequest } from "./../utils/httpRequest";
 export const apiMessage = {
   getMessages: async (conversationId: string, paramsApi: ParamsApi) => {
     const { page, size } = paramsApi;
-
-    console.log(conversationId);
-
     return await httpRequest.get(`/messages/${conversationId}`, {
       params: {
         page,

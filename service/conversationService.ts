@@ -13,4 +13,11 @@ export const apiConversations = {
   getConversationById: async (id: string) => {
     return await httpRequest.get(`/conversations/${id}`);
   },
+
+  createGroup: ({ name, userIds }: { name: string; userIds: any }) => {
+    return httpRequest.post(`/conversations/new/groups`, {
+      name,
+      userIds,
+    });
+  },
 };

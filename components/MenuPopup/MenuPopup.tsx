@@ -16,6 +16,17 @@ export default function MenuPopup({
         style={styles.buttonContainer}
         onPress={() => {
           setTip(false);
+          navigation.navigate("AddFriendScreen");
+        }}
+      >
+        <AntDesign name="adduser" size={24} color="black" style={styles.icon} />
+        <Text style={styles.text}>Thêm bạn</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.buttonContainer}
+        onPress={() => {
+          setTip(false);
           navigation.navigate("AddGroupScreen");
         }}
       >
@@ -26,27 +37,6 @@ export default function MenuPopup({
           style={styles.icon}
         />
         <Text style={styles.text}>Tạo nhóm</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={styles.buttonContainer}
-        onPress={() => {
-          setTip(false);
-          navigation.navigate("AddFriendScreen");
-        }}
-      >
-        <AntDesign name="adduser" size={24} color="black" style={styles.icon} />
-        <Text style={styles.text}>Thêm bạn</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.buttonContainer}>
-        <Ionicons
-          name="qr-code-outline"
-          size={24}
-          color="black"
-          style={styles.icon}
-        />
-        <Text style={styles.text}>Quét mã QR</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.buttonContainer}>

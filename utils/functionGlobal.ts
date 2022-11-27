@@ -20,3 +20,16 @@ export const getConversationByUserId = (
 
   return conversation;
 };
+
+export const getGroupConversationById = (
+  conversationId: string,
+  conversations: Array<any>
+) => {
+  const conversation = conversations.find((e) => {
+    return e._id === conversationId && e.type === true;
+  });
+
+  console.log(conversation);
+
+  return conversation;
+};

@@ -11,12 +11,14 @@ import dateUtils from "../../utils/dateUtils";
 import { Video, Audio } from "expo-av";
 import ImageView from "react-native-image-viewing";
 import { BackgroundImage } from "react-native-elements/dist/config";
+import { Avatar } from "react-native-elements";
+import { getAcronym } from "../../utils/functionGlobal";
 
 const win = Dimensions.get("window");
 const ratio = win.width / 541;
 
 const MessageImage = (props: any) => {
-  const { item, isMe } = props;
+  const { item, isMe, avatarColor } = props;
 
   const checkType = (content: string) => {
     const splitTempt = content.split(".");
@@ -34,44 +36,65 @@ const MessageImage = (props: any) => {
   };
 
   return (
-    <View
-      style={[styles.viewImage, isMe ? styles.rightImage : styles.leftImage]}
-    >
-      <View>
-        {checkType(item.content) === "VIDEO" ? (
-          <Video
-            style={styles.imageStyle}
-            source={{ uri: item.content }}
-            useNativeControls
-            isLooping
-            volume={1.0}
-          />
-        ) : (
-          <TouchableOpacity
-            onPress={() => {
-              handleViewingImage(item.content);
-            }}
-            style={{ width: "50%" }}
-          >
-            <Image
+    <View style={{ flexDirection: "row", marginLeft: 10 }}>
+      {isMe ? (
+        <></>
+      ) : (
+        <Avatar
+          rounded
+          title={getAcronym(item.user.name)}
+          overlayContainerStyle={{
+            backgroundColor: avatarColor ? avatarColor : item.user.avatarColor,
+          }}
+          source={
+            item.user.avatar.length !== 0
+              ? {
+                  uri: item.user.avatar,
+                }
+              : {}
+          }
+          size={24}
+        />
+      )}
+      <View
+        style={[styles.viewImage, isMe ? styles.rightImage : styles.leftImage]}
+      >
+        <View>
+          {checkType(item.content) === "VIDEO" ? (
+            <Video
+              style={styles.imageStyle}
               source={{ uri: item.content }}
-              style={[styles.imageStyle, { backgroundColor: "black" }]}
-              resizeMode="contain"
+              useNativeControls
+              isLooping
+              volume={1.0}
             />
-          </TouchableOpacity>
-        )}
-        <View style={styles.textTime}>
-          <Text style={{ color: "white", fontSize: 10 }}>
-            {dateUtils.getTime(item.createdAt)}
-          </Text>
+          ) : (
+            <TouchableOpacity
+              onPress={() => {
+                handleViewingImage(item.content);
+              }}
+              style={{ width: "50%" }}
+            >
+              <Image
+                source={{ uri: item.content }}
+                style={[styles.imageStyle, { backgroundColor: "black" }]}
+                resizeMode="contain"
+              />
+            </TouchableOpacity>
+          )}
+          <View style={styles.textTime}>
+            <Text style={{ color: "white", fontSize: 10 }}>
+              {dateUtils.getTime(item.createdAt)}
+            </Text>
+          </View>
         </View>
+        <ImageView
+          images={[{ uri: url }]}
+          imageIndex={0}
+          visible={visible}
+          onRequestClose={() => setVisible(false)}
+        />
       </View>
-      <ImageView
-        images={[{ uri: url }]}
-        imageIndex={0}
-        visible={visible}
-        onRequestClose={() => setVisible(false)}
-      />
     </View>
   );
 };
@@ -85,7 +108,9 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   viewImage: {
-    margin: 10,
+    marginBottom: 10,
+    marginLeft: 10,
+    marginRight: 10,
     maxWidth: "82%",
   },
   leftImage: {

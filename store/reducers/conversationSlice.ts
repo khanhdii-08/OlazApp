@@ -50,6 +50,7 @@ const conversationSlice = createSlice({
   initialState,
   reducers: {
     setCurrentConversation: (state, action) => {
+      console.log("duy", action.payload);
       state.conversationId = action.payload._id;
       state.conversation = action.payload;
     },
