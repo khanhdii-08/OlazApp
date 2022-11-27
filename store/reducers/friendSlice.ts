@@ -58,7 +58,7 @@ export const acceptFriend = createAsyncThunk(
   }
 );
 
-export const deleteFriend = createAsyncThunk(
+export const deleteFriendAsync = createAsyncThunk(
   "friend/deleteFriend",
   async (id: string) => {
     const res = apiFriend.deleteFriend(id);
@@ -191,7 +191,7 @@ const friendSlice = createSlice({
     });
 
     //////
-    builder.addCase(deleteFriend.fulfilled, (state, action) => {
+    builder.addCase(deleteFriendAsync.fulfilled, (state, action) => {
       state.friends = state.friends.filter(
         (friend) => friend._id !== action.payload
       );
@@ -207,5 +207,6 @@ export const {
   setNewFriend,
   refuseInvite,
   cancelMyFriendRequest,
+  deleteFriend,
 } = friendSlice.actions;
 export default friendReducer;

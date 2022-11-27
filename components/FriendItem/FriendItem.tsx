@@ -6,7 +6,7 @@ import {
   Alert,
   Animated,
 } from "react-native";
-import React from "react";
+import React, { useRef } from "react";
 import { Avatar } from "react-native-elements";
 import { Feather, AntDesign, MaterialIcons } from "@expo/vector-icons";
 import { useAppDispatch, useAppSelector } from "../../store";
@@ -19,13 +19,12 @@ import { getMessages } from "../../store/reducers/messageSlice";
 import { useNavigation } from "@react-navigation/native";
 import { ParamsApi } from "../ChatRoomItem/ChatRoomItem";
 import { Swipeable } from "react-native-gesture-handler";
-import { deleteFriend } from "../../store/reducers/friendSlice";
+import { deleteFriendAsync } from "../../store/reducers/friendSlice";
 
 const FriendItem = ({ friendItem }: { friendItem: any }) => {
   // console.log("data", friendItem);
   const navigation = useNavigation();
   const dispatch = useAppDispatch();
-
   const { conversations } = useAppSelector(conversationSelector);
 
   const paramsApi: ParamsApi = {
@@ -33,6 +32,7 @@ const FriendItem = ({ friendItem }: { friendItem: any }) => {
     size: 20,
   };
 
+  const sipeRef: any = useRef();
   const onPressMessage = () => {
     const conversation = getConversationByUserId(friendItem._id, conversations);
     if (conversation) {
@@ -44,7 +44,8 @@ const FriendItem = ({ friendItem }: { friendItem: any }) => {
   };
 
   const onPressDelete = () => {
-    dispatch(deleteFriend(friendItem._id));
+    sipeRef.current.close();
+    dispatch(deleteFriendAsync(friendItem._id));
   };
 
   const rightSipe = () => {
@@ -57,9 +58,9 @@ const FriendItem = ({ friendItem }: { friendItem: any }) => {
   };
 
   return (
-    <Pressable onPress={onPressMessage}>
-      <Swipeable renderRightActions={rightSipe}>
-        <View style={styles.container}>
+    <Swipeable ref={sipeRef} renderRightActions={rightSipe}>
+      <View style={styles.container}>
+        <Pressable onPress={onPressMessage}>
           <View style={styles.containerLeft}>
             <Avatar
               rounded
@@ -78,19 +79,23 @@ const FriendItem = ({ friendItem }: { friendItem: any }) => {
             />
             <Text style={styles.text}>{friendItem.name}</Text>
           </View>
+        </Pressable>
 
-          <View style={styles.containerRight}>
+        <View style={styles.containerRight}>
+          <Pressable onPress={() => Alert.alert("gọi")}>
             <Feather name="phone" size={24} color="black" />
+          </Pressable>
+          <Pressable onPress={() => Alert.alert("gọi video")}>
             <AntDesign
               name="videocamera"
               size={24}
               color="black"
               style={{ marginLeft: 24, marginRight: 34 }}
             />
-          </View>
+          </Pressable>
         </View>
-      </Swipeable>
-    </Pressable>
+      </View>
+    </Swipeable>
   );
 };
 
