@@ -2,11 +2,18 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { Avatar } from "react-native-elements";
 import { getAcronym } from "../../utils/functionGlobal";
+import { useAppDispatch } from "../../store";
+import { deleteMeInvive } from "../../store/reducers/friendSlice";
 
 const ItemMeInvite = (props: any) => {
   const { friendMeInvite } = props;
-
+  const dispatch = useAppDispatch();
   // console.log(friendMeInvite);
+
+  const onPress = () => {
+    dispatch(deleteMeInvive(friendMeInvite._id));
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.item}>
@@ -29,7 +36,7 @@ const ItemMeInvite = (props: any) => {
         <View style={styles.containerRight}>
           <Text style={styles.text}>{friendMeInvite.name}</Text>
           <View>
-            <Pressable style={styles.btn}>
+            <Pressable onPress={onPress} style={styles.btn}>
               <Text>Thu hồi</Text>
             </Pressable>
           </View>

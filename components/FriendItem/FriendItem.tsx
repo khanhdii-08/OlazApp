@@ -1,7 +1,14 @@
-import { StyleSheet, Text, View, Pressable } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Pressable,
+  Alert,
+  Animated,
+} from "react-native";
 import React from "react";
 import { Avatar } from "react-native-elements";
-import { Feather, AntDesign } from "@expo/vector-icons";
+import { Feather, AntDesign, MaterialIcons } from "@expo/vector-icons";
 import { useAppDispatch, useAppSelector } from "../../store";
 import {
   conversationSelector,
@@ -11,6 +18,8 @@ import { getConversationByUserId } from "../../utils/functionGlobal";
 import { getMessages } from "../../store/reducers/messageSlice";
 import { useNavigation } from "@react-navigation/native";
 import { ParamsApi } from "../ChatRoomItem/ChatRoomItem";
+import { Swipeable } from "react-native-gesture-handler";
+import { deleteFriend } from "../../store/reducers/friendSlice";
 
 const FriendItem = ({ friendItem }: { friendItem: any }) => {
   // console.log("data", friendItem);
@@ -34,36 +43,53 @@ const FriendItem = ({ friendItem }: { friendItem: any }) => {
     }
   };
 
-  return (
-    <Pressable style={styles.container} onPress={onPressMessage}>
-      <View style={styles.containerLeft}>
-        <Avatar
-          rounded
-          title={friendItem.name[0]}
-          overlayContainerStyle={{
-            backgroundColor: friendItem.avatarColor,
-          }}
-          source={
-            friendItem.avatar.length
-              ? {
-                  uri: friendItem.avatar,
-                }
-              : {}
-          }
-          size={45}
-        />
-        <Text style={styles.text}>{friendItem.name}</Text>
-      </View>
+  const onPressDelete = () => {
+    dispatch(deleteFriend(friendItem._id));
+  };
 
-      <View style={styles.containerRight}>
-        <Feather name="phone" size={24} color="black" />
-        <AntDesign
-          name="videocamera"
-          size={24}
-          color="black"
-          style={{ marginLeft: 24, marginRight: 34 }}
-        />
-      </View>
+  const rightSipe = () => {
+    return (
+      <Pressable onPress={onPressDelete} style={styles.deleteFriend}>
+        <MaterialIcons name="delete" size={24} color="white" />
+        <Animated.Text style={{ color: "white" }}>Xóa</Animated.Text>
+      </Pressable>
+    );
+  };
+
+  return (
+    <Pressable onPress={onPressMessage}>
+      <Swipeable renderRightActions={rightSipe}>
+        <View style={styles.container}>
+          <View style={styles.containerLeft}>
+            <Avatar
+              rounded
+              title={friendItem.name[0]}
+              overlayContainerStyle={{
+                backgroundColor: friendItem.avatarColor,
+              }}
+              source={
+                friendItem.avatar.length
+                  ? {
+                      uri: friendItem.avatar,
+                    }
+                  : {}
+              }
+              size={45}
+            />
+            <Text style={styles.text}>{friendItem.name}</Text>
+          </View>
+
+          <View style={styles.containerRight}>
+            <Feather name="phone" size={24} color="black" />
+            <AntDesign
+              name="videocamera"
+              size={24}
+              color="black"
+              style={{ marginLeft: 24, marginRight: 34 }}
+            />
+          </View>
+        </View>
+      </Swipeable>
     </Pressable>
   );
 };
@@ -83,6 +109,12 @@ const styles = StyleSheet.create({
   },
   containerRight: {
     flexDirection: "row",
+    alignItems: "center",
+  },
+  deleteFriend: {
+    backgroundColor: "red",
+    width: 70,
+    justifyContent: "center",
     alignItems: "center",
   },
 });

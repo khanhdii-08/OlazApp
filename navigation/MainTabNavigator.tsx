@@ -23,10 +23,13 @@ import {
 import { rerenderMessage } from "../store/reducers/messageSlice";
 import { getUserById } from "../store/reducers/userSlice";
 import {
+  cancelMyFriendRequest,
+  deleteFriend,
   getFriends,
   getListInvite,
   getListMeInvite,
   recieveInvite,
+  refuseInvite,
   setNewFriend,
 } from "../store/reducers/friendSlice";
 import { getProfile } from "../store/reducers/meSlice";
@@ -116,6 +119,18 @@ export default function TabNavigator() {
     socket.on("accept-friend", (value: any) => {
       console.log(value);
       dispatch(setNewFriend(value._id));
+    });
+
+    socket.on("deleted-friend-invite", (_id: string) => {
+      dispatch(refuseInvite(_id));
+    });
+
+    socket.on("deleted-invite-was-send", (_id: string) => {
+      dispatch(cancelMyFriendRequest(_id));
+    });
+
+    socket.on("deleted-friend", (_id: string) => {
+      dispatch(deleteFriend(_id));
     });
   }, []);
 

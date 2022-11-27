@@ -3,7 +3,7 @@ import React from "react";
 import { Avatar } from "react-native-elements";
 import { getAcronym } from "../../utils/functionGlobal";
 import { useAppDispatch } from "../../store";
-import { acceptFriend } from "../../store/reducers/friendSlice";
+import { acceptFriend, deleteInvive } from "../../store/reducers/friendSlice";
 import { useNavigation } from "@react-navigation/native";
 
 const ItemInvite = ({ friendInvite }: any) => {
@@ -11,6 +11,10 @@ const ItemInvite = ({ friendInvite }: any) => {
   const navigation = useNavigation();
   const onPressAcceptFriend = () => {
     dispatch(acceptFriend(friendInvite._id));
+  };
+
+  const onPressNoAcceptFriend = () => {
+    dispatch(deleteInvive(friendInvite._id));
   };
 
   return (
@@ -40,7 +44,10 @@ const ItemInvite = ({ friendInvite }: any) => {
           <Text style={styles.text}>{friendInvite.name}</Text>
           <View style={styles.btnContainer}>
             <View style={{ paddingRight: 20 }}>
-              <Pressable style={[styles.btn, { backgroundColor: "#dbdbdb" }]}>
+              <Pressable
+                onPress={onPressNoAcceptFriend}
+                style={[styles.btn, { backgroundColor: "#dbdbdb" }]}
+              >
                 <Text>Từ chối</Text>
               </Pressable>
             </View>

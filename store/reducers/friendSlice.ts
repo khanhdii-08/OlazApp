@@ -34,10 +34,34 @@ export const inviteFriend = createAsyncThunk(
   }
 );
 
+export const deleteInvive = createAsyncThunk(
+  "friend/deleteInvite",
+  async (id: string) => {
+    const rs = await apiFriend.deleteInvive(id);
+    return id;
+  }
+);
+
+export const deleteMeInvive = createAsyncThunk(
+  "friend/deleteMeInvite",
+  async (id: string) => {
+    const rs = await apiFriend.deleteMeInvive(id);
+    return id;
+  }
+);
+
 export const acceptFriend = createAsyncThunk(
   "friend/accept",
   async (id: string) => {
     const rs = await apiFriend.acceptFriend(id);
+    return id;
+  }
+);
+
+export const deleteFriend = createAsyncThunk(
+  "friend/deleteFriend",
+  async (id: string) => {
+    const res = apiFriend.deleteFriend(id);
     return id;
   }
 );
@@ -65,6 +89,28 @@ const friendSlice = createSlice({
         state.friendInvites = [action.payload, ...state.friendInvites];
     },
 
+    refuseInvite: (state, action) => {
+      if (action.payload) {
+        state.friendMeInvites = state.friendMeInvites.filter(
+          (friend) => friend._id !== action.payload
+        );
+      }
+    },
+
+    cancelMyFriendRequest: (state, action) => {
+      if (action.payload) {
+        state.friendInvites = state.friendInvites.filter(
+          (friend) => friend._id !== action.payload
+        );
+      }
+    },
+
+    deleteFriend: (state, action) => {
+      state.friends = state.friends.filter(
+        (friend) => friend._id !== action.payload
+      );
+    },
+
     setNewFriend: (state, action) => {
       const friend = state.friendMeInvites.find(
         (friendMeInvite) => friendMeInvite._id === action.payload
@@ -72,8 +118,6 @@ const friendSlice = createSlice({
       const newList = state.friendMeInvites.filter(
         (friendMeInvite) => friendMeInvite._id !== action.payload
       );
-      console.log("friend", friend);
-      console.log("newList", newList);
 
       state.friends = [friend, ...state.friends];
       state.friendMeInvites = newList;
@@ -121,6 +165,7 @@ const friendSlice = createSlice({
       state.isLoading = false;
     });
 
+    ////
     builder.addCase(acceptFriend.fulfilled, (state, action) => {
       const friend = state.friendInvites.find(
         (friend) => friend._id === action.payload
@@ -130,11 +175,37 @@ const friendSlice = createSlice({
       );
       state.friends = [friend, ...state.friends];
     });
+
+    /////
+    builder.addCase(deleteInvive.fulfilled, (state, action) => {
+      state.friendInvites = state.friendInvites.filter(
+        (friend) => friend._id !== action.payload
+      );
+    });
+
+    //////
+    builder.addCase(deleteMeInvive.fulfilled, (state, action) => {
+      state.friendMeInvites = state.friendMeInvites.filter(
+        (friend) => friend._id !== action.payload
+      );
+    });
+
+    //////
+    builder.addCase(deleteFriend.fulfilled, (state, action) => {
+      state.friends = state.friends.filter(
+        (friend) => friend._id !== action.payload
+      );
+    });
   },
 });
 
 const friendReducer = friendSlice.reducer;
 
 export const friendSeletor = (state: RootState) => state.friendReducer;
-export const { recieveInvite, setNewFriend } = friendSlice.actions;
+export const {
+  recieveInvite,
+  setNewFriend,
+  refuseInvite,
+  cancelMyFriendRequest,
+} = friendSlice.actions;
 export default friendReducer;

@@ -23,7 +23,7 @@ const UserSearchItem = ({ props }: any) => {
       Alert.alert("Yêu cầu kết bạn đã được gửi");
       setTextStatus("");
     } else if (status === "FOLLOWER") {
-      Alert.alert("Đã đồng ý kết bạn");
+      dispatch(inviteFriend(props));
       setTextStatus("");
     }
   };
