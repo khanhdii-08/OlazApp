@@ -90,7 +90,6 @@ export default function AddGroupScreen() {
       const response = await apiConversations.createGroup({ name, userIds });
       const res = await apiConversations.getConversationById(response.data._id);
       const conversation = res.data;
-      console.log(conversation);
       if (conversation) {
         const conversationId = conversation._id;
         dispatch(setCurrentConversation(conversation));
@@ -138,37 +137,48 @@ export default function AddGroupScreen() {
             style={{
               flexDirection: "row",
               flexWrap: "wrap",
-              justifyContent: "flex-start",
+              justifyContent: "space-between",
               alignContent: "center",
               alignItems: "center",
             }}
           >
-            {listAddToGroup.length > 0 &&
-              listAddToGroup.map((item: any) => (
-                <TouchableOpacity
-                  key={item._id}
-                  style={{ marginRight: 8 }}
-                  onPress={() => handleRemoveFromGroup(item._id)}
-                >
-                  <Avatar
-                    rounded
-                    title={getAcronym(item.name)}
-                    overlayContainerStyle={{
-                      backgroundColor: item?.avatarColor,
-                    }}
-                    source={
-                      item?.avatar?.length > 0
-                        ? {
-                            uri: item.avatar,
-                          }
-                        : {}
-                    }
-                    size="medium"
+            <View
+              style={{
+                flexDirection: "row",
+                flexWrap: "wrap",
+                justifyContent: "center",
+                alignContent: "center",
+                alignItems: "center",
+              }}
+            >
+              {listAddToGroup.length > 0 &&
+                listAddToGroup.map((item: any) => (
+                  <TouchableOpacity
+                    key={item._id}
+                    style={{ marginRight: 8 }}
+                    onPress={() => handleRemoveFromGroup(item._id)}
                   >
-                    <Avatar.Accessory name="x" type="feather" />
-                  </Avatar>
-                </TouchableOpacity>
-              ))}
+                    <Avatar
+                      rounded
+                      title={getAcronym(item.name)}
+                      overlayContainerStyle={{
+                        backgroundColor: item?.avatarColor,
+                      }}
+                      source={
+                        item?.avatar?.length > 0
+                          ? {
+                              uri: item.avatar,
+                            }
+                          : {}
+                      }
+                      size="medium"
+                    >
+                      <Avatar.Accessory name="x" type="feather" />
+                    </Avatar>
+                  </TouchableOpacity>
+                ))}
+            </View>
+
             {listAddToGroup.length > 0 && (
               <Button
                 icon={
@@ -225,10 +235,10 @@ export default function AddGroupScreen() {
             <View style={{ backgroundColor: "#fff" }}>
               <FriendItem
                 friendItem={item}
-                handleGroup={() =>
-                  isExists
-                    ? handleRemoveFromGroup(item._id)
-                    : handleAddToGroup(item)
+                handleGroup={
+                  () => !isExists && handleAddToGroup(item)
+                  // ? handleRemoveFromGroup(item._id)
+                  // : handleAddToGroup(item)
                 }
                 isShowButton={true}
               />

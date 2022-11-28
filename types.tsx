@@ -31,6 +31,7 @@ export type RootStackParamList = {
   RequestAddFriend: undefined;
   EditUser: undefined;
   ProfileUser: { userId: string };
+  EditProFileScreen: undefined;
 };
 
 export type RootRouteProps<RouteName extends keyof RootStackParamList> =

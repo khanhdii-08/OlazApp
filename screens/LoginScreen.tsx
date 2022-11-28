@@ -11,6 +11,7 @@ import {
   Pressable,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { useTogglePasswordVisibility } from "../hooks/useTogglePasswordVisibility";
@@ -48,11 +49,11 @@ const LoginScreen = () => {
     try {
       const result = await login(username, password);
       // await AsyncStorage.setItem("refreshToken", result.refreshToken);
-      jwt.setToken(result.token);
+      jwt.setToken(result?.data.token);
       configAxios();
       dispatch(setLogin(true));
     } catch (error) {
-      console.log(error);
+      Alert.alert("Số điện thoại hoặc mật khẩu không đúng");
     }
   };
 
@@ -79,7 +80,7 @@ const LoginScreen = () => {
           <TextInput
             style={styles.textInput}
             value={username}
-            placeholder="Tên đăng nhập"
+            placeholder="Số điện thoại đăng nhập"
             placeholderTextColor="#717070"
             autoFocus={true}
             onChangeText={(value) => {

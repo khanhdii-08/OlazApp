@@ -92,7 +92,7 @@ const ConfirmAccountScreen = () => {
 
   const handleLogin = async () => {
     const result = await login(account.username, account.password);
-    jwt.setToken(result.token);
+    jwt.setToken(result?.data.token);
     configAxios();
     dispatch(getProfile()).then((e) =>
       navigation.navigate("SettingAccountFirst")

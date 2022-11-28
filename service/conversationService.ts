@@ -20,4 +20,10 @@ export const apiConversations = {
       userIds,
     });
   },
+
+  leaveGroup: async (conversationId: string) => {
+    return await httpRequest.delete(
+      `/conversations/${conversationId}/members/leave`
+    );
+  },
 };

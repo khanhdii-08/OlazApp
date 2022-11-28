@@ -19,6 +19,7 @@ import { meSelector, updateAvatar } from "../store/reducers/meSlice";
 import meApi from "../service/meService";
 import { setLogin } from "../store/reducers/authSlice";
 import Modal from "react-native-modal";
+import { getAcronym } from "../utils/functionGlobal";
 
 const radioButtonsData: RadioButtonProps[] = [
   {
@@ -79,18 +80,6 @@ const SettingAccountFirstScreen = () => {
     return (
       ("00" + date).slice(-2) + "/" + ("00" + month).slice(-2) + "/" + year
     );
-  };
-
-  const getAcronym = (name: string) => {
-    if (name) {
-      const acronym = name
-        .split(/\s/)
-        .reduce((response, word) => (response += word.slice(0, 1)), "")
-        .toUpperCase();
-
-      return acronym.slice(0, 2);
-    }
-    return "";
   };
 
   useEffect(() => {

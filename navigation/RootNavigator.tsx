@@ -27,6 +27,7 @@ import QRScreen from "../screens/QRScreen";
 import RequestAddFriend from "../screens/RequestAddFriendScreen";
 import ProfileUserScreen from "../screens/ProfileUserScreen";
 import EditUserScreen from "../screens/EditUserScreen";
+import EditProFileScreen from "../screens/EditProFileScreen";
 import { useAppDispatch } from "../store";
 import { resetMessageSlice } from "../store/reducers/messageSlice";
 
@@ -62,9 +63,10 @@ export default function RootNavigator() {
         options={({ navigation }: RootStackScreenProps<"ChatRoom">) => ({
           headerTintColor: "white",
           headerTitle: ChatRoomHeader,
-          headerStyle: {
-            backgroundColor: "#0091ff",
-          },
+          headerBackground: () => headerGradient,
+          // headerStyle: {
+          //   backgroundColor: "#0091ff",
+          // },
           headerBackTitleVisible: false,
           title: "Username",
           headerBackVisible: false,
@@ -98,6 +100,25 @@ export default function RootNavigator() {
             headerShown: false,
             presentation: "fullScreenModal",
           }}
+        />
+
+        <Stack.Screen
+          name="EditProFileScreen"
+          component={EditProFileScreen}
+          options={({
+            navigation,
+          }: RootStackScreenProps<"EditProFileScreen">) => ({
+            headerTitle: "Chỉnh sửa thông tin cá nhân",
+            headerStyle: {
+              backgroundColor: "#EEEEEE",
+            },
+            animation: "slide_from_bottom",
+            headerLeft: () => (
+              <Pressable onPress={() => navigation.goBack()}>
+                <AntDesign name="close" size={24} color="black" />
+              </Pressable>
+            ),
+          })}
         />
       </Stack.Group>
 
@@ -174,9 +195,7 @@ export default function RootNavigator() {
           }: RootStackScreenProps<"RequestAddFriend">) => ({
             headerBackVisible: false,
             headerTitle: "",
-            headerStyle: {
-              backgroundColor: "#0091ff",
-            },
+            headerBackground: () => headerGradient,
             headerLeft: () => (
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <Pressable onPress={() => navigation.goBack()}>

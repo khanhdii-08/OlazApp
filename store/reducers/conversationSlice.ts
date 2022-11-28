@@ -45,15 +45,48 @@ export const getConversationById = createAsyncThunk(
   }
 );
 
+export const leaveGroup = createAsyncThunk(
+  "conversation/leaveGroup",
+  async (params: any, _) => {
+    const { conversationId } = params;
+
+    const response = await apiConversations.leaveGroup(conversationId);
+    return response.data;
+  }
+);
+
 const conversationSlice = createSlice({
   name: NAME,
   initialState,
   reducers: {
     setCurrentConversation: (state, action) => {
-      console.log("duy", action.payload);
       state.conversationId = action.payload._id;
       state.conversation = action.payload;
     },
+
+    /////
+    deleteGroup: (state, action) => {
+      const conversations = state.conversations.filter(
+        (conversation) => conversation._id !== action.payload
+      );
+      state.conversations = [...conversations];
+      if (action.payload === state.conversationId) {
+        state.conversationId = "";
+        state.conversation = {};
+      }
+    },
+
+    updateAvatarWhenUpdateMember: (state, action) => {
+      const { conver } = action.payload;
+      const index = state.conversations.findIndex(
+        (ele) => ele._id === conver._id
+      );
+      if (index > -1 && state.conversation._id === conver._id) {
+        state.conversations[index] = conver;
+      } else console.log("abccc");
+    },
+
+    /////
 
     setToTalUnread: (state, action) => {
       let tempCount = 0;
@@ -104,6 +137,20 @@ const conversationSlice = createSlice({
     builder.addCase(getConversationById.fulfilled, (state, action) => {
       state.conversations = [action.payload, ...state.conversations];
     });
+
+    /////
+
+    builder.addCase(leaveGroup.fulfilled, (state, action) => {
+      console.log("leaveGroup");
+      const conversations = state.conversations.filter(
+        (conversation) => conversation._id !== action.payload
+      );
+      state.conversations = [...conversations];
+      if (action.payload === state.conversationId) {
+        state.conversationId = "";
+        state.conversation = {};
+      }
+    });
   },
 });
 
@@ -117,6 +164,8 @@ export const {
   setLastMessageInConversation,
   resetConversationSlice,
   setToTalUnread,
+  deleteGroup,
+  updateAvatarWhenUpdateMember,
 } = conversationSlice.actions;
 
 export default conversationReducer;

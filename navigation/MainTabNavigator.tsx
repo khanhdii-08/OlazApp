@@ -16,9 +16,11 @@ import jwt from "../utils/jwt";
 import { useAppDispatch, useAppSelector } from "../store";
 import {
   conversationSelector,
+  deleteGroup,
   getConversationById,
   getConversations,
   setLastMessageInConversation,
+  updateAvatarWhenUpdateMember,
 } from "../store/reducers/conversationSlice";
 import { rerenderMessage } from "../store/reducers/messageSlice";
 import { getUserById } from "../store/reducers/userSlice";
@@ -33,6 +35,7 @@ import {
   setNewFriend,
 } from "../store/reducers/friendSlice";
 import { getProfile } from "../store/reducers/meSlice";
+import { apiConversations } from "../service/conversationService";
 
 const BottomTab = createBottomTabNavigator<RootTabParamList>();
 
@@ -109,6 +112,22 @@ export default function TabNavigator() {
       }
     );
   }, []);
+
+  // useEffect(() => {
+  //   socket.on("delete-conversation", async (id: string) => {
+  //     dispatch(deleteGroup(id));
+  //   });
+  //   socket.on("update-member", async (conversationId: string) => {
+  //     const data = await apiConversations.getConversationById(conversationId);
+  //     const conver = data.data;
+  //     console.log("azzz", conver);
+  //     dispatch(
+  //       updateAvatarWhenUpdateMember({
+  //         conver,
+  //       })
+  //     );
+  //   });
+  // }, []);
 
   useEffect(() => {
     socket.on("send-friend-invite", (fq: object) => {

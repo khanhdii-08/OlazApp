@@ -65,13 +65,7 @@ const FriendItem = (props: any) => {
   };
 
   const onPressAddGroup = () => {
-    if (nameIcon === "person-add") {
-      handleGroup();
-      setNameIcon("person-remove");
-    } else if (nameIcon === "person-remove") {
-      handleGroup();
-      setNameIcon("person-add");
-    }
+    handleGroup();
   };
 
   return (
@@ -102,13 +96,11 @@ const FriendItem = (props: any) => {
           {isShowButton ? (
             <Pressable onPressIn={onPressAddGroup}>
               <Ionicons
-                name={nameIcon}
+                name="add"
                 size={24}
-                color={nameIcon === "person-add" ? "#0091ff" : "red"}
+                color="#0091ff"
                 style={{ marginRight: 24 }}
               />
-
-              {/* <Ionicons name="person-remove" size={24} color="black" /> */}
             </Pressable>
           ) : (
             <>

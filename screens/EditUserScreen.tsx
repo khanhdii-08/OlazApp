@@ -18,8 +18,6 @@ export default function EditUserScreen() {
   const navigation = useNavigation();
   const { userProfile } = useAppSelector(meSelector);
 
-  console.log(userProfile);
-
   return (
     <>
       <ImageBackground
@@ -80,7 +78,10 @@ export default function EditUserScreen() {
       </View>
 
       <View style={{ alignItems: "center" }}>
-        <TouchableOpacity style={[styles.btnEdit, { opacity: 1 }]}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("EditProFileScreen")}
+          style={[styles.btnEdit, { opacity: 1 }]}
+        >
           <View style={styles.iconEdit}>
             <AntDesign name="edit" size={20} color="black" />
             <Text style={styles.textEdit}> Chỉnh sửa</Text>

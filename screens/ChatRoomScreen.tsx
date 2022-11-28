@@ -37,12 +37,7 @@ export default function ChatRoomScreen() {
     size: 20,
   });
 
-  console.log("duyy");
-
-  console.log(conversation.name);
-
   useEffect(() => {
-    console.log(conversation.name);
     if (conversation.name) {
       navigation.setOptions({ title: conversation.name });
     }

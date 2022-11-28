@@ -13,7 +13,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useTogglePasswordVisibility } from "../hooks/useTogglePasswordVisibility";
 import { useNavigation } from "@react-navigation/native";
 import { getUser, registry } from "../service/authService";
@@ -23,40 +23,77 @@ const RegisterScreen = ({
   navigation,
 }: LoginStackScreenProps<"RegisterScreen">) => {
   // const navigation = useNavigation();
-
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [checkValidName, setcheckValidName] = useState(false);
+  const [checkValidSDT, setcheckValidSDT] = useState(false);
+  const [checkValidPassword, setcheckValidPassword] = useState(false);
 
   const { passwordVisibility, rightIcon, handlePasswordVisibility } =
     useTogglePasswordVisibility("HIỆN", "ẨN");
   const [disabled, setDisabled] = useState(true);
 
   const onSubmit = async (user: { username: string; password: string }) => {
-    try {
-      await registry(name, username, password);
-      navigation.navigate("ConfirmAccount", { user: user });
-    } catch (error) {
-      console.log(error);
+    if (!checkValidName && !checkValidSDT && !checkValidPassword) {
+      try {
+        await registry(name, username, password);
+        navigation.navigate("ConfirmAccount", { user: user });
+      } catch (error) {
+        console.log(error);
 
-      const account = await getUser(username);
+        const account = await getUser(username);
 
-      if (account.isActived) {
-        Alert.alert("Số điện thoại đã đăng ký, xin mời đăng mập");
-        navigation.navigate("LoginScreen", { username: username });
-      } else {
-        navigation.navigate("ConfirmAccount", { user: account });
+        if (account.isActived) {
+          Alert.alert("Số điện thoại đã đăng ký, xin mời đăng mập");
+          navigation.navigate("LoginScreen", { username: username });
+        } else {
+          navigation.navigate("ConfirmAccount", { user: account });
+        }
       }
     }
   };
 
-  const checkInput = (name: string, username: string, password: string) => {
-    if (name && username && password) setDisabled(false);
+  const checkInput = () => {
+    if (
+      !checkValidName &&
+      !checkValidSDT &&
+      !checkValidPassword &&
+      name &&
+      username &&
+      password
+    )
+      setDisabled(false);
     else setDisabled(true);
   };
 
+  const handleVailName = (value: string) => {
+    setName(value);
+    if (value.length >= 2) {
+      setcheckValidName(false);
+    } else setcheckValidName(true);
+  };
+
+  const handleVailSDT = (value: string) => {
+    let re = /^(0[3|5|7|8|9])+([0-9]{8})\b/;
+
+    setUsername(value);
+    if (re.test(value)) {
+      setcheckValidSDT(false);
+    } else setcheckValidSDT(true);
+  };
+
+  const handleVailPassword = (value: string) => {
+    let rege = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,16}$/;
+
+    setPassword(value);
+    if (rege.test(value)) {
+      setcheckValidPassword(false);
+    } else setcheckValidPassword(true);
+  };
+
   useEffect(() => {
-    checkInput(name, username, password);
+    checkInput();
   }, [name, username, password]);
 
   return (
@@ -66,7 +103,7 @@ const RegisterScreen = ({
     >
       <StatusBar animated={true} barStyle="default" backgroundColor="#3399FF" />
       <ScrollView keyboardShouldPersistTaps="handled">
-        <Text style={styles.text}>Tên Zalo</Text>
+        <Text style={styles.text}>Tên Olaz</Text>
         <View style={styles.parent}>
           <TextInput
             style={styles.textInput}
@@ -74,7 +111,7 @@ const RegisterScreen = ({
             placeholder="Gồm 2-40 ký tự"
             placeholderTextColor="#717070"
             autoFocus={true}
-            onChangeText={setName}
+            onChangeText={(value) => handleVailName(value)}
           />
           {name && (
             <TouchableOpacity
@@ -95,7 +132,8 @@ const RegisterScreen = ({
             value={username}
             placeholder="....."
             placeholderTextColor="#717070"
-            onChangeText={(value) => setUsername(value)}
+            onChangeText={(value) => handleVailSDT(value)}
+            // (value) => setUsername(value)
           />
           {username && (
             <TouchableOpacity
@@ -109,15 +147,16 @@ const RegisterScreen = ({
             </TouchableOpacity>
           )}
         </View>
+
         <Text style={styles.text}>Mật Khẩu</Text>
         <View style={styles.parent}>
           <TextInput
             style={styles.textInput}
             value={password}
-            placeholder="Gồm 2-40 ký tự"
+            placeholder="Gồm 8-16 ký tự"
             placeholderTextColor="#717070"
             secureTextEntry={passwordVisibility}
-            onChangeText={(value) => setPassword(value)}
+            onChangeText={(value) => handleVailPassword(value)}
           />
 
           {password && (
@@ -148,6 +187,28 @@ const RegisterScreen = ({
             <Text style={{ color: "white" }}>Đăng Ký</Text>
           </TouchableOpacity>
         </View>
+        {checkValidName ? (
+          <Text style={{ color: "red", marginLeft: 10 }}>
+            Tên có độ dài lơn hơn 2.
+          </Text>
+        ) : (
+          <></>
+        )}
+        {checkValidSDT ? (
+          <Text style={{ color: "red", marginLeft: 10 }}>
+            Số điện thoại không tồn tại hoặc số điện thoại không đủ 10 chữ số.
+          </Text>
+        ) : (
+          <></>
+        )}
+        {checkValidPassword ? (
+          <Text style={{ color: "red", marginLeft: 10 }}>
+            Mật khẩu có độ dài ít nhất 8-16 ký tự trong đó có chứa chữ hoa ,chữ
+            thường, chữ số.
+          </Text>
+        ) : (
+          <></>
+        )}
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -199,5 +260,8 @@ const styles = StyleSheet.create({
   showPass: {
     fontSize: 15,
     opacity: 0.7,
+  },
+  checkregex: {
+    fontSize: 12,
   },
 });
